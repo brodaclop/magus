@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Karakter, KarakterInfo } from "../engine/karakter";
 
+const PREFIX = 'magus.';
+
 interface DataConnector {
     categories: () => Array<string>;
     list: (category?: string) => Array<KarakterInfo>;
@@ -24,7 +26,7 @@ export function useDataConnector(): DataConnector {
     }
 
     const list = (category?: string): Array<KarakterInfo> => {
-        const all: Array<KarakterInfo> = [...Array(window.localStorage.length)].map((_, i) => window.localStorage.key(i) ?? '').map(key => fetch(key));
+        const all: Array<KarakterInfo> = [...Array(window.localStorage.length)].map((_, i) => window.localStorage.key(i) ?? '').filter(key => key.startsWith(PREFIX)).map(key => fetch(key));
         if (!category) {
             return all;
         }
@@ -32,16 +34,16 @@ export function useDataConnector(): DataConnector {
     };
 
     const load = (info: KarakterInfo): Karakter => {
-        return fetch(info.id);
+        return fetch(PREFIX + info.id);
     };
 
     const save = (karakter: Karakter): void => {
-        window.localStorage.setItem(karakter.id, JSON.stringify(karakter));
+        window.localStorage.setItem(PREFIX + karakter.id, JSON.stringify(karakter));
         setOperations(operations + 1);
     };
 
     const remove = (info: KarakterInfo) => {
-        window.localStorage.removeItem(info.id);
+        window.localStorage.removeItem(PREFIX + info.id);
     }
 
     (window as any).exportMagus = () => {
