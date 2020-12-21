@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, GridColumn, GridRow, Input, Label, Modal, Table } from 'semantic-ui-react';
+import { Button, Confirm, Grid, GridColumn, GridRow, Input, Label, Modal, Table } from 'semantic-ui-react';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { EPFP } from '../components/EPFP';
 import { FegyverLista } from '../components/FegyverLista';
@@ -12,10 +12,11 @@ import { calculateHarcertek, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 
 
-export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown }> = ({ karakter, save }) => {
+export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown, remove: () => unknown }> = ({ karakter, save, remove }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
+    const [torlesKerdes, setTorlesKerdes] = useState(false);
     return <Grid relaxed>
         <GridRow columns={3}>
             <GridColumn>
@@ -46,6 +47,19 @@ export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakt
                         </Table.Cell>
                         <Table.Cell>
                             {karakter.categories.map(c => <Label tag>{c}</Label>)}
+                        </Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell colSpan={2}>
+                            <Button onClick={() => setTorlesKerdes(true)} color='red' circular>Karakter törlése</Button>
+                            <Confirm
+                                open={torlesKerdes}
+                                onCancel={() => setTorlesKerdes(false)}
+                                onConfirm={() => { setTorlesKerdes(false); remove() }}
+                                header='Karakter törlése'
+                                content='Tuti?'
+                                cancelButton='Nem'
+                                confirmButton='De' />
                         </Table.Cell>
                     </Table.Row>
                 </Table>

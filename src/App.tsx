@@ -13,7 +13,7 @@ type PAGES = 'home' | 'karakteralkoto' | 'karakterlap';
 function App() {
 
   const [page, setPage] = useState<PAGES>('home');
-  const { save, list, load, categories } = useDataConnector();
+  const { save, list, load, categories, remove } = useDataConnector();
   const [karakter, setKarakter] = useState<Karakter>();
   const [kockaOpen, setKockaOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState('');
@@ -24,13 +24,21 @@ function App() {
     setPage('karakterlap');
   }, [save, setKarakter, setPage]);
 
+  const removeKarakter = useCallback(() => {
+    if (karakter) {
+      remove(karakter);
+      setKarakter(undefined);
+      setPage('home');
+    }
+  }, [karakter, setKarakter, setPage, remove]);
+
   const renderPage = useCallback(() => {
     switch (page) {
-      case 'home': return <div>Home</div>
+      case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
       case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} />
-      case 'karakterlap': return <Karakterlap karakter={karakter as Karakter} save={saveKarakter} />
+      case 'karakterlap': return <Karakterlap karakter={karakter as Karakter} save={saveKarakter} remove={removeKarakter} />
     }
-  }, [page, saveKarakter, karakter])
+  }, [page, saveKarakter, karakter, removeKarakter])
 
   const renderHeader = useCallback(() => {
     const karakterek = list(currentCategory);
