@@ -23,7 +23,7 @@ export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakt
                 <Table striped definition>
                     <Table.Row><Table.Cell>Név:</Table.Cell><Table.Cell>{karakter.name}</Table.Cell></Table.Row>
                     <Table.Row><Table.Cell>Faj:</Table.Cell><Table.Cell>{karakter.faj}</Table.Cell></Table.Row>
-                    <Table.Row><Table.Cell>Kaszt:</Table.Cell><Table.Cell>{karakter.kaszt}</Table.Cell></Table.Row>
+                    <Table.Row><Table.Cell>Kaszt:</Table.Cell><Table.Cell>{karakter.kaszt.name}</Table.Cell></Table.Row>
                     <Table.Row><Table.Cell>Szint:</Table.Cell>
                         <Table.Cell>
                             <Button as='div' labelPosition='left'>

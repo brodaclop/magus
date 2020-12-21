@@ -4,13 +4,22 @@ import { DobasMatrix } from '../engine/dobasmatrix';
 import { formatDiceRoll } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
 
+const NumberInput: any = require('semantic-ui-react-numberinput').default;
 
-export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string }> = ({ matrix, keyMap, direction, title }) => {
+export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string> }> = ({ matrix, keyMap, direction, title, editable, setValue }) => {
     const displayCell = (name: string, key: string) => {
         const value = matrix.values[name][key];
         const constantRoll = (value?.roll?.die ?? 0) === 0;
         const rollString = value?.roll ? formatDiceRoll(value.roll) : '';
-        return <Table.Cell key={name + '-' + key}>{rollString}{!constantRoll && value?.result && <> = <DobasEredmeny result={value?.result} /></>}</Table.Cell>;
+        if (!editable?.includes(name)) {
+            return <Table.Cell key={name + '-' + key}>
+                {rollString}{!constantRoll && value?.result && <> = <DobasEredmeny result={value?.result} /></>}
+            </Table.Cell>;
+        } else {
+            return <Table.Cell key={name + '-' + key}>
+                <NumberInput size='mini' allowEmptyValue value={value.roll.plus} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: string) => setValue?.(name, key, e)} />
+            </Table.Cell>;
+        }
     }
 
     if (direction === 'horizontal') {

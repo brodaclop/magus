@@ -97,11 +97,48 @@ export const FOKASZTOK: Record<string, Array<string>> = {
     'szerencsevadász': ['tolvaj', 'bárd'],
     'pap': ['pap', 'paplovag'],
     'harcművész': ['harcművész', 'kardművész'],
-    'varázsló': ['boszorkánymester', 'tűzvarázsló', 'varázsló']
+    'varázsló': ['boszorkánymester', 'tűzvarázsló', 'varázsló'],
+    'egyéb': ['egyéb']
 };
 
 export const KASZTOK: Record<string, Kaszt> = {
+    'egyéb': {
+        name: 'egyéb',
+        kepesseg: {
+            ero: '10',
+            gy: '10',
+            ugy: '10',
+            ak: '10',
+            egs: '10',
+            sz: '10',
+            int: '10',
+            ae: '10',
+            asz: '10',
+            erz: '10'
+        },
+        alapHarcertek: {
+            ke: 0,
+            te: 0,
+            ve: 0,
+            ce: 0
+        },
+        hm: {
+            kotelezo: {
+                ke: 0,
+                te: 0,
+                ve: 0,
+                ce: 0
+            },
+            szabad: 0
+        },
+        epfp: {
+            ep: 0,
+            fp: 0,
+            fpPerSzint: 'k6'
+        }
+    },
     harcos: {
+        name: 'harcos',
         kepesseg: {
             ero: 'k6 + 12 + kf',
             gy: '2k6 + 6 + kf',
@@ -136,6 +173,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     lovag: {
+        name: 'lovag',
         kepesseg: {
             ero: 'k6 + 12 + kf',
             gy: '3k6(2x)',
@@ -170,6 +208,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'gladiátor': {
+        name: 'gladiátor',
         kepesseg: {
             ero: 'k6 + 12 + kf',
             gy: '2k6 + 6 + kf',
@@ -204,6 +243,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'fejvadász': {
+        name: 'fejvadász',
         kepesseg: {
             ero: '2k6+6',
             gy: 'k6+12+kf',
@@ -238,6 +278,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     tolvaj: {
+        name: 'tolvaj',
         kepesseg: {
             ero: '3k6(2x)',
             gy: 'k10 + 8 + kf',
@@ -272,6 +313,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'bárd': {
+        name: 'bárd',
         kepesseg: {
             ero: 'k10+8',
             gy: 'k10+8+kf',
@@ -306,6 +348,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     pap: {
+        name: 'pap',
         kepesseg: {
             ero: '2k6+6',
             gy: '3k6(2x)',
@@ -340,6 +383,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     paplovag: {
+        name: 'paplovag',
         kepesseg: {
             ero: 'k10+8+kf',
             gy: '3k6(2x)',
@@ -374,6 +418,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'harcművész': {
+        name: 'harcművész',
         kepesseg: {
             ero: 'k10+8',
             gy: 'k6+14',
@@ -408,6 +453,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'kardművész': {
+        name: 'kardművész',
         kepesseg: {
             ero: 'k10+8',
             gy: 'k6+12+kf',
@@ -442,6 +488,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'boszorkánymester': {
+        name: 'boszorkánymester',
         kepesseg: {
             ero: '3k6(2x)',
             gy: 'k10+8',
@@ -476,6 +523,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'tűzvarázsló': {
+        name: 'tűzvarázsló',
         kepesseg: {
             ero: '2k6+6',
             gy: '3k6(2x)',
@@ -510,6 +558,7 @@ export const KASZTOK: Record<string, Kaszt> = {
         }
     },
     'varázsló': {
+        name: 'varázsló',
         kepesseg: {
             ero: '3k6',
             gy: '3k6(2x)',
@@ -546,6 +595,7 @@ export const KASZTOK: Record<string, Kaszt> = {
 }
 
 export interface Kaszt {
+    name: string,
     kepesseg: KepessegDobas,
     alapHarcertek: Harcertek,
     hm: { kotelezo: Harcertek, szabad: number },

@@ -1,6 +1,6 @@
 import { DobasMatrix } from "./dobasmatrix";
 import { FEGYVERTELEN, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
-import { KASZTOK, osszead } from "./kasztok";
+import { Kaszt, osszead } from "./kasztok";
 import { roll } from "./roll";
 
 
@@ -27,9 +27,9 @@ export interface KarakterInfo {
     name: string;
 }
 
-export interface Karakter extends KarakterInfo {
+export interface Karakter extends KarakterInfo, HasEPFP {
     faj: string;
-    kaszt: string;
+    kaszt: Kaszt;
     szint: number;
     kepessegek: KarakterKepesseg;
     kepzettsegek: Array<Kepzettseg>;
@@ -38,6 +38,9 @@ export interface Karakter extends KarakterInfo {
     hm: number;
     fegyverek: Array<Fegyver>;
     valasztottFegyver?: number;
+}
+
+export interface HasEPFP {
     maxFp: number;
     maxEp: number;
     fp: number;
@@ -60,21 +63,21 @@ export interface Kepzettseg {
     kp: number;
 }
 
-export const folottiResz = (kepesseg: number, hatar: number = 10) => {
-    return Math.max(0, kepesseg - hatar);
+export const folottiResz = (kepesseg?: number, hatar: number = 10) => {
+    return Math.max(0, ((kepesseg === undefined || Number.isNaN(kepesseg)) ? 0 : kepesseg) - hatar);
 }
 
 export const szintlepes = (karakter: Karakter): Karakter => {
     karakter.szint++;
-    const hm = KASZTOK[karakter.kaszt].hm;
+    const hm = karakter.kaszt.hm;
     karakter.hm += hm.szabad;
     karakter.hmHarcertek = osszead(karakter.hmHarcertek, hm.kotelezo);
-    karakter.maxFp += roll(KASZTOK[karakter.kaszt].epfp.fpPerSzint).value;
+    karakter.maxFp += roll(karakter.kaszt.epfp.fpPerSzint).value;
     karakter.fp = karakter.maxFp;
     return karakter;
 }
 
-const calculateKepessegHarcertek = (karakter: Karakter, fegyver: Fegyver): Record<string, string | number> => {
+const calculateKepessegHarcertek = (karakter: { kepessegek: KarakterKepesseg }, fegyver: Fegyver): Record<string, string | number> => {
     return {
         ke: folottiResz(karakter.kepessegek.gy) + folottiResz(karakter.kepessegek.ugy),
         te: folottiResz(karakter.kepessegek.gy) + folottiResz(karakter.kepessegek.ugy) + folottiResz(karakter.kepessegek.ero),
@@ -84,15 +87,15 @@ const calculateKepessegHarcertek = (karakter: Karakter, fegyver: Fegyver): Recor
     }
 }
 
-const calculateSebesulesHatrany = (karakter: Karakter): Harcertek | null => {
-    if (karakter.ep <= karakter.maxEp * 0.25) {
+const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
+    if (karakter.maxEp > 0 && karakter.ep <= karakter.maxEp * 0.25) {
         return {
             ke: -15,
             te: -20,
             ve: -25,
             ce: -30
         }
-    } else if (karakter.ep <= karakter.maxEp * 0.5 || karakter.fp < karakter.maxFp * 0.1) {
+    } else if ((karakter.maxEp > 0 && karakter.ep <= karakter.maxEp * 0.5) || (karakter.maxFp > 0 && karakter.fp < karakter.maxFp * 0.1)) {
         return {
             ke: -5,
             te: -10,
@@ -103,12 +106,12 @@ const calculateSebesulesHatrany = (karakter: Karakter): Harcertek | null => {
     return null;
 }
 
-export const calculateHarcertek = (karakter: Karakter, fegyver: Fegyver): DobasMatrix => {
+export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg } & HasEPFP, fegyver: Fegyver): DobasMatrix => {
     const fegyvertelen = fegyver.name === FEGYVERTELEN.name;
     const okol = fegyver.name === 'Puszta kéz';
     const lofegyver: boolean = fegyver.harcertek.ce > 0;
-    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek.find(k => okol ? (k.name === 'Ökölharc') : (k.name === 'Fegyverhasználat - ' + fegyver.name.toLowerCase()));
-    const ret: DobasMatrix = new DobasMatrix(lofegyver ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']);
+    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => okol ? (k.name === 'Ökölharc') : (k.name === 'Fegyverhasználat - ' + fegyver.name.toLowerCase()));
+    const ret: DobasMatrix = new DobasMatrix(fegyvertelen ? ['ke', 'te', 've', 'ce', 'sebzes'] : (lofegyver ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
     ret.add('alap', karakter.alapHarcertek as unknown as Record<string, number>);
     ret.add('hm', karakter.hmHarcertek as unknown as Record<string, number>)
     if (!fegyvertelen) {
