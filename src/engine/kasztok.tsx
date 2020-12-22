@@ -57,7 +57,7 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
     "félelf": {
         ero: '-1',
         gy: '1',
-        ugy: 'ö',
+        ugy: '0',
         ak: '0',
         egs: '0',
         sz: '0',
@@ -69,7 +69,7 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
     "törp": {
         ero: '1',
         gy: '1',
-        ugy: 'ö',
+        ugy: '0',
         ak: '1',
         egs: '1',
         sz: '-2',
@@ -81,11 +81,11 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
     "udvari ork": {
         ero: '2',
         gy: '0',
-        ugy: 'ö',
+        ugy: '0',
         ak: '1',
         egs: '2',
         sz: '-3',
-        int: '1',
+        int: '-1',
         ae: '0',
         asz: '-3',
         erz: '1'
