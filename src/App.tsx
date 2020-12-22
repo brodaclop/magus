@@ -7,6 +7,7 @@ import { Karakter } from './engine/karakter';
 import 'semantic-ui-css/semantic.min.css'
 import logo from './static/magus.png';
 import { Icon, Menu, Image, Modal, Button, Dropdown } from 'semantic-ui-react';
+import DragAndDrop from './components/DragAndDrop';
 
 type PAGES = 'home' | 'karakteralkoto' | 'karakterlap';
 
@@ -59,6 +60,17 @@ function App() {
         <Icon name='plus' />
       </Menu.Item>
       <Menu.Item position='right'>
+        <DragAndDrop
+          dragPlaceholder={<Button circular as='div' color='green'><Icon name='upload' />Import</Button>}
+          handleDrop={async l => {
+            const text = await l.item(0)?.text();
+
+            if (text) {
+              save(JSON.parse(text));
+            }
+          }}>
+          <Button circular basic as='div' color='green'><Icon name='upload' />Import</Button>
+        </DragAndDrop>
         <Modal trigger={<Button primary>Kocka</Button>} onOpen={() => setKockaOpen(true)} onClose={() => setKockaOpen(false)} open={kockaOpen}>
           <Modal.Content>
             <Kockadobo />
@@ -66,7 +78,7 @@ function App() {
         </Modal>
       </Menu.Item>
     </Menu>
-  }, [setPage, page, list, load, karakter, setKarakter, kockaOpen, setKockaOpen, categories, currentCategory, setCurrentCategory]);
+  }, [setPage, page, list, load, karakter, setKarakter, kockaOpen, setKockaOpen, categories, currentCategory, setCurrentCategory, save]);
 
   return (
     <div className="App">

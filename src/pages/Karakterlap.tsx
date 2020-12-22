@@ -10,6 +10,7 @@ import { DobasMatrix } from '../engine/dobasmatrix';
 import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
+import fileDownload from 'js-file-download';
 
 
 export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown, remove: () => unknown }> = ({ karakter, save, remove }) => {
@@ -17,6 +18,11 @@ export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakt
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
     const [torlesKerdes, setTorlesKerdes] = useState(false);
+
+    const exportKarakter = () => {
+        fileDownload(JSON.stringify(karakter), `${karakter.name}.json`, 'text/json');
+    }
+
     return <Grid relaxed>
         <GridRow columns={3}>
             <GridColumn>
@@ -60,6 +66,7 @@ export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakt
                                 content='Tuti?'
                                 cancelButton='Nem'
                                 confirmButton='De' />
+                            <Button onClick={exportKarakter} color='green' circular>Export</Button>
                         </Table.Cell>
                     </Table.Row>
                 </Table>
