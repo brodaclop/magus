@@ -89,7 +89,68 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
         ae: '0',
         asz: '-3',
         erz: '1'
-    }
+    },
+    "amund": {
+        ero: '1',
+        gy: '0',
+        ugy: '0',
+        ak: '1',
+        egs: '0',
+        sz: '3',
+        int: '0',
+        ae: '0',
+        asz: '-1',
+        erz: '0'
+    },
+    "dzsenn": {
+        ero: '0',
+        gy: '0',
+        ugy: '0',
+        ak: '0',
+        egs: '0',
+        sz: '0',
+        int: '2',
+        ae: '0',
+        asz: '0',
+        erz: '0'
+    },
+    "khál": {
+        ero: '3',
+        gy: '2',
+        ugy: '1',
+        ak: '2',
+        egs: '3',
+        sz: '0',
+        int: '-1',
+        ae: '0',
+        asz: '-5',
+        erz: '0'
+    },
+    "gnóm": {
+        ero: '-1',
+        gy: '0',
+        ugy: '1',
+        ak: '0',
+        egs: '0',
+        sz: '0',
+        int: '1',
+        ae: '0',
+        asz: '0',
+        erz: '0'
+    },
+    "goblin": {
+        ero: '-2',
+        gy: '0',
+        ugy: '0',
+        ak: '1',
+        egs: '1',
+        sz: '-2',
+        int: '-1',
+        ae: '0',
+        asz: '-2',
+        erz: '0'
+    },
+
 }
 
 export const FOKASZTOK: Record<string, Array<string>> = {

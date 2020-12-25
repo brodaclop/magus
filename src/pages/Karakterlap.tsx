@@ -12,8 +12,14 @@ import { calculateHarcertek, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 
+interface KarakterlapProps {
+    categories: Array<string>,
+    karakter: Karakter,
+    save: (karakter: Karakter) => unknown,
+    remove: () => unknown
+}
 
-export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown, remove: () => unknown }> = ({ karakter, save, remove }) => {
+export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
@@ -45,7 +51,10 @@ export const Karakterlap: React.FC<{ karakter: Karakter, save: (karakter: Karakt
                         <Modal trigger={<Button floated='right' size='tiny' circular color='orange'>+</Button>} onOpen={() => setKategoriak(true)} onClose={() => setKategoriak(false)} open={kategoriak} size='fullscreen' title='Új kategória'>
                                 <Modal.Header>Új kategória</Modal.Header>
                                 <Modal.Content>
-                                    <Input value={ujKategoria} onChange={e => setUjKategoria(e.target.value)} />
+                                    <Input list='categories' value={ujKategoria} onChange={e => setUjKategoria(e.target.value)} />
+                                    <datalist id='categories'>
+                                        {categories.map(c => <option value={c}>{c}</option>)}
+                                    </datalist>
                                     <Button onClick={() => { karakter.categories.push(ujKategoria); setKategoriak(false); save(karakter) }}>Hozzáad</Button>
                                 </Modal.Content>
                             </Modal>

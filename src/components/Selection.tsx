@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Label } from 'semantic-ui-react';
 
-interface SelectionProps { label: JSX.Element | string, selected: string, setSelected: (newValue: string) => unknown, options: Array<string>, structure?: Record<string, Array<string>> };
+interface SelectionProps { label: JSX.Element | string, selected?: string, setSelected: (newValue: string | undefined) => unknown, options: Array<string>, structure?: Record<string, Array<string>> };
 
 export const Selection: React.FC<SelectionProps> = ({ label, selected, setSelected, options, structure }) => {
     if (!structure) {
