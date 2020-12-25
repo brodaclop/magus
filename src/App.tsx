@@ -45,6 +45,7 @@ function App() {
         categories={categories()}
         currentCategory={currentCategory}
         setCurrentCategory={setCurrentCategory}
+        karakter={karakter}
         page={page}
         setPage={ps => {
           setPage(ps);
