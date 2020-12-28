@@ -124,7 +124,7 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
         int: '-1',
         ae: '0',
         asz: '-5',
-        erz: '0'
+        erz: '3'
     },
     "gnóm": {
         ero: '-1',
@@ -136,7 +136,7 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
         int: '1',
         ae: '0',
         asz: '0',
-        erz: '0'
+        erz: '2'
     },
     "goblin": {
         ero: '-2',
@@ -148,7 +148,7 @@ export const FAJ_KEPESSEG: Record<string, KepessegDobas> = {
         int: '-1',
         ae: '0',
         asz: '-2',
-        erz: '0'
+        erz: '2'
     },
 
 }
