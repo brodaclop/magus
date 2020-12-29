@@ -7,19 +7,21 @@ import { FegyverValaszto } from '../components/FegyverValaszto';
 import { HMEloszto } from '../components/HMEloszto';
 import { KepzettsegLista } from '../components/KepzettsegLista';
 import { DobasMatrix } from '../engine/dobasmatrix';
-import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
-import { calculateHarcertek, Karakter, szintlepes } from '../engine/karakter';
+import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
+import { calculateHarcertek, Fegyver, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 
 interface KarakterlapProps {
     categories: Array<string>,
     karakter: Karakter,
+    fegyverek: Array<Fegyver>,
     save: (karakter: Karakter) => unknown,
+    saveFegyverek: (fegyverek: Array<Fegyver>) => unknown,
     remove: () => unknown
 }
 
-export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories }) => {
+export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
@@ -87,12 +89,12 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 <EPFP {...karakter} onChange={(ep, fp) => { karakter.ep = ep; karakter.fp = fp; save(karakter) }} />
             </GridColumn>
             <GridColumn>
-                <div><DobasMatrixDisplay title='Harcértékek' matrix={calculateHarcertek(karakter, karakter.fegyverek[karakter.valasztottFegyver ?? 0]).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>
-                <FegyverLista fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver ?? 0} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }} />
+                <div><DobasMatrixDisplay title='Harcértékek' matrix={calculateHarcertek(karakter, karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>
+                <FegyverLista fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }} />
                 <Modal trigger={<Button primary>Fegyverlista módosítása</Button>} onOpen={() => setUjFegyver(true)} onClose={() => setUjFegyver(false)} open={ujfegyver} size='fullscreen'>
                     <Modal.Header>Fegyverlista módosítása</Modal.Header>
                     <Modal.Content>
-                        <FegyverValaszto karakter={karakter} save={k => { save(k); setUjFegyver(false) }} />
+                        <FegyverValaszto saveFegyverek={saveFegyverek} fegyverek={fegyverek} karakter={karakter} save={k => { save(k); }} />
                     </Modal.Content>
                 </Modal>
             </GridColumn>
@@ -105,13 +107,5 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 <div><KepzettsegLista kepzettsegek={karakter.kepzettsegek} /></div>
             </GridColumn>
         </GridRow>
-
-        {/* <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <div>
-                <FegyverLista fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver ?? 0} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }} />
-                <FegyverValaszto karakter={karakter} save={save} />
-            </div>
-        </div>
-         */}
     </Grid>
 }

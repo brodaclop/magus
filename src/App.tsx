@@ -13,7 +13,7 @@ export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karak
 function App() {
 
   const [page, setPage] = useState<PageSelection>({ page: 'home' });
-  const { save, list, categories, load, remove } = useDataConnector();
+  const { save, list, categories, load, remove, listFajok, listFegyverek, saveFegyverek } = useDataConnector();
   const [karakter, setKarakter] = useState<Karakter>();
   const [currentCategory, setCurrentCategory] = useState('');
 
@@ -32,8 +32,8 @@ function App() {
   const renderPage = () => {
     switch (page.page) {
       case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
-      case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} />
-      case 'karakterlap': return <Karakterlap categories={categories()} karakter={karakter as Karakter} save={saveKarakter} remove={removeKarakter} />
+      case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} fajok={listFajok()} />
+      case 'karakterlap': return <Karakterlap saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} karakter={karakter as Karakter} save={saveKarakter} remove={removeKarakter} />
     }
   };
 

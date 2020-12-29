@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
-import { FAJ_KEPESSEG, Kaszt, KASZTOK, KEPESSEG_NEV } from '../engine/kasztok';
+import { Kaszt, KASZTOK, KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { EPFP } from '../components/EPFP';
 import { KarakterAlkotasBackground } from '../components/KarakterAlkotasBackground';
@@ -20,15 +20,15 @@ export interface BackgroundSelection {
 }
 
 
-const calculateKepessegek = ({ kaszt, faj, manual }: { kaszt?: string, faj?: string, manual?: Kaszt }, roll?: boolean) => {
+const calculateKepessegek = (fajok: Record<string, KepessegDobas>, { kaszt, faj, manual }: { kaszt?: string, faj?: string, manual?: Kaszt }, roll?: boolean) => {
     const newMatrix = new DobasMatrix(Object.keys(KEPESSEG_NEV));
     if (manual) {
         newMatrix.add('Kaszt: ' + kaszt, manual.kepesseg as unknown as Record<string, string>);
     } else if (kaszt && KASZTOK[kaszt]) {
         newMatrix.add('Kaszt: ' + kaszt, KASZTOK[kaszt].kepesseg as unknown as Record<string, string>);
     }
-    if (faj && FAJ_KEPESSEG[faj]) {
-        newMatrix.add('Faj: ' + faj, FAJ_KEPESSEG[faj] as unknown as Record<string, string>);
+    if (faj && fajok[faj]) {
+        newMatrix.add('Faj: ' + faj, fajok[faj] as unknown as Record<string, string>);
     }
     if (roll || manual) {
         newMatrix.roll();
@@ -68,16 +68,16 @@ const createKarakter = ({ kaszt, faj, manual, szint, name }: BackgroundSelection
 
 
 
-export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown }> = ({ save }) => {
+export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, fajok: Record<string, KepessegDobas> }> = ({ save, fajok }) => {
     const [backgroundSelection, setBackgroundSelection] = useState<BackgroundSelection>({ szint: 1, name: '' });
     const [matrix, setMatrix] = useState<DobasMatrix>(new DobasMatrix(Object.keys(KEPESSEG_NEV)));
 
     useEffect(() => {
-        setMatrix(calculateKepessegek({ kaszt: backgroundSelection.kaszt, faj: backgroundSelection.faj, manual: backgroundSelection.manual }));
-    }, [backgroundSelection.manual, backgroundSelection.faj, backgroundSelection.kaszt, setMatrix]);
+        setMatrix(calculateKepessegek(fajok, { kaszt: backgroundSelection.kaszt, faj: backgroundSelection.faj, manual: backgroundSelection.manual }));
+    }, [fajok, backgroundSelection.manual, backgroundSelection.faj, backgroundSelection.kaszt, setMatrix]);
 
     const dob = () => {
-        setMatrix(calculateKepessegek(backgroundSelection, true));
+        setMatrix(calculateKepessegek(fajok, backgroundSelection, true));
     };
 
 
@@ -99,7 +99,7 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown }
         <GridRow columns={2} divided>
             <GridColumn>
                 <GridRow>
-                    <KarakterAlkotasBackground backgroundSelection={backgroundSelection} setBackgroundSelection={setBackgroundSelection} />
+                    <KarakterAlkotasBackground backgroundSelection={backgroundSelection} setBackgroundSelection={setBackgroundSelection} fajNevek={Object.keys(fajok)} />
                 </GridRow>
                 {karakter && <>
                     <div>

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Input, Label } from 'semantic-ui-react';
-import { KASZTOK, FOKASZTOK, FAJ_KEPESSEG } from '../engine/kasztok';
+import { KASZTOK, FOKASZTOK } from '../engine/kasztok';
 import { BackgroundSelection } from '../pages/KarakterAlkotas';
 import { Selection } from './Selection';
 
-export const KarakterAlkotasBackground: React.FC<{ backgroundSelection: BackgroundSelection, setBackgroundSelection: (backgroundSelection: BackgroundSelection) => unknown }> = ({ backgroundSelection, setBackgroundSelection }) => {
+export const KarakterAlkotasBackground: React.FC<{ fajNevek: Array<string>, backgroundSelection: BackgroundSelection, setBackgroundSelection: (backgroundSelection: BackgroundSelection) => unknown }> = ({ fajNevek, backgroundSelection, setBackgroundSelection }) => {
 
     const changeKasztSelection = (s: string | undefined) => {
         setBackgroundSelection({ ...backgroundSelection, kaszt: s, manual: s === 'egyéb' ? JSON.parse(JSON.stringify(KASZTOK['egyéb'])) : undefined })
@@ -19,7 +19,7 @@ export const KarakterAlkotasBackground: React.FC<{ backgroundSelection: Backgrou
             </Input>
         </div>
         <div><Selection label='Kaszt' selected={backgroundSelection.kaszt} setSelected={changeKasztSelection} options={Object.keys(KASZTOK)} structure={FOKASZTOK} /></div>
-        <div><Selection label='Faj' selected={backgroundSelection.faj} setSelected={faj => setBackgroundSelection({ ...backgroundSelection, faj })} options={Object.keys(FAJ_KEPESSEG)} /></div>
+        <div><Selection label='Faj' selected={backgroundSelection.faj} setSelected={faj => setBackgroundSelection({ ...backgroundSelection, faj })} options={fajNevek} /></div>
         <div><Input labelPosition='left' value={backgroundSelection.szint} onChange={e => {
             const value = e.target.value ? Math.max(0, Math.floor(Number(e.target.value))) : undefined;
             setBackgroundSelection({ ...backgroundSelection, szint: value });

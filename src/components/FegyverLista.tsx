@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import { Fegyver } from '../engine/karakter';
 
-export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: number, onSelectionChange?: (newSelection: number) => unknown }> = ({ fegyverek, selected, onSelectionChange }) => {
+export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: number, onSelectionChange?: (newSelection: number | undefined) => unknown }> = ({ fegyverek, selected, onSelectionChange }) => {
     const fegyverLista: Array<Record<string, string | number>> = fegyverek.map(fegyver => {
         const rec: Record<string, string | number> = {};
         rec.name = fegyver.name;
@@ -31,7 +31,7 @@ export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: numb
         </Table.Header>
         <Table.Body>
             {fegyverLista.map((r, i) => {
-                return <Table.Row active={selected === i} onClick={() => onSelectionChange?.(i)}>
+                return <Table.Row active={selected === i} onClick={() => onSelectionChange?.(selected === i ? undefined : i)}>
                     <Table.Cell>{r.name}</Table.Cell>
                     <Table.Cell>{r.ke}</Table.Cell>
                     <Table.Cell>{r.te}</Table.Cell>

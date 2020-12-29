@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Karakter, KarakterInfo } from "../engine/karakter";
+import { FEGYVEREK } from "../engine/harc";
+import { Fegyver, Karakter, KarakterInfo } from "../engine/karakter";
+import { FAJ_KEPESSEG, KepessegDobas } from "../engine/kasztok";
 
 const PREFIX = 'magus.';
+const CONFIG_PREFIX = 'magus-config.';
 
 interface DataConnector {
     categories: () => Array<string>;
@@ -9,6 +12,9 @@ interface DataConnector {
     load: (info: KarakterInfo) => Karakter;
     save: (karakter: Karakter) => void;
     remove: (info: KarakterInfo) => void;
+    listFajok: () => Record<string, KepessegDobas>;
+    listFegyverek: () => Array<Fegyver>;
+    saveFegyverek: (fegyverek: Array<Fegyver>) => void;
     key?: number;
 }
 
@@ -20,6 +26,11 @@ export function useDataConnector(): DataConnector {
         const s = window.localStorage.getItem(name);
         return s ? JSON.parse(s) : null;
     };
+
+    function put(name: string, ob: any) {
+        window.localStorage.setItem(name, JSON.stringify(ob));
+        setOperations(operations + 1);
+    }
 
     const categories = (): Array<string> => {
         return [...new Set(list().flatMap(info => info.categories))];
@@ -38,8 +49,7 @@ export function useDataConnector(): DataConnector {
     };
 
     const save = (karakter: Karakter): void => {
-        window.localStorage.setItem(PREFIX + karakter.id, JSON.stringify(karakter));
-        setOperations(operations + 1);
+        put(PREFIX + karakter.id, karakter);
     };
 
     const remove = (info: KarakterInfo) => {
@@ -67,6 +77,16 @@ export function useDataConnector(): DataConnector {
         load,
         save,
         remove,
+        listFajok: () => FAJ_KEPESSEG,
+        listFegyverek: () => {
+            let ret = fetch<Array<Fegyver>>(CONFIG_PREFIX + 'fegyverek');
+            if (!ret) {
+                put(CONFIG_PREFIX + 'fegyverek', FEGYVEREK);
+                ret = FEGYVEREK;
+            }
+            return ret;
+        },
+        saveFegyverek: fegyverek => put(CONFIG_PREFIX + 'fegyverek', fegyverek),
         key: operations
     }
 }
