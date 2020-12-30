@@ -917,5 +917,89 @@ export const SZITUACIOK: Record<string, Harcertek> = {
         te: -10,
         ve: 0,
         ce: -5
-    }
+    },
+    'meglepetésből': {
+        ke: 100,
+        te: 30,
+        ve: 0,
+        ce: 10
+    },
+    'mozgó lóról': {
+        ke: 5,
+        te: 10,
+        ve: 20,
+        ce: -20
+    },
+    'vakon': {
+        ke: -20,
+        te: -60,
+        ve: -70,
+        ce: -150
+    },
+    'félhomályban': {
+        ke: -10,
+        te: -30,
+        ve: -35,
+        ce: -70
+    },
+    'helyhez kötve': {
+        ke: -20,
+        te: -15,
+        ve: -5,
+        ce: 0
+    },
+    'kábultan': {
+        ke: -15,
+        te: -20,
+        ve: -25,
+        ce: -30
+    },
+    'bénultan': {
+        ke: -30,
+        te: -40,
+        ve: -35,
+        ce: -15
+    },
+    'félelemmel': {
+        ke: -10,
+        te: -15,
+        ve: 5,
+        ce: -20
+    },
+    'gyűlölettel': {
+        ke: 3,
+        te: 10,
+        ve: -20,
+        ce: -20
+    },
+    'roham': {
+        ke: 0,
+        te: 20,
+        ve: -25,
+        ce: -30
+    },
+    'védharc hátrálva': {
+        ke: 0,
+        te: 0,
+        ve: 40,
+        ce: 0
+    },
+    'védharc állva': {
+        ke: 0,
+        te: 0,
+        ve: 25,
+        ce: 0
+    },
+    'részleges védharc': {
+        ke: 0,
+        te: 0,
+        ve: 15,
+        ce: 0
+    },
+    'foglyul ejtésért': {
+        ke: -5,
+        te: -5,
+        ve: -15,
+        ce: 0
+    },
 }

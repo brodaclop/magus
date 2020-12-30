@@ -76,10 +76,15 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
                                     <Table.Cell>{cellContents(m)}</Table.Cell>
                                 </Table.Row>
                                 )}
+                                {fegyver.name !== FEGYVERTELEN.name &&
+                                    <Table.Row>
+                                        <Table.HeaderCell>Tám/kör</Table.HeaderCell>
+                                        <Table.Cell>{`${fegyver.lassu ? '1/' : ''}${fegyver.tamPerKor}`}</Table.Cell>
+                                    </Table.Row>
+                                }
                                 <Table.Row>
                                     <Table.HeaderCell>Dobás</Table.HeaderCell>
                                     <Table.Cell><DobasEredmeny result={dobasEredmeny} /></Table.Cell>
-
                                 </Table.Row>
                             </Table>
                         </GridRow>
