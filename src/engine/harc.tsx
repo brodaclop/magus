@@ -647,7 +647,7 @@ export const FEGYVEREK: Array<Fegyver> = [
             ce: 18,
         },
         lotav: 35,
-        sebzes: '1k5',
+        sebzes: '1k10/2',
         tamPerKor: 2,
     },
     {
@@ -659,7 +659,7 @@ export const FEGYVEREK: Array<Fegyver> = [
             ce: 14,
         },
         lotav: 30,
-        sebzes: '1k3',
+        sebzes: '1k6/2',
         tamPerKor: 2,
     },
     {
@@ -671,7 +671,7 @@ export const FEGYVEREK: Array<Fegyver> = [
             ce: 13,
         },
         lotav: 30,
-        sebzes: '1k3',
+        sebzes: '1k6/2',
         tamPerKor: 3,
     },
     {
@@ -721,7 +721,7 @@ export const FEGYVEREK: Array<Fegyver> = [
             ce: 1,
         },
         lotav: 100,
-        sebzes: '1k5',
+        sebzes: '1k10/2',
         tamPerKor: 2,
     },
     {
@@ -892,3 +892,30 @@ export const FEGYVEREK: Array<Fegyver> = [
         tamPerKor: 2,
     },
 ];
+
+export const SZITUACIOK: Record<string, Harcertek> = {
+    'hátulról': {
+        ke: 5,
+        te: 10,
+        ve: 0,
+        ce: 0
+    },
+    'félhátulról': {
+        ke: 2,
+        te: 5,
+        ve: 0,
+        ce: 0
+    },
+    'magasabbról': {
+        ke: 2,
+        te: 5,
+        ve: 0,
+        ce: 5
+    },
+    'alacsonyabbról': {
+        ke: -2,
+        te: -10,
+        ve: 0,
+        ce: -5
+    }
+}

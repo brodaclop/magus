@@ -15,6 +15,14 @@ describe('roll.tsx', () => {
                 details: '(1+2+3+4+5+6)'
             });
         });
+        it('does divided rolls', () => {
+            rollSource(arrayRnd([5 / 6]));
+            const res = roll('1k6/2');
+            expect(res).toEqual({
+                value: 3,
+                details: '(3)'
+            });
+        });
         it('does double rolls', () => {
             rollSource(arrayRnd([0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6]));
             const res = roll('3k6(2x)');

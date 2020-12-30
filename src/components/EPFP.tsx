@@ -17,13 +17,13 @@ export const EPFP: React.FC<{ maxEp: number, maxFp: number, ep: number, fp: numb
         <Table.Body>
             <Table.Row>
                 <Table.HeaderCell>Max</Table.HeaderCell>
-                <Table.Cell>{maxChange ? <NumberInput size='mini' allowEmptyValue value={maxEp} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: any) => onChange(Number(e), maxFp)} /> : maxEp}</Table.Cell>
-                <Table.Cell>{maxChange ? <NumberInput size='mini' allowEmptyValue value={maxFp} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: any) => onChange(maxEp, Number(e))} /> : maxFp}</Table.Cell>
+                <Table.Cell>{maxChange ? <NumberInput maxLength={3} size='mini narrow' allowEmptyValue value={maxEp} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: any) => onChange(Number(e), maxFp)} /> : maxEp}</Table.Cell>
+                <Table.Cell>{maxChange ? <NumberInput maxLength={3} size='mini narrow' allowEmptyValue value={maxFp} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: any) => onChange(maxEp, Number(e))} /> : maxFp}</Table.Cell>
             </Table.Row>
             <Table.Row>
                 <Table.HeaderCell>Akt</Table.HeaderCell>
-                <Table.Cell>{!aktChange ? ep : <NumberInput size='mini' allowEmptyValue value={ep} stepAmount={1} minValue={0} maxValue={maxEp} onChange={(e: any) => onChange(Math.min(maxEp, Number(e)), fp)} />}</Table.Cell>
-                <Table.Cell>{!aktChange ? fp : <NumberInput size='mini' allowEmptyValue value={fp} stepAmount={1} minValue={0} maxValue={maxFp} onChange={(e: any) => onChange(ep, Math.min(maxFp, Number(e)))} />}</Table.Cell>
+                <Table.Cell>{!aktChange ? ep : <NumberInput maxLength={3} size='mini narrow' allowEmptyValue value={ep} stepAmount={1} minValue={0} maxValue={maxEp} onChange={(e: any) => onChange(Math.min(maxEp, Number(e)), fp)} />}</Table.Cell>
+                <Table.Cell>{!aktChange ? fp : <NumberInput maxLength={3} size='mini narrow' allowEmptyValue value={fp} stepAmount={1} minValue={0} maxValue={maxFp} onChange={(e: any) => onChange(ep, Math.min(maxFp, Number(e)))} />}</Table.Cell>
             </Table.Row>
         </Table.Body>
     </Table>

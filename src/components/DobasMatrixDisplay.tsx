@@ -6,7 +6,7 @@ import { DobasEredmeny } from './DobasEredmeny';
 
 const NumberInput: any = require('semantic-ui-react-numberinput').default;
 
-export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string> }> = ({ matrix, keyMap, direction, title, editable, setValue }) => {
+export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string | React.ReactNode, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string> }> = ({ matrix, keyMap, direction, title, editable, setValue }) => {
     const displayCell = (name: string, key: string) => {
         const value = matrix.values[name][key];
         const constantRoll = (value?.roll?.die ?? 0) === 0;
@@ -23,10 +23,10 @@ export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<
     }
 
     if (direction === 'horizontal') {
-        return <Table celled striped definition>
+        return <Table celled striped>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell key='title'>{title}</Table.HeaderCell>
+                    <Table.HeaderCell key='title' disabled={false}>{title}</Table.HeaderCell>
                     {matrix.keys.map(key => <Table.HeaderCell key={key}>{keyMap[key]}</Table.HeaderCell>)}
                 </Table.Row>
             </Table.Header>

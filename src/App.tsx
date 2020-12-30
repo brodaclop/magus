@@ -5,9 +5,10 @@ import { useDataConnector } from './hooks/dataconnector';
 import { Karakter, KarakterInfo } from './engine/karakter';
 import 'semantic-ui-css/semantic.min.css'
 import { PageHeader } from './components/PageHeader';
+import { Kombat } from './pages/Kombat';
 
 
-export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo }
+export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat', category: string }
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
   const renderPage = () => {
     switch (page.page) {
       case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
+      case 'kombat': return <Kombat karakterek={list(page.category).map(i => load(i))} save={save} />
       case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} fajok={listFajok()} />
       case 'karakterlap': return <Karakterlap saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} karakter={karakter as Karakter} save={saveKarakter} remove={removeKarakter} />
     }
@@ -51,6 +53,9 @@ function App() {
           setPage(ps);
           if (ps.page === 'karakterlap') {
             setKarakter(load(ps.karakter));
+          }
+          if (ps.page === 'kombat') {
+            setCurrentCategory(ps.category);
           }
         }}
         save={saveKarakter}

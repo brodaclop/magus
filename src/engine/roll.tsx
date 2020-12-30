@@ -81,11 +81,11 @@ export const parseDiceRoll = (diceString: string = '0'): DiceRoll => {
             die: 0,
             plus: Number(diceString),
             tries: 1,
-            div: 0,
+            div: 1,
             kf: false
         };
     }
-    const res = diceString.replaceAll(/\s/g, '').match(PATTERN);
+    const res = diceString.replace(/\s/g, '').match(PATTERN);
     return {
         numDice: Number(res?.groups?.numDice ?? 1),
         die: Number(res?.groups?.die ?? 0),
@@ -105,4 +105,33 @@ export const formatDiceRoll = (dice: DiceRoll): string => {
 
 export const formatResult = (result: DiceRollResult): string => {
     return `${result.value} (${result.details})`
+}
+
+export const sumRolls = (rolls: Array<DiceRoll>): DiceRoll | null => {
+    try {
+        const ret: DiceRoll = parseDiceRoll();
+        rolls.forEach(r => {
+            if (r.tries > 1 || r.kf) {
+                throw new Error('can\'t sum rolls with multiple tries or kf');
+            }
+            if (ret.die !== 0 && r.die !== 0 && r.die !== ret.die) {
+                throw new Error('can\'t sum rolls with different dies');
+            }
+            if (ret.div !== 1 && r.div !== 1 && ret.div !== r.div) {
+                throw new Error('can\'t sum rolls with different divisors');
+            }
+            if (r.die !== 0) {
+                ret.die = r.die;
+                ret.numDice += r.numDice;
+            }
+            if (r.plus !== 0) {
+                ret.plus += r.plus;
+            }
+            if (r.div > 1) {
+                ret.div = r.div;
+            }
+        })
+        return ret;
+    } catch (e) { }
+    return null;
 }

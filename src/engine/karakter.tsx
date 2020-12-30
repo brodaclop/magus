@@ -106,7 +106,7 @@ const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
     return null;
 }
 
-export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg } & HasEPFP, fegyver: Fegyver): DobasMatrix => {
+export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
     const fegyvertelen = fegyver.name === FEGYVERTELEN.name;
     const okol = fegyver.name === 'Puszta kéz';
     const lofegyver: boolean = fegyver.harcertek.ce > 0;
@@ -130,5 +130,6 @@ export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarce
     if (sebesules) {
         ret.add('Sebesülés', { ...sebesules });
     }
+    szituaciok?.forEach(sz => ret.add(sz.name, { ...sz }));
     return ret;
 }

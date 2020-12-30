@@ -37,6 +37,10 @@ export class DobasMatrix {
         return this;
     }
 
+    getRolls = (key: string): Array<DiceRoll> => {
+        return Object.values(this.values).map(r => r[key].roll).filter(roll => roll && (roll.die > 0 || roll.plus !== 0));
+    }
+
     clearRolls = (): DobasMatrix => {
         this.keys.forEach(key => {
             Object.keys(this.values).forEach(name => {

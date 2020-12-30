@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Menu, Image } from 'semantic-ui-react';
+import { Icon, Menu, Image, Button } from 'semantic-ui-react';
 import { Karakter, KarakterInfo } from '../engine/karakter';
 import { CategoriesDropdown } from './CategoriesDropdown';
 import { KarakterImport } from './KarakterImport';
@@ -33,6 +33,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
         </Menu.Item>
         <Menu.Item position='right'>
             <KarakterImport save={save} />
+            <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />
         </Menu.Item>
     </Menu>

@@ -27,7 +27,7 @@ export const FegyverValaszto: React.FC<FegyverValasztoProps> = ({ karakter, save
     }, [karakter, save, selected, fegyverek]);
 
     const saveDeletion = useCallback(() => {
-        if (selectedForDeletion) {
+        if (selectedForDeletion !== undefined) {
             karakter.fegyverek = karakter.fegyverek.filter((f, i) => i !== selectedForDeletion);
             karakter.valasztottFegyver = 0;
             save(karakter);
