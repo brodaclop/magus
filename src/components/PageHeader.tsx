@@ -13,7 +13,7 @@ interface PageHeaderProps {
     categories: Array<string>;
     currentCategory: string;
     setCurrentCategory: (category: string) => unknown;
-    karakter?: Karakter;
+    karakter?: KarakterInfo;
     karakterek: Array<KarakterInfo>;
     page: PageSelection;
     setPage: (pageSelection: PageSelection) => unknown;

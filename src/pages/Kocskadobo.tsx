@@ -1,7 +1,7 @@
 import React, { useCallback, useReducer, useState } from 'react';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll } from '../engine/roll';
 import { DobasEredmeny } from '../components/DobasEredmeny';
-import { Button, Dropdown, Grid, GridColumn, GridRow, Header, Input, Label, Segment } from 'semantic-ui-react';
+import { Button, Dropdown, Grid, GridColumn, GridRow, Header, Input, Label } from 'semantic-ui-react';
 import { IntegerInput } from '../components/IntegerInput';
 const { Slider } = require('react-semantic-ui-range');
 

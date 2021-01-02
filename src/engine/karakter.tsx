@@ -106,13 +106,17 @@ const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
     return null;
 }
 
-export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
+export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg, szint?: number, kaszt?: { name: string } } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
     const fegyvertelen = fegyver.name === FEGYVERTELEN.name;
     const okol = fegyver.name === 'Puszta kéz';
     const lofegyver: boolean = fegyver.harcertek.ce > 0;
+    const fejvadasz = karakter.kaszt?.name === 'fejvadász';
     const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => okol ? (k.name === 'Ökölharc') : (k.name === 'Fegyverhasználat - ' + fegyver.name.toLowerCase()));
     const ret: DobasMatrix = new DobasMatrix(fegyvertelen ? ['ke', 'te', 've', 'ce', 'sebzes'] : (lofegyver ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
     ret.add('alap', karakter.alapHarcertek as unknown as Record<string, number>);
+    if (fejvadasz && karakter.szint) {
+        ret.add('spec', { ke: Math.floor(karakter.szint / 2), sebzes: Math.floor(karakter.szint / 2) });
+    }
     ret.add('hm', karakter.hmHarcertek as unknown as Record<string, number>)
     if (!fegyvertelen) {
         ret.add(fegyver.name, { ...fegyver.harcertek, 'sebzes': fegyver.sebzes });

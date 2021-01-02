@@ -14,7 +14,8 @@ export const HMEloszto: React.FC<{ harcertek: Harcertek, hm: number, complete: (
 
     useEffect(() => {
         setCurrent({ harcertek: { ...harcertek }, hm });
-    }, [harcertek, hm]);
+    }, [harcertek, hm, setCurrent]);
+
 
     const change = useCallback((he: ('ke' | 'te' | 've' | 'ce'), newValue: number) => {
         const newCurrent: State = { ...current };
@@ -32,7 +33,7 @@ export const HMEloszto: React.FC<{ harcertek: Harcertek, hm: number, complete: (
         {(Object.keys(harcertek) as Array<any>).map((he: ('ke' | 'te' | 've' | 'ce')) => <Table.Row>
             <Table.Cell>{HARCERTEK_DISPLAY_NAMES[he]}:</Table.Cell>
             <Table.Cell><i>{harcertek[he]}</i></Table.Cell>
-            <Table.Cell><NumberInput allowEmptyValue size='mini' value={current.harcertek[he]} stepAmount={1} minValue={harcertek[he]} maxValue={(current.harcertek[he] ?? 0) + current.hm} onChange={(e: any) => change(he, Number(e ?? 0))} /></Table.Cell>
+            <Table.Cell><NumberInput className={he} allowEmptyValue size='mini' value={current.harcertek[he]} stepAmount={1} minValue={harcertek[he]} maxValue={(current.harcertek[he] ?? 0) + current.hm} onChange={(e: any) => change(he, Number(e ?? 0))} /></Table.Cell>
         </Table.Row>)}
         <Button onClick={() => complete(current.harcertek, current.hm)}>Eloszt</Button>
     </Table>
