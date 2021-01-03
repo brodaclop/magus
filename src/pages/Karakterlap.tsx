@@ -90,8 +90,8 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 <PointsTable
                     points={(function () {
                         const ret = [
-                            { name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.maxFp },
-                            { name: 'fp', label: 'FP', max: karakter.maxEp, akt: karakter.maxFp }];
+                            { name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep },
+                            { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }];
                         if (karakter.pszi) {
                             ret.push({ name: 'pszi', label: 'ΨP', max: karakter.pszi.max, akt: karakter.pszi.akt })
                         }

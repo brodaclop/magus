@@ -132,7 +132,11 @@ export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarce
     ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
     if (!kepzettseg) {
         if (!fegyvertelen) {
-            ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+            if (!fejvadasz) {
+                ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+            } else {
+                ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen, fejvadász'] });
+            }
         }
     } else if (!okol) {
         ret.add('Képzettség ' + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
