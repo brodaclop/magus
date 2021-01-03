@@ -4,7 +4,7 @@ import { Input, Label } from 'semantic-ui-react';
 interface IntegerInputProps {
     value?: number,
     onChange: (value?: number) => unknown,
-    label: string;
+    label?: string;
 }
 
 
@@ -15,7 +15,7 @@ export const IntegerInput: React.FC<IntegerInputProps> = ({ value, onChange, lab
             onChange(newValue);
         }
     }}>
-        <Label pointing='right' basic>{label}</Label>
+        {label && <Label pointing='right' basic>{label}</Label>}
         <input />
     </Input>;
 }

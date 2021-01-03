@@ -2,6 +2,17 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import { Kepzettseg } from '../engine/karakter';
 
+
+const compare = (a: Kepzettseg, b: Kepzettseg): number => {
+    if (typeof a.szint === 'number' && typeof b.szint !== 'number') {
+        return 1;
+    }
+    if (typeof b.szint === 'number' && typeof a.szint !== 'number') {
+        return -1;
+    }
+    return a.name.localeCompare(b.name);
+}
+
 export const KepzettsegLista: React.FC<{ kepzettsegek: Array<Kepzettseg> }> = ({ kepzettsegek }) => {
     return <Table striped celled>
         <Table.Header>
@@ -12,7 +23,7 @@ export const KepzettsegLista: React.FC<{ kepzettsegek: Array<Kepzettseg> }> = ({
             </Table.Row>
         </Table.Header>
         <Table.Body>
-            {kepzettsegek.map((r, i) => {
+            {kepzettsegek.sort(compare).map((r, i) => {
                 return <Table.Row>
                     <Table.Cell>{r.name}</Table.Cell>
                     <Table.Cell>{r.szint}</Table.Cell>

@@ -38,6 +38,14 @@ export interface Karakter extends KarakterInfo, HasEPFP {
     hm: number;
     fegyverek: Array<Fegyver>;
     valasztottFegyver?: number;
+    pszi?: {
+        max: number;
+        akt: number;
+    },
+    mp?: {
+        max: number;
+        akt: number;
+    },
 }
 
 export interface HasEPFP {

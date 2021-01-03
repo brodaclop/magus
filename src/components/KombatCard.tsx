@@ -4,7 +4,7 @@ import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/har
 import { calculateHarcertek, Karakter } from '../engine/karakter';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
-import { EPFP } from './EPFP';
+import { PointsTable } from './PointsTable';
 
 export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown }> = ({ karakter, save }) => {
     const [dobasEredmeny, setDobasEredmeny] = useState<DiceRollResult>();
@@ -50,11 +50,13 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
         <Card.Content>
             <Card.Header>{karakter.name}</Card.Header>
             <Card.Meta>
-                <EPFP ep={karakter.ep} fp={karakter.fp} maxEp={karakter.maxEp} maxFp={karakter.maxFp} onChange={(ep, fp) => {
-                    karakter.ep = ep;
-                    karakter.fp = fp;
-                    save(karakter);
-                }} />
+                <PointsTable
+                    points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.maxFp }, { name: 'fp', label: 'FP', max: karakter.maxEp, akt: karakter.maxFp }]}
+                    onChange={(name, value) => {
+                        (karakter as any)[name] = value;
+                        save(karakter);
+                    }}
+                />
             </Card.Meta>
             <Card.Description>
                 <Grid columns={2}>

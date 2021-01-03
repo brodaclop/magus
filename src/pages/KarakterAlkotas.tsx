@@ -6,7 +6,7 @@ import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
 import { Kaszt, KASZTOK, KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
-import { EPFP } from '../components/EPFP';
+import { PointsTable } from '../components/PointsTable';
 import { KarakterAlkotasBackground } from '../components/KarakterAlkotasBackground';
 
 const NumberInput: any = require('semantic-ui-react-numberinput').default;
@@ -139,16 +139,18 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                         keyMap={HARCERTEK_DISPLAY_NAMES} />
                     </div>
                     <div>
-                        <EPFP
+                        <PointsTable
                             title='Életerő 0. szinten'
-                            ep={karakter.ep}
-                            fp={karakter.fp}
-                            maxEp={karakter.maxEp}
-                            maxFp={karakter.maxFp}
-                            onChange={(ep, fp) => {
+                            points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
+
+                            onChange={(name, value) => {
                                 if (kezi) {
-                                    kezi.epfp.ep = ep - folottiResz(matrix.sum.egs);
-                                    kezi.epfp.fp = fp - folottiResz(matrix.sum.ae) - folottiResz(matrix.sum.ak);
+                                    if (name === 'ep') {
+                                        kezi.epfp.ep = value - folottiResz(matrix.sum.egs);
+                                    }
+                                    if (name === 'fp') {
+                                        kezi.epfp.fp = value - folottiResz(matrix.sum.ae) - folottiResz(matrix.sum.ak);
+                                    }
                                     setBackgroundSelection({ ...backgroundSelection, manual: kezi })
                                 }
                             }}

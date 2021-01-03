@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Confirm, Grid, GridColumn, GridRow, Input, Label, Modal, Table } from 'semantic-ui-react';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
-import { EPFP } from '../components/EPFP';
+import { PointsTable } from '../components/PointsTable';
 import { FegyverLista } from '../components/FegyverLista';
 import { FegyverValaszto } from '../components/FegyverValaszto';
 import { HMEloszto } from '../components/HMEloszto';
@@ -11,6 +11,7 @@ import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, Fegyver, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
+import { KepzettsegModal } from '../components/KepzettsegModal';
 
 interface KarakterlapProps {
     categories: Array<string>,
@@ -86,7 +87,28 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                     karakter.hm = hm;
                     save(karakter);
                 }} /> </div>}
-                <EPFP {...karakter} onChange={(ep, fp) => { karakter.ep = ep; karakter.fp = fp; save(karakter) }} />
+                <PointsTable
+                    points={(function () {
+                        const ret = [
+                            { name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.maxFp },
+                            { name: 'fp', label: 'FP', max: karakter.maxEp, akt: karakter.maxFp }];
+                        if (karakter.pszi) {
+                            ret.push({ name: 'pszi', label: 'ΨP', max: karakter.pszi.max, akt: karakter.pszi.akt })
+                        }
+                        if (karakter.mp) {
+                            ret.push({ name: 'mp', label: 'MP', max: karakter.mp.max, akt: karakter.mp.akt })
+                        }
+                        return ret;
+                    })()}
+                    onChange={(name, value) => {
+                        if (name === 'ep' || name === 'fp') {
+                            (karakter as any)[name] = value;
+                        } else {
+                            (karakter as any)[name].akt = value;
+                        }
+                        save(karakter);
+                    }}
+                />
             </GridColumn>
             <GridColumn>
                 <div><DobasMatrixDisplay title='Harcértékek' matrix={calculateHarcertek(karakter, karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>
@@ -105,6 +127,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
         <GridRow>
             <GridColumn>
                 <div><KepzettsegLista kepzettsegek={karakter.kepzettsegek} /></div>
+                <div><KepzettsegModal karakter={karakter} save={save} /></div>
             </GridColumn>
         </GridRow>
     </Grid>
