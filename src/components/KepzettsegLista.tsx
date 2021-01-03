@@ -27,7 +27,7 @@ export const KepzettsegLista: React.FC<{ kepzettsegek: Array<Kepzettseg> }> = ({
                 return <Table.Row>
                     <Table.Cell>{r.name}</Table.Cell>
                     <Table.Cell>{r.szint}</Table.Cell>
-                    <Table.Cell>-</Table.Cell>
+                    <Table.Cell>{r.kp ? r.kp : '-'}</Table.Cell>
                 </Table.Row>
             })}
         </Table.Body>
