@@ -51,7 +51,7 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
             <Card.Header>{karakter.name}</Card.Header>
             <Card.Meta>
                 <PointsTable
-                    points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.maxFp }, { name: 'fp', label: 'FP', max: karakter.maxEp, akt: karakter.maxFp }]}
+                    points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
                     onChange={(name, value) => {
                         (karakter as any)[name] = value;
                         save(karakter);
