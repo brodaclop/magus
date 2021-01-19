@@ -23,7 +23,7 @@ interface PageHeaderProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCategory, setCurrentCategory, karakter, karakterek, page, setPage, save }) => {
     return <Menu tabular>
         <Menu.Item header>
-            <Image src={logo} size='mini' />
+            <Image src={logo} size='mini' onClick={() => setPage({ page: 'story' })} />
         </Menu.Item>
         <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={setCurrentCategory} />
         {karakterek.map(k => <Menu.Item active={k.id === karakter?.id} name={k.name} onClick={() => setPage({ page: 'karakterlap', karakter: k })}>

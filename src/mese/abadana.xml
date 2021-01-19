@@ -1,0 +1,57 @@
+<story>
+    <characters>
+        <character id="tango">
+            <name>Tangó</name>
+            <alias>Főnök</alias>
+            <race>ember</race>
+            <class>harcos</class>
+            <origin>Abadana</origin>
+            <language level="5">dzsad</language>
+            <looks>Sunyi képű, izmos figura, peckesen lépdel.</looks>
+            <behaviour>Zavart, agresszív</behaviour>
+        </character>
+    </characters>
+    <scene title="Balhé az Abaszisz Fényében">
+        <setting map="https://new.tableplop.com/campaigns/12606/scenes/27606">Abaszisz Fénye</setting>
+        <characters>
+            <character id="zombi">
+                <name>Zombi</name>
+                <alias>Torbjörn</alias>
+                <race>ember</race>
+                <class>boszorkánymester</class>
+                <origin>Abaszisz</origin>
+                <language level="5">aszisz</language>
+                <language level="5">pyarroni</language>
+                <language level="4">erv</language>
+                <language level="3">dzsad</language>
+                <looks>Nagydarab barbár kinézetű figura, haja szőke és hosszú, ruhája alatt valamilyen sodronying-szerűséget visel.</looks>
+                <behaviour>Érdeklődő, szinte kizökkenthetetlen a nyugalmából</behaviour>
+            </character>
+        </characters>
+        <items>
+            <item id='pallos'>
+                <name>Pallos</name>
+                <value>1a 5e</value>
+                <description>
+                    <p>Egy ütött-kopott, de jól karbantartott pallos, jól láthatóan sok harcot megjárt.</p>
+                    <p>Alapesetben <link target="character:zombi">Zombi</link> feje felett van a falon.</p>
+                </description>
+            </item>
+        </items>
+        <events>
+            <event role="entrance">A parti zárás és vacsora után még hátramarad beszélgetni egy kicsit.</event>
+            <event>Amikor elegett beszélgettek, minden előzetes jel nélkül belép <link target="character:tango">Tangó</link> és a többiek</event>
+            <event>
+                <link target="character:tango">Tangó</link> nagyjából a parti irányába mutat, majd közli, hogy "Ott van!"</event>
+            <event>A partinak egy köre van felkészülni, amíg a csávók lassan közelítenek</event>
+            <event>Érzékelés +2 próbával észreveszik, hogy <link target="character:tango">Zombi</link> eltűnt, viszont a <link target="item:pallos">pallos</link> ott van a pulton</event>
+            <background>
+                <p>Torbjörn gyorsan kapcsolt, hogy biztos vannak kint figyelők, és hogy semmi szín alatt nem szökhetnek meg, ezért kisurran a pult mögötti ajtón, hogy levadássza őket</p>
+                <p>Kb. két kör után villanást látnak a nyitott ajtón át, majd újabb két kör múlva még egyet</p>
+            </background>
+            <event>Ha lenyomták a csávókat, <link target="character:tango">Zombi</link> mindenkit körbekérdez, hogy vajon érte jöhettek-e.</event>
+            <event role="exit">Torbjörn mindenkit felterel a szobájába és kívülről rájuk zárja a vendégrészt.</event>
+        </events>
+    </scene>
+
+</story>

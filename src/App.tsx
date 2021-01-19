@@ -6,9 +6,9 @@ import { Karakter, KarakterInfo } from './engine/karakter';
 import 'semantic-ui-css/semantic.min.css'
 import { PageHeader } from './components/PageHeader';
 import { Kombat } from './pages/Kombat';
+import { StoryPage } from './pages/StoryPage';
 
-
-export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat', category: string }
+export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat', category: string } | { page: 'story' }
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
       case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
       case 'kombat': return <Kombat karakterek={list(page.category).map(i => load(i))} save={save} />
       case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} fajok={listFajok()} />
+      case 'story': return <StoryPage story={window.localStorage.getItem('magus-story') ?? ''} />;
       case 'karakterlap': return <Karakterlap saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} karakter={load(page.karakter)} save={saveKarakter} remove={() => removeKarakter(page.karakter as Karakter)} />
     }
   };
