@@ -18,12 +18,13 @@ interface PageHeaderProps {
     page: PageSelection;
     setPage: (pageSelection: PageSelection) => unknown;
     save: (karakter: Karakter) => unknown;
+    saveMese: (story: string) => unknown;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCategory, setCurrentCategory, karakter, karakterek, page, setPage, save }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCategory, setCurrentCategory, karakter, karakterek, page, setPage, save, saveMese }) => {
     return <Menu tabular>
         <Menu.Item header>
-            <Image src={logo} size='mini' onClick={() => setPage({ page: 'story' })} />
+            <Image src={logo} size='mini' onClick={() => setPage({ page: page.page === 'story' ? 'home' : 'story' })} />
         </Menu.Item>
         <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={setCurrentCategory} />
         {karakterek.map(k => <Menu.Item active={k.id === karakter?.id} name={k.name} onClick={() => setPage({ page: 'karakterlap', karakter: k })}>
@@ -32,7 +33,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
             <Icon name='plus' />
         </Menu.Item>
         <Menu.Item position='right'>
-            <KarakterImport save={save} />
+            <KarakterImport save={save} saveMese={saveMese} />
             <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />
         </Menu.Item>

@@ -14,7 +14,7 @@ export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karak
 function App() {
 
   const [page, setPage] = useState<PageSelection>({ page: 'home' });
-  const { save, list, categories, load, remove, listFajok, listFegyverek, saveFegyverek } = useDataConnector();
+  const { save, list, categories, load, remove, listFajok, listFegyverek, saveFegyverek, loadStory, saveStory } = useDataConnector();
   const [currentCategory, setCurrentCategory] = useState('');
 
   const saveKarakter = useCallback((karakter: Karakter) => {
@@ -34,7 +34,7 @@ function App() {
       case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
       case 'kombat': return <Kombat karakterek={list(page.category).map(i => load(i))} save={save} />
       case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} fajok={listFajok()} />
-      case 'story': return <StoryPage story={window.localStorage.getItem('magus-story') ?? ''} />;
+      case 'story': return <StoryPage story={loadStory()} saveStory={saveStory} />;
       case 'karakterlap': return <Karakterlap saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} karakter={load(page.karakter)} save={saveKarakter} remove={() => removeKarakter(page.karakter as Karakter)} />
     }
   };
@@ -57,6 +57,7 @@ function App() {
         }}
         save={saveKarakter}
         karakterek={list(currentCategory)}
+        saveMese={saveStory}
       />
       {renderPage()}
     </div>

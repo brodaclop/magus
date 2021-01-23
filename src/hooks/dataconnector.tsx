@@ -5,6 +5,7 @@ import { FAJ_KEPESSEG, KepessegDobas } from "../engine/kasztok";
 
 const PREFIX = 'magus.';
 const CONFIG_PREFIX = 'magus-config.';
+const STORY_KEY = 'magus-story';
 
 interface DataConnector {
     categories: () => Array<string>;
@@ -15,6 +16,8 @@ interface DataConnector {
     listFajok: () => Record<string, KepessegDobas>;
     listFegyverek: () => Array<Fegyver>;
     saveFegyverek: (fegyverek: Array<Fegyver>) => void;
+    loadStory: () => string,
+    saveStory: (story: string) => unknown;
     key?: number;
 }
 
@@ -87,6 +90,8 @@ export function useDataConnector(): DataConnector {
             return ret;
         },
         saveFegyverek: fegyverek => put(CONFIG_PREFIX + 'fegyverek', fegyverek),
+        loadStory: () => fetch(STORY_KEY) ?? '<story/>',
+        saveStory: (story: string) => put(STORY_KEY, story),
         key: operations
     }
 }
