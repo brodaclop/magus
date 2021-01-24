@@ -1,6 +1,6 @@
 import fileDownload from 'js-file-download';
 import React, { useState } from 'react';
-import { Button, Header, Icon, Input, Label, List, Modal, Popup, SemanticICONS } from 'semantic-ui-react';
+import { Button, Header, Icon, Input, Label, List, Modal, Popup, SemanticICONS, Tab } from 'semantic-ui-react';
 import { v4 } from 'uuid';
 import { Element } from 'xml-js';
 import { DomUtils } from '../utils/DomUtils';
@@ -68,26 +68,22 @@ const StoryEvent: React.FC<{ event: Element, renderer: Renderer, onClick: () => 
     </List.Item>;
 }
 
-const renderScene = (scene: Element, renderer: Renderer, onChange: () => unknown, root: Element) => {
+const StoryScene: React.FC<{ scene: Element, renderer: Renderer, onChange: () => unknown, root: Element }> = ({ scene, renderer, onChange, root }) => {
     const events = children(scene, 'events')[0];
     const setting = child(scene, 'setting');
     const map = setting ? attr(setting, 'map') : '';
     const description = setting ? attr(setting, 'description') : '';
     return <>
-        <Header as='h1'>Jelenet: {attr(scene, 'title')}</Header>
-        <Header as='h2'>Helyszín: {childText(scene, 'setting')}
-            {map &&
-                <Label size='small' onClick={() => window.open(map as string, '_blank')}>
-                    <Icon name='map' fitted />
-                </Label>
-            }
-            {description &&
-                <Label size='small' onClick={() => window.open(description as string, '_blank')}>
-                    <Icon name='external alternate' fitted />
-                </Label>
-            }
+        <Label basic>
+            {map ? <a href='#'><Icon name='map marker alternate' onClick={() => window.open(map as string, '_blank')} /></a> : <Icon name='map marker alternate' />}
 
-        </Header>
+            {childText(scene, 'setting')}
+            {description &&
+                <Label.Detail as='a'>
+                    <Icon name='external alternate' onClick={() => window.open(description as string, '_blank')} />
+                </Label.Detail>
+            }
+        </Label>
         <List celled animated>
             {events.elements?.map(e => <StoryEvent event={e} renderer={renderer} onClick={() => {
                 const status = attr(e, 'status');
@@ -163,11 +159,23 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
     const storyOb = parse(story);
     const scenes = findElementsByName(storyOb, 'scene');
     const renderer = RenderUtils.createRenderer(storyOb);
+    const sceneTabs = scenes.map(s => {
+        return {
+            menuItem: attr(s, 'title'),
+            render: () => <Tab.Pane><StoryScene
+                scene={s}
+                renderer={renderer}
+                onChange={() => saveStory(print(storyOb))}
+                root={storyOb} /></Tab.Pane>
+        }
+    })
+
+
     return <>
         <Button onClick={() => fileDownload(story, 'mese.xml', 'application/xml')} color='green' circular>Export</Button>
+        <Tab panes={sceneTabs} />
 
         {renderCast(renderer)};
         {renderInventory(renderer)};
-        {scenes.map(s => renderScene(s, renderer, () => saveStory(print(storyOb)), storyOb))}
     </>;
 }

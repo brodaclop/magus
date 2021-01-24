@@ -1,12 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { ReactHTMLElement, ReactNode } from 'react';
 import { Card, CardGroup, Header, Popup, Table } from 'semantic-ui-react';
 import { Element } from 'xml-js';
 import { DomUtils } from './DomUtils';
 
-const renderLinkTarget = (target: string, root: Element): ReactNode | null => {
+
+
+const findLinkTarget = (target: string, root: Element): Element | null => {
     const [targetType, id] = target.split(':', 2);
-    const t = DomUtils.findById(root, targetType, id);
-    return t ? renderTable(t, root) : null;
+    return DomUtils.findById(root, targetType, id);
 }
 
 const StoryElement: React.FC<{ elem: Element | null, root: Element }> = ({ elem, root }) => {
@@ -25,11 +26,11 @@ const StoryElement: React.FC<{ elem: Element | null, root: Element }> = ({ elem,
         return <Header>Helyszín: {contents}</Header>
     } else if (elem.name === 'link') {
         const target = DomUtils.attr(elem, 'target').toString();
-        const renderedTarget = renderLinkTarget(target, root);
-        if (renderedTarget) {
+        const targetElem = findLinkTarget(target, root);
+        if (targetElem) {
             return <Popup hoverable trigger={<a href='#'>{contents}</a>} wide>
                 <Popup.Content>
-                    {renderedTarget}
+                    <StoryCard tag={targetElem} root={root} />
                 </Popup.Content>
             </Popup>
         }
@@ -43,13 +44,14 @@ const StoryElement: React.FC<{ elem: Element | null, root: Element }> = ({ elem,
 }
 
 
-const renderTable = (tag: Element, root: Element) => {
+const StoryCard: React.FC<{ tag: Element, root: Element }> = ({ tag, root }) => {
     if (tag.name === 'character') {
-        return renderCharacter(tag, root);
+        return <CharacterCard elem={tag} root={root} />
     }
     if (tag.name === 'item') {
-        return renderItem(tag, root);
+        return <ItemCard elem={tag} root={root} />
     }
+    return null;
 }
 
 const TableRow: React.FC<{ label: string, elem: Element | null, root: Element }> = ({ label, elem, root }) => <Table.Row>
@@ -69,7 +71,7 @@ const NestedTableRow: React.FC<{ elems: Element[], label: string, root: Element 
 }
 
 
-const renderCharacter = (elem: Element, root: Element) => <Table definition striped columns={2} structured>
+const CharacterCard: React.FC<{ elem: Element, root: Element }> = ({ elem, root }) => <Table definition striped columns={2} structured>
     <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} />
     <TableRow label='Faj' elem={DomUtils.child(elem, 'race')} root={root} />
     <TableRow label='Jellem' elem={DomUtils.child(elem, 'alignment')} root={root} />
@@ -82,7 +84,7 @@ const renderCharacter = (elem: Element, root: Element) => <Table definition stri
 </Table>;
 
 
-const renderItem = (elem: Element, root: Element) => {
+const ItemCard: React.FC<{ elem: Element, root: Element }> = ({ elem, root }) => {
     return <Table definition striped columns={2}>
         <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} />
         <TableRow label='Érték' elem={DomUtils.child(elem, 'value')} root={root} />
@@ -96,12 +98,12 @@ const renderItem = (elem: Element, root: Element) => {
 
 const StoryCards: React.FC<{ root: Element, name: string }> = ({ root, name }) => {
     const cards = DomUtils.findElementsByName(root, name);
-    return <CardGroup>
-        {cards.map(c => <Card>
+    return <CardGroup itemsPerRow={5}>
+        {cards.map(c => <Card raised>
             <Card.Content>
                 <Card.Header>{DomUtils.childText(c, 'name')}</Card.Header>
                 <Card.Meta>
-                    {renderTable(c, root)}
+                    <StoryCard tag={c} root={root} />
                 </Card.Meta>
             </Card.Content>
         </Card>
