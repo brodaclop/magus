@@ -1,5 +1,5 @@
-import React, { ReactHTMLElement, ReactNode } from 'react';
-import { Card, CardGroup, Header, Popup, Table } from 'semantic-ui-react';
+import React, { ReactNode } from 'react';
+import { Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
 import { Element } from 'xml-js';
 import { DomUtils } from './DomUtils';
 
@@ -10,7 +10,7 @@ const findLinkTarget = (target: string, root: Element): Element | null => {
     return DomUtils.findById(root, targetType, id);
 }
 
-const StoryElement: React.FC<{ elem: Element | null, root: Element }> = ({ elem, root }) => {
+const StoryElement: React.FC<{ elem: Element | null, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
     if (!elem) {
         return <></>;
     }
@@ -18,92 +18,116 @@ const StoryElement: React.FC<{ elem: Element | null, root: Element }> = ({ elem,
         return <>{elem.text}</>;
     }
     const contents = <>
-        {elem.elements?.map(e => <StoryElement elem={e} root={root} />)}
+        {elem.elements?.map(e => <StoryElement elem={e} root={root} switchToScene={switchToScene} />)}
     </>;
-    if (elem.name === 'p') {
-        return <p>{contents}</p>
-    } else if (elem.name === 'setting') {
-        return <Header>Helyszín: {contents}</Header>
-    } else if (elem.name === 'link') {
-        const target = DomUtils.attr(elem, 'target').toString();
-        const targetElem = findLinkTarget(target, root);
-        if (targetElem) {
-            return <Popup hoverable trigger={<a href='#'>{contents}</a>} wide>
-                <Popup.Content>
-                    <StoryCard tag={targetElem} root={root} />
-                </Popup.Content>
-            </Popup>
+    switch (elem.name) {
+        case 'p': return <p>{contents}</p>
+        case 'setting': {
+            const map = DomUtils.attr(elem, 'map');
+            const description = DomUtils.attr(elem, 'description');
+
+            return <>
+                <Icon title={map ? 'Térkép' : undefined} style={map ? { cursor: 'pointer' } : {}} name='map marker alternate' onClick={() => map && window.open(map as string, '_blank')} />
+                <strong title={description ? 'Leírás' : undefined} style={description ? { cursor: 'pointer' } : {}} onClick={() => description && window.open(description as string, '_blank')}>{contents}</strong>
+            </>
         }
-        return contents;
-    } else if (elem.name === 'language') {
-        const level = DomUtils.attr(elem, 'level');
-        return <>{contents} { level ? <em>({level})</em> : ''}</>;
-    } else {
-        return contents;
+        case 'roll': {
+            const details = DomUtils.attr(elem, 'details');
+            if (details) {
+                return <Popup hoverable trigger={<span><Icon name='cube' fitted /> <strong>{contents}</strong></span>} wide>
+                    <Popup.Content>
+                        {details}
+                    </Popup.Content>
+                </Popup>
+            } else {
+                return <><Icon name='cube' fitted /> <strong>{contents}</strong></>;
+            }
+        } case 'reward': {
+            return <><Icon name='trophy' fitted /> <strong>{contents}</strong></>;
+        } case 'jump': {
+            return <><Icon name='paper plane outline' fitted /> <em style={{ cursor: 'pointer' }} onClick={() => switchToScene(DomUtils.attr(elem, 'scene'))}>{contents}</em></>;
+        } case 'link': {
+            const target = DomUtils.attr(elem, 'target').toString();
+            const targetElem = findLinkTarget(target, root);
+            if (targetElem) {
+                const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : 'gift';
+                return <Popup hoverable trigger={<span><Icon name={targetIcon} fitted /> <strong>{contents}</strong></span>} wide>
+                    <Popup.Content>
+                        <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} />
+                    </Popup.Content>
+                </Popup>
+            }
+            return contents;
+        } case 'language': {
+            const level = DomUtils.attr(elem, 'level');
+            return <>{contents} { level ? <em>({level})</em> : ''}</>;
+        }
+        default: {
+            return contents;
+        }
     }
 }
 
-
-const StoryCard: React.FC<{ tag: Element, root: Element }> = ({ tag, root }) => {
+const StoryCard: React.FC<{ tag: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ tag, root, switchToScene }) => {
     if (tag.name === 'character') {
-        return <CharacterCard elem={tag} root={root} />
+        return <CharacterCard elem={tag} root={root} switchToScene={switchToScene} />
     }
     if (tag.name === 'item') {
-        return <ItemCard elem={tag} root={root} />
+        return <ItemCard elem={tag} root={root} switchToScene={switchToScene} />
     }
     return null;
 }
 
-const TableRow: React.FC<{ label: string, elem: Element | null, root: Element }> = ({ label, elem, root }) => <Table.Row>
+const TableRow: React.FC<{ label: string, elem: Element | null, root: Element, switchToScene: (id: string) => unknown }> = ({ label, elem, root, switchToScene }) => <Table.Row>
     <Table.Cell>{label}</Table.Cell>
-    <Table.Cell><StoryElement elem={elem} root={root} /></Table.Cell>
+    <Table.Cell><StoryElement elem={elem} root={root} switchToScene={switchToScene} /></Table.Cell>
 </Table.Row>;
 
-const NestedTableRow: React.FC<{ elems: Element[], label: string, root: Element }> = ({ elems, label, root }) => {
+const NestedTableRow: React.FC<{ elems: Element[], label: string, root: Element, switchToScene: (id: string) => unknown }> = ({ elems, label, root, switchToScene }) => {
     const [first, ...rest] = elems;
     return <>
         <Table.Row>
             <Table.Cell rowSpan={elems.length}>{label}</Table.Cell>
-            <Table.Cell><StoryElement elem={first} root={root} /></Table.Cell>
+            <Table.Cell><StoryElement elem={first} root={root} switchToScene={switchToScene} /></Table.Cell>
         </Table.Row>
-        {rest.map(r => <Table.Row><Table.Cell><StoryElement elem={r} root={root} /></Table.Cell></Table.Row>)}
+        {rest.map(r => <Table.Row><Table.Cell><StoryElement elem={r} root={root} switchToScene={switchToScene} /></Table.Cell></Table.Row>)}
     </>;
 }
 
 
-const CharacterCard: React.FC<{ elem: Element, root: Element }> = ({ elem, root }) => <Table definition striped columns={2} structured>
-    <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} />
-    <TableRow label='Faj' elem={DomUtils.child(elem, 'race')} root={root} />
-    <TableRow label='Jellem' elem={DomUtils.child(elem, 'alignment')} root={root} />
-    <TableRow label='Kaszt' elem={DomUtils.child(elem, 'class')} root={root} />
-    <TableRow label='Szülőföld' elem={DomUtils.child(elem, 'origin')} root={root} />
-    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'language')} label='Nyelvek' root={root} />
-    <TableRow label='Kinézet' elem={DomUtils.child(elem, 'looks')} root={root} />
-    <TableRow label='Viselkedés' elem={DomUtils.child(elem, 'behaviour')} root={root} />
-    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'loot')} label='Felszerelés' root={root} />
+const CharacterCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => <Table definition striped columns={2} structured>
+    <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
+    <TableRow label='Faj' elem={DomUtils.child(elem, 'race')} root={root} switchToScene={switchToScene} />
+    <TableRow label='Jellem' elem={DomUtils.child(elem, 'alignment')} root={root} switchToScene={switchToScene} />
+    <TableRow label='Kaszt' elem={DomUtils.child(elem, 'class')} root={root} switchToScene={switchToScene} />
+    <TableRow label='Szülőföld' elem={DomUtils.child(elem, 'origin')} root={root} switchToScene={switchToScene} />
+    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'language')} label='Nyelvek' root={root} switchToScene={switchToScene} />
+    <TableRow label='Kinézet' elem={DomUtils.child(elem, 'looks')} root={root} switchToScene={switchToScene} />
+    <TableRow label='Viselkedés' elem={DomUtils.child(elem, 'behaviour')} root={root} switchToScene={switchToScene} />
+    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'loot')} label='Felszerelés' root={root} switchToScene={switchToScene} />
 </Table>;
 
 
-const ItemCard: React.FC<{ elem: Element, root: Element }> = ({ elem, root }) => {
+const ItemCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
     return <Table definition striped columns={2}>
-        <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} />
-        <TableRow label='Érték' elem={DomUtils.child(elem, 'value')} root={root} />
+        <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
+        <TableRow label='Érték' elem={DomUtils.child(elem, 'value')} root={root} switchToScene={switchToScene} />
         <Table.Row>
             <Table.Cell colSpan={2}>
-                {DomUtils.children(elem, 'description').map(e => <StoryElement elem={e} root={root} />)}
+                {DomUtils.children(elem, 'description').map(e => <StoryElement elem={e} root={root} switchToScene={switchToScene} />)}
             </Table.Cell>
         </Table.Row>
     </Table>;
 }
 
-const StoryCards: React.FC<{ root: Element, name: string }> = ({ root, name }) => {
+const StoryCards: React.FC<{ root: Element, name: string, switchToScene: (id: string) => unknown }> = ({ root, name, switchToScene }) => {
     const cards = DomUtils.findElementsByName(root, name);
     return <CardGroup itemsPerRow={5}>
         {cards.map(c => <Card raised>
             <Card.Content>
                 <Card.Header>{DomUtils.childText(c, 'name')}</Card.Header>
                 <Card.Meta>
-                    <StoryCard tag={c} root={root} />
+                    <StoryCard tag={c} root={root} switchToScene={switchToScene} />
                 </Card.Meta>
             </Card.Content>
         </Card>
@@ -116,10 +140,10 @@ export interface Renderer {
     renderCards: (name: string) => ReactNode
 }
 
-const createRenderer = (root: Element): Renderer => {
+const createRenderer = (root: Element, switchScene: (id: string) => unknown): Renderer => {
     return {
-        renderElement: elem => <StoryElement elem={elem} root={root} />,
-        renderCards: name => <StoryCards root={root} name={name} />
+        renderElement: elem => <StoryElement elem={elem} root={root} switchToScene={switchScene} />,
+        renderCards: name => <StoryCards root={root} name={name} switchToScene={switchScene} />
     }
 }
 

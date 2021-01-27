@@ -156,9 +156,13 @@ const findComments = (event: Element, root: Element): Element[] => {
 }
 
 export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => unknown }> = ({ story, saveStory }) => {
+    const [activeScene, setActiveScene] = useState<number>()
     const storyOb = parse(story);
     const scenes = findElementsByName(storyOb, 'scene');
-    const renderer = RenderUtils.createRenderer(storyOb);
+    const findSceneById = (id: string) => {
+        return scenes.findIndex(s => attr(s, 'id') === id);
+    }
+    const renderer = RenderUtils.createRenderer(storyOb, id => setActiveScene(findSceneById(id)));
     const sceneTabs = scenes.map(s => {
         return {
             menuItem: attr(s, 'title'),
@@ -170,10 +174,11 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
         }
     })
 
+    console.log('scene', activeScene);
 
     return <>
         <Button onClick={() => fileDownload(story, 'mese.xml', 'application/xml')} color='green' circular>Export</Button>
-        <Tab panes={sceneTabs} />
+        <Tab activeIndex={activeScene} onTabChange={(e, { activeIndex }) => setActiveScene(activeIndex as number)} panes={sceneTabs} />
 
         {renderCast(renderer)};
         {renderInventory(renderer)};
