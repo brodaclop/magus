@@ -3,11 +3,14 @@ import { Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-
 import { Element } from 'xml-js';
 import { DomUtils } from './DomUtils';
 
-
-
-const findLinkTarget = (target: string, root: Element): Element | null => {
-    const [targetType, id] = target.split(':', 2);
-    return DomUtils.findById(root, targetType, id);
+export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
+    setting: 'map marker alternate',
+    roll: 'cube',
+    reward: 'trophy',
+    character: 'user outline',
+    item: 'gift',
+    jump: 'paper plane outline',
+    '': 'question'
 }
 
 const StoryElement: React.FC<{ elem: Element | null, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
@@ -46,22 +49,25 @@ const StoryElement: React.FC<{ elem: Element | null, root: Element, switchToScen
             return <><Icon name='trophy' fitted /> <strong>{contents}</strong></>;
         } case 'jump': {
             return <><Icon name='paper plane outline' fitted /> <em style={{ cursor: 'pointer' }} onClick={() => switchToScene(DomUtils.attr(elem, 'scene'))}>{contents}</em></>;
-        } case 'link': {
-            const target = DomUtils.attr(elem, 'target').toString();
-            const targetElem = findLinkTarget(target, root);
-            if (targetElem) {
-                const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : 'gift';
-                return <Popup hoverable trigger={<span><Icon name={targetIcon} fitted /> <strong>{contents}</strong></span>} wide>
-                    <Popup.Content>
-                        <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} />
-                    </Popup.Content>
-                </Popup>
-            }
-            return contents;
-        } case 'language': {
-            const level = DomUtils.attr(elem, 'level');
-            return <>{contents} { level ? <em>({level})</em> : ''}</>;
         }
+        case 'character':
+        case 'item':
+            {
+                const target = DomUtils.attr(elem, 'ref').toString();
+                const targetElem = DomUtils.findById(root, elem.name, target);
+                if (targetElem) {
+                    const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : 'gift';
+                    return <Popup hoverable trigger={<span><Icon name={targetIcon} fitted /> <strong>{contents}</strong></span>} wide>
+                        <Popup.Content>
+                            <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} />
+                        </Popup.Content>
+                    </Popup>
+                }
+                return contents;
+            } case 'language': {
+                const level = DomUtils.attr(elem, 'level');
+                return <>{contents} { level ? <em>({level})</em> : ''}</>;
+            }
         default: {
             return contents;
         }
@@ -121,7 +127,7 @@ const ItemCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: str
 }
 
 const StoryCards: React.FC<{ root: Element, name: string, switchToScene: (id: string) => unknown }> = ({ root, name, switchToScene }) => {
-    const cards = DomUtils.findElementsByName(root, name);
+    const cards = DomUtils.findElementsByName(root, name).filter(e => !e.attributes?.ref);
     return <CardGroup itemsPerRow={5}>
         {cards.map(c => <Card raised>
             <Card.Content>

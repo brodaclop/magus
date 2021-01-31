@@ -81,6 +81,15 @@ const parse = (str: string): Element => {
     return xml2js(str, { compact: false, nativeType: true, trim: false }) as Element;
 }
 
+const convertLegacyLinks = (elem: Element) => {
+    if (elem.name === 'link') {
+        const [type, ref] = DomUtils.attr(elem, 'target').split(':');
+        elem.name = type;
+        elem.attributes = { ref }
+    }
+    elem.elements?.forEach(e => convertLegacyLinks(e));
+}
+
 const print = (root: Element): string => {
     return js2xml(root, { compact: false });
 }
@@ -99,5 +108,6 @@ export const DomUtils = {
     findElementsByName,
     findElements,
     parse,
+    convertLegacyLinks,
     print
 };

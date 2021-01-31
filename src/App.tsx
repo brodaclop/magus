@@ -6,7 +6,7 @@ import { Karakter, KarakterInfo } from './engine/karakter';
 import 'semantic-ui-css/semantic.min.css'
 import { PageHeader } from './components/PageHeader';
 import { Kombat } from './pages/Kombat';
-import { StoryPage } from './pages/StoryPage';
+import { StoryPage } from './story/pages/StoryPage';
 
 export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat', category: string } | { page: 'story' }
 
