@@ -1,6 +1,13 @@
 import React, { ReactNode } from 'react';
 import { Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from './DomUtils';
+import { EventRenderer } from './inlinerenderers/EventRenderer';
+import { JumpRenderer } from './inlinerenderers/JumpRenderer';
+import { LanguageRenderer } from './inlinerenderers/LanguageRenderer';
+import { ParagraphRenderer } from './inlinerenderers/ParagraphRenderer';
+import { RewardRenderer } from './inlinerenderers/RewardRenderer';
+import { RollRenderer } from './inlinerenderers/RollRenderer';
+import { SettingRenderer } from './inlinerenderers/SettingRenderer';
 
 export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
     setting: 'map marker alternate',
@@ -11,6 +18,10 @@ export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
     jump: 'paper plane outline',
     '': 'question'
 }
+
+export type RendererComponent = React.FC<{ elem: DOMElement; switchToScene: (id: string) => unknown }>;
+
+
 
 const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
     if (!elem) {
@@ -23,32 +34,13 @@ const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switch
         {elem.elements?.map(e => <StoryElement elem={e} root={root} switchToScene={switchToScene} />)}
     </>;
     switch (elem.name) {
-        case 'p': return <p>{contents}</p>
-        case 'setting': {
-            const map = DomUtils.attr(elem, 'map');
-            const description = DomUtils.attr(elem, 'description');
-
-            return <>
-                <Icon title={map ? 'Térkép' : undefined} style={map ? { cursor: 'pointer' } : {}} name='map marker alternate' onClick={() => map && window.open(map as string, '_blank')} />
-                <strong title={description ? 'Leírás' : undefined} style={description ? { cursor: 'pointer' } : {}} onClick={() => description && window.open(description as string, '_blank')}>{contents}</strong>
-            </>
-        }
-        case 'roll': {
-            const details = DomUtils.attr(elem, 'details');
-            if (details) {
-                return <Popup hoverable trigger={<span><Icon name='cube' fitted /> <strong>{contents}</strong></span>} wide>
-                    <Popup.Content>
-                        {details}
-                    </Popup.Content>
-                </Popup>
-            } else {
-                return <><Icon name='cube' fitted /> <strong>{contents}</strong></>;
-            }
-        } case 'reward': {
-            return <><Icon name='trophy' fitted /> <strong>{contents}</strong></>;
-        } case 'jump': {
-            return <><Icon name='paper plane outline' fitted /> <em style={{ cursor: 'pointer' }} onClick={() => switchToScene(DomUtils.attr(elem, 'scene'))}>{contents}</em></>;
-        }
+        case 'p': return <ParagraphRenderer switchToScene={switchToScene} elem={elem}>{contents}</ParagraphRenderer>
+        case 'setting': return <SettingRenderer switchToScene={switchToScene} elem={elem}>{contents}</SettingRenderer>
+        case 'roll': return <RollRenderer switchToScene={switchToScene} elem={elem}>{contents}</RollRenderer>
+        case 'reward': return <RewardRenderer switchToScene={switchToScene} elem={elem}>{contents}</RewardRenderer>
+        case 'jump': return <JumpRenderer switchToScene={switchToScene} elem={elem}>{contents}</JumpRenderer>
+        case 'langauge': return <LanguageRenderer switchToScene={switchToScene} elem={elem}>{contents}</LanguageRenderer>
+        case 'event': return <EventRenderer switchToScene={switchToScene} elem={elem}>{contents}</EventRenderer>
         case 'character':
         case 'item':
             {

@@ -1,55 +1,46 @@
 import React, { useState } from 'react';
-import { Modal, Label, Icon, List } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
-import { EventEditor } from './editor/EventEditor';
 import { StoryEvent } from './StoryEvent';
 import { v4 } from 'uuid';
+import { EventEditorModal } from './EventEditorModal';
 
-const { attr, children, child, childText, addChild, addText, findElementsByName, deleteChild } = DomUtils;
+const { attr, children, child, addChild, addText, findElementsByName, deleteChild } = DomUtils;
+
+export interface EventEditingState {
+    insert?: 'after' | 'before',
+    anchor?: DOMElement,
+    elem: DOMElement
+}
 
 
 export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onChange: () => unknown, root: DOMElement }> = ({ scene, renderer, onChange, root }) => {
     const events = children(scene, 'events')[0];
-    const setting = child(scene, 'setting');
-    const map = setting ? attr(setting, 'map') : '';
-    const description = setting ? attr(setting, 'description') : '';
-    const [editedEvent, setEditedEvent] = useState<{ insert?: 'after' | 'before', anchor?: DOMElement, elem: DOMElement }>();
+    const [editedEvent, setEditedEvent] = useState<EventEditingState>();
     return <>
-        <Modal open={editedEvent !== undefined} onClose={() => setEditedEvent(undefined)}>
-            <Modal.Content>
-                {editedEvent && <EventEditor event={editedEvent.elem} onFinished={() => {
-                    if (editedEvent.insert) {
-                        DomUtils.addChildElement(editedEvent.anchor?.$parent as DOMElement, editedEvent.elem, editedEvent.anchor as DOMElement, editedEvent.insert);
-                    }
-                    setEditedEvent(undefined)
-                }
-                } renderer={renderer} root={root} />}
-            </Modal.Content>
-        </Modal>
-        <Label basic>
-            {map ? <a href='#'><Icon name='map marker alternate' onClick={() => window.open(map as string, '_blank')} /></a> : <Icon name='map marker alternate' />}
-
-            {childText(scene, 'setting')}
-            {description &&
-                <Label.Detail as='a'>
-                    <Icon name='external alternate' onClick={() => window.open(description as string, '_blank')} />
-                </Label.Detail>
-            }
-        </Label>
+        <EventEditorModal
+            editedEvent={editedEvent}
+            onEditingFinished={() => setEditedEvent(undefined)}
+            renderer={renderer}
+            root={root}
+        />
         <List celled animated>
-            {events.elements?.map(e => <StoryEvent
+            {events?.elements?.map(e => <StoryEvent
                 event={e}
                 renderer={renderer}
                 setEditedEvent={event => {
-                    if (event.insert) {
+                    if (event.operation === 'insertAfter' || event.operation === 'insertBefore') {
                         setEditedEvent({
-                            insert: event.insert, elem: {
+                            insert: event.operation === 'insertAfter' ? 'after' : 'before', elem: {
                                 type: 'element',
                                 name: 'event',
                                 $parent: e.$parent
                             }, anchor: e
                         });
+                    } else if (event.operation === 'delete') {
+                        DomUtils.deleteChild(e.$parent, e);
+                        onChange();
                     } else {
                         setEditedEvent({ elem: e });
 
@@ -71,6 +62,22 @@ export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onCha
                     onChange();
                 }}
             />)}
+            <List.Item style={{ backgroundColor: 'gainsboro' }} onClick={() => {
+                setEditedEvent({
+                    insert: 'after',
+                    elem: {
+                        type: 'element',
+                        name: 'event',
+                        $parent: events
+                    }
+                });
+
+            }}>
+                <List.Icon name='plus' />
+                <List.Content>
+                    <i>Új elem</i>
+                </List.Content>
+            </List.Item>
 
         </List>
     </>

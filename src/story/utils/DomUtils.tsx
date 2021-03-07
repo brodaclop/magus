@@ -46,6 +46,7 @@ const addChildElement = (parent: DOMElement, child: DOMElement, referenceSibling
         insertIndex = insert === 'after' ? parent.elements.length : 0;
     }
     parent.elements.splice(insertIndex, 0, child);
+    child.$parent = parent;
 
     return child;
 }
@@ -98,11 +99,18 @@ const parse = (str: string): DOMElement => {
     return xml2js(str, { compact: false, nativeType: true, trim: false, addParent: true, parentKey: '$parent' }) as DOMElement;
 }
 
-const convertLegacyLinks = (elem: Element) => {
+const convertLegacyLinks = (elem: DOMElement) => {
     if (elem.name === 'link') {
         const [type, ref] = DomUtils.attr(elem, 'target').split(':');
         elem.name = type;
         elem.attributes = { ref }
+    }
+    if (elem.name === 'setting' && elem.$parent.name === 'scene') { //wrap legacy scene <setting> into a background event instead
+        const events = child(elem.$parent, 'events') || addChild(elem.$parent, 'events');
+        const event = addChild(events, 'event', undefined, 'before');
+        attr(event, 'role', 'background');
+        deleteChild(elem.$parent, elem);
+        addChildElement(event, elem);
     }
     elem.elements?.forEach(e => convertLegacyLinks(e));
 }

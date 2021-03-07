@@ -21,7 +21,6 @@ export const HMEloszto: React.FC<{ harcertek: Harcertek, hm: number, complete: (
         const newCurrent: State = { ...current };
         newCurrent.harcertek[he] = newValue;
         newCurrent.hm = hm - (Object.keys(newCurrent.harcertek) as Array<any>).reduce((acc, curr: ('ke' | 'te' | 've' | 'ce')) => acc + (newCurrent.harcertek[curr] - harcertek[curr]), 0);
-        console.log('hmeloszto', newCurrent);
         setCurrent(newCurrent);
     }, [current, setCurrent, harcertek, hm]);
 
