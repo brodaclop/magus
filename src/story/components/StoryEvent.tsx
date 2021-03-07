@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { List, Modal, Icon, Input, Label, Button, Popup, SemanticICONS } from 'semantic-ui-react';
-import { DomUtils } from '../utils/DomUtils';
+import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { ContextMenu } from './ContextMenu';
-import { Element } from 'xml-js';
 
-const ROLE_ICONS: Record<string, SemanticICONS> = {
+export const ROLE_ICONS: Record<string, SemanticICONS> = {
     'normal': 'angle right',
     'entrance': 'sign-in',
     'exit': 'sign-out',
     'info': 'info circle',
     'background': 'film',
+    'speech': 'comment alternate outline',
     'warning': 'warning'
 
 }
@@ -20,12 +20,20 @@ const iconForRole = (role: string): SemanticICONS => {
 }
 
 export interface EditedEvent {
-    event: Element;
     insert?: 'after' | 'before';
-    anchor?: Element;
 }
 
-export const StoryEvent: React.FC<{ event: Element, renderer: Renderer, onClick: () => unknown, addComment: (contents: string) => unknown, comments?: Element[], deleteComment: (comment: Element) => unknown, setEditedEvent: (editedEvent: EditedEvent) => unknown }> = ({ event, renderer, onClick, addComment, comments, deleteComment, setEditedEvent }) => {
+export interface StoryEventProps {
+    event: DOMElement,
+    renderer: Renderer,
+    onClick: () => unknown,
+    addComment: (contents: string) => unknown,
+    comments?: DOMElement[],
+    deleteComment: (comment: DOMElement) => unknown,
+    setEditedEvent: (editedEvent: EditedEvent) => unknown
+};
+
+export const StoryEvent: React.FC<StoryEventProps> = ({ event, renderer, onClick, addComment, comments, deleteComment, setEditedEvent }) => {
     const [kommentModal, setKommentModal] = useState(false);
     const [editedKomment, setEditedKomment] = useState('');
     const role = DomUtils.attr(event, 'role').toString() || 'normal';
@@ -40,13 +48,13 @@ export const StoryEvent: React.FC<{ event: Element, renderer: Renderer, onClick:
                 { name: 'after', content: 'Új elem', icon: 'down arrow' },
             ]}
                 onClicked={item => {
-                    if (item.name === 'edit') {
-                        setEditedEvent({
-                            event
-                        });
+                    switch (item.name) {
+                        case 'edit': setEditedEvent({}); break;
+                        case 'before': setEditedEvent({ insert: 'before' }); break;
+                        case 'after': setEditedEvent({ insert: 'after' }); break;
                     }
                 }}>
-                {role === 'background' ? <i>{renderedEvent}</i> : renderedEvent}
+                {role === 'background' ? <i>{renderedEvent}</i> : role === 'speech' ? <blockquote>{renderedEvent}</blockquote> : renderedEvent}
             </ContextMenu>
         </List.Content>
         <List.Content floated='right'>

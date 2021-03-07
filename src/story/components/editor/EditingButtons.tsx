@@ -1,14 +1,13 @@
 import { EditorState, Modifier } from 'draft-js';
 import React, { useState } from 'react';
 import { Button, Dropdown, Input, Label, Modal } from 'semantic-ui-react';
-import { DomUtils } from '../../utils/DomUtils';
+import { DOMElement, DomUtils } from '../../utils/DomUtils';
 import { EditorUtils } from '../../utils/EditorUtils';
-import { Element } from 'xml-js';
 
 const { addEntity } = EditorUtils;
 
 
-export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState(s: EditorState): unknown, root: Element }> = ({ editorState, setEditorState, root }) => {
+export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState(s: EditorState): unknown, root: DOMElement }> = ({ editorState, setEditorState, root }) => {
 
     const [editorPopup, setEditorPopup] = useState<string>();
     const [editedValue, setEditedValue] = useState<Record<string, string>>({});

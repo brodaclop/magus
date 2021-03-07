@@ -1,7 +1,12 @@
 import { xml2js, Element, js2xml } from 'xml-js';
 
-const findElements = (root: Element, filter: (ob: Element) => boolean): Array<Element> => {
-    let ret: Array<Element> = [];
+export interface DOMElement extends Element {
+    $parent: DOMElement;
+    elements?: Array<DOMElement>;
+}
+
+const findElements = (root: DOMElement, filter: (ob: DOMElement) => boolean): Array<DOMElement> => {
+    let ret: Array<DOMElement> = [];
     if (filter(root)) {
         ret.push(root);
     }
@@ -12,28 +17,40 @@ const findElements = (root: Element, filter: (ob: Element) => boolean): Array<El
     return ret;
 }
 
-const findElementsByName = (root: Element, name: string): Array<Element> => {
+const findElementsByName = (root: DOMElement, name: string): Array<DOMElement> => {
     return findElements(root, e => e.name === name);
 }
 
-const findById = (root: Element, name: string, id: string) => {
+const findById = (root: DOMElement, name: string, id: string): DOMElement | null => {
     const found = findElements(root, e => e.name === name && DomUtils.attr(e, 'id') === id);
     return found.length > 0 ? found[0] : null;
 }
 
-const children = (elem: Element, name: string) => {
+const children = (elem: DOMElement, name: string): Array<DOMElement> => {
     return elem.elements?.filter(e => e.name === name) ?? [];
 }
 
-const addChild = (parent: Element, name: string, previousSibling?: Element) => {
-    parent.elements = parent.elements ?? [];
-    const insertIndex = previousSibling ? parent.elements.indexOf(previousSibling) + 1 : 0;
-    const newElement: Element = { type: 'element', name };
-    parent.elements.splice(insertIndex, 0, newElement);
-    return newElement;
+const addChild = (parent: DOMElement, name: string, referenceSibling?: DOMElement, insert: 'after' | 'before' = 'after'): DOMElement => {
+    const newElement: DOMElement = { type: 'element', name, $parent: parent };
+    return addChildElement(parent, newElement, referenceSibling, insert);
 }
 
-const deleteChild = (parent: Element, child: Element) => {
+
+const addChildElement = (parent: DOMElement, child: DOMElement, referenceSibling?: DOMElement, insert: 'after' | 'before' = 'after'): DOMElement => {
+    parent.elements = parent.elements ?? [];
+    let insertIndex = 0;
+    if (referenceSibling) {
+        const referenceIndex = parent.elements.indexOf(referenceSibling);
+        insertIndex = insert === 'after' ? referenceIndex + 1 : referenceIndex;
+    } else {
+        insertIndex = insert === 'after' ? parent.elements.length : 0;
+    }
+    parent.elements.splice(insertIndex, 0, child);
+
+    return child;
+}
+
+const deleteChild = (parent: DOMElement, child: DOMElement) => {
     parent.elements = parent.elements ?? [];
     const deleteIndex = parent.elements.indexOf(child);
     if (deleteIndex !== -1) {
@@ -41,21 +58,21 @@ const deleteChild = (parent: Element, child: Element) => {
     }
 }
 
-const addText = (parent: Element, text: string, previousSibling?: Element) => {
+const addText = (parent: DOMElement, text: string, previousSibling?: DOMElement): DOMElement => {
     parent.elements = parent.elements ?? [];
     const insertIndex = previousSibling ? parent.elements.indexOf(previousSibling) + 1 : 0;
-    const newElement: Element = { type: 'text', text };
+    const newElement: DOMElement = { type: 'text', text, $parent: parent };
     parent.elements.splice(insertIndex, 0, newElement);
     return newElement;
 }
 
 
-const child = (elem: Element, name: string) => {
+const child = (elem: DOMElement, name: string): DOMElement | null => {
     const c = children(elem, name);
     return c.length > 0 ? c[0] : null;
 }
 
-const childText = (elem: Element, name: string) => {
+const childText = (elem: Element, name: string): string => {
     const ret = elem.elements?.find(e => e.name === name);
     return text(ret);
 }
@@ -73,12 +90,12 @@ const attr = (elem: Element, name: string, value?: string | null): string => {
 }
 
 
-const text = (elem?: Element) => {
+const text = (elem?: Element): string => {
     return elem?.elements?.map(t => t.text).join(' ') ?? '';
 }
 
-const parse = (str: string): Element => {
-    return xml2js(str, { compact: false, nativeType: true, trim: false }) as Element;
+const parse = (str: string): DOMElement => {
+    return xml2js(str, { compact: false, nativeType: true, trim: false, addParent: true, parentKey: '$parent' }) as DOMElement;
 }
 
 const convertLegacyLinks = (elem: Element) => {
@@ -91,12 +108,13 @@ const convertLegacyLinks = (elem: Element) => {
 }
 
 const print = (root: Element): string => {
-    return js2xml(root, { compact: false });
+    return js2xml(root, { compact: false, parentKey: '$parent' });
 }
 
 
 export const DomUtils = {
     addChild,
+    addChildElement,
     addText,
     attr,
     text,

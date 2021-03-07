@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
-import { Element } from 'xml-js';
-import { DomUtils } from './DomUtils';
+import { DOMElement, DomUtils } from './DomUtils';
 
 export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
     setting: 'map marker alternate',
@@ -13,7 +12,7 @@ export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
     '': 'question'
 }
 
-const StoryElement: React.FC<{ elem: Element | null, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
+const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
     if (!elem) {
         return <></>;
     }
@@ -74,7 +73,7 @@ const StoryElement: React.FC<{ elem: Element | null, root: Element, switchToScen
     }
 }
 
-const StoryCard: React.FC<{ tag: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ tag, root, switchToScene }) => {
+const StoryCard: React.FC<{ tag: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ tag, root, switchToScene }) => {
     if (tag.name === 'character') {
         return <CharacterCard elem={tag} root={root} switchToScene={switchToScene} />
     }
@@ -84,12 +83,12 @@ const StoryCard: React.FC<{ tag: Element, root: Element, switchToScene: (id: str
     return null;
 }
 
-const TableRow: React.FC<{ label: string, elem: Element | null, root: Element, switchToScene: (id: string) => unknown }> = ({ label, elem, root, switchToScene }) => <Table.Row>
+const TableRow: React.FC<{ label: string, elem: DOMElement | null, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ label, elem, root, switchToScene }) => <Table.Row>
     <Table.Cell>{label}</Table.Cell>
     <Table.Cell><StoryElement elem={elem} root={root} switchToScene={switchToScene} /></Table.Cell>
 </Table.Row>;
 
-const NestedTableRow: React.FC<{ elems: Element[], label: string, root: Element, switchToScene: (id: string) => unknown }> = ({ elems, label, root, switchToScene }) => {
+const NestedTableRow: React.FC<{ elems: DOMElement[], label: string, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elems, label, root, switchToScene }) => {
     const [first, ...rest] = elems;
     return <>
         <Table.Row>
@@ -101,7 +100,7 @@ const NestedTableRow: React.FC<{ elems: Element[], label: string, root: Element,
 }
 
 
-const CharacterCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => <Table definition striped columns={2} structured>
+const CharacterCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => <Table definition striped columns={2} structured>
     <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
     <TableRow label='Faj' elem={DomUtils.child(elem, 'race')} root={root} switchToScene={switchToScene} />
     <TableRow label='Jellem' elem={DomUtils.child(elem, 'alignment')} root={root} switchToScene={switchToScene} />
@@ -114,7 +113,7 @@ const CharacterCard: React.FC<{ elem: Element, root: Element, switchToScene: (id
 </Table>;
 
 
-const ItemCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
+const ItemCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
     return <Table definition striped columns={2}>
         <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
         <TableRow label='Érték' elem={DomUtils.child(elem, 'value')} root={root} switchToScene={switchToScene} />
@@ -126,7 +125,7 @@ const ItemCard: React.FC<{ elem: Element, root: Element, switchToScene: (id: str
     </Table>;
 }
 
-const StoryCards: React.FC<{ root: Element, name: string, switchToScene: (id: string) => unknown }> = ({ root, name, switchToScene }) => {
+const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id: string) => unknown }> = ({ root, name, switchToScene }) => {
     const cards = DomUtils.findElementsByName(root, name).filter(e => !e.attributes?.ref);
     return <CardGroup itemsPerRow={5}>
         {cards.map(c => <Card raised>
@@ -142,11 +141,11 @@ const StoryCards: React.FC<{ root: Element, name: string, switchToScene: (id: st
 }
 
 export interface Renderer {
-    renderElement: (elem: Element) => ReactNode
+    renderElement: (elem: DOMElement) => ReactNode
     renderCards: (name: string) => ReactNode
 }
 
-const createRenderer = (root: Element, switchScene: (id: string) => unknown): Renderer => {
+const createRenderer = (root: DOMElement, switchScene: (id: string) => unknown): Renderer => {
     return {
         renderElement: elem => <StoryElement elem={elem} root={root} switchToScene={switchScene} />,
         renderCards: name => <StoryCards root={root} name={name} switchToScene={switchScene} />

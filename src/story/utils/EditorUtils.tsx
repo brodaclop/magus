@@ -1,5 +1,5 @@
 import { ContentState, Modifier, SelectionState } from "draft-js";
-import { Element } from 'xml-js';
+import { DOMElement } from "./DomUtils";
 
 const lastPos = (state: ContentState): SelectionState => {
     const len = state.getLastBlock().getLength();
@@ -19,7 +19,7 @@ const addEntity = (state: ContentState, type: string, data: any, start: number, 
     return ret;
 }
 
-const processElement = (elem: Element, state: ContentState): ContentState => {
+const processElement = (elem: DOMElement, state: ContentState): ContentState => {
     if (elem.type === 'text') {
         return Modifier.insertText(state, lastPos(state), elem.text as string);
     } else if (elem.elements) {
@@ -39,15 +39,16 @@ const processElement = (elem: Element, state: ContentState): ContentState => {
     return state;
 }
 
-const toElements = (state: ContentState): Array<Element> => {
+const toElements = (state: ContentState, $parent: DOMElement): Array<DOMElement> => {
     const block = state.getLastBlock();
-    const ret: Array<Element> = [];
+    const ret: Array<DOMElement> = [];
     const text = block.getText();
     block.findEntityRanges(() => true, (start, end) => {
         const entityKey = block.getEntityAt(start);
-        const textNode: Element = {
+        const textNode: DOMElement = {
             type: 'text',
-            text: text.substring(start, end)
+            text: text.substring(start, end),
+            $parent
         };
         if (entityKey) {
             const entity = state.getEntity(entityKey);
@@ -55,35 +56,42 @@ const toElements = (state: ContentState): Array<Element> => {
                 type: 'element',
                 name: entity.getType(),
                 attributes: entity.getData(),
-                elements: [textNode]
+                elements: [textNode],
+                $parent
             });
         } else {
             ret.push(textNode);
         }
     })
     if (text.includes('\n\n')) {
-        const paragraphs: Array<Element> = [{
+        const paragraphs: Array<DOMElement> = [{
             type: 'element',
             name: 'p',
-            elements: []
+            elements: [],
+            $parent: $parent
         }];
         ret.forEach(e => {
             if (e.type === 'text' && e.text?.toString().includes('\n\n')) {
                 const [first, ...paras] = e.text.toString().split('\n\n');
                 paragraphs[paragraphs.length - 1].elements?.push({
                     type: 'text',
-                    text: first
+                    text: first,
+                    $parent: paragraphs[paragraphs.length - 1]
                 });
 
                 paras.forEach(p => {
-                    paragraphs.push({
+                    const para: DOMElement = {
                         type: 'element',
                         name: 'p',
-                        elements: [{
-                            type: 'text',
-                            text: p
-                        }]
-                    });
+                        $parent,
+                        elements: []
+                    };
+                    para.elements?.push({
+                        type: 'text',
+                        text: p,
+                        $parent: para,
+                    })
+                    paragraphs.push(para);
                 })
             } else {
                 paragraphs[paragraphs.length - 1].elements?.push(e);

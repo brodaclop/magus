@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
 import { Modal, Label, Icon, List } from 'semantic-ui-react';
-import { DomUtils } from '../utils/DomUtils';
+import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { EventEditor } from './editor/EventEditor';
-import { EditedEvent, StoryEvent } from './StoryEvent';
-import { Element } from 'xml-js';
+import { StoryEvent } from './StoryEvent';
 import { v4 } from 'uuid';
 
 const { attr, children, child, childText, addChild, addText, findElementsByName, deleteChild } = DomUtils;
 
 
-export const StoryScene: React.FC<{ scene: Element, renderer: Renderer, onChange: () => unknown, root: Element }> = ({ scene, renderer, onChange, root }) => {
+export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onChange: () => unknown, root: DOMElement }> = ({ scene, renderer, onChange, root }) => {
     const events = children(scene, 'events')[0];
     const setting = child(scene, 'setting');
     const map = setting ? attr(setting, 'map') : '';
     const description = setting ? attr(setting, 'description') : '';
-    const [editedEvent, setEditedEvent] = useState<EditedEvent>();
+    const [editedEvent, setEditedEvent] = useState<{ insert?: 'after' | 'before', anchor?: DOMElement, elem: DOMElement }>();
     return <>
         <Modal open={editedEvent !== undefined} onClose={() => setEditedEvent(undefined)}>
             <Modal.Content>
-                {editedEvent && <EventEditor event={editedEvent.event} onFinished={() => setEditedEvent(undefined)} renderer={renderer} root={root} />}
+                {editedEvent && <EventEditor event={editedEvent.elem} onFinished={() => {
+                    if (editedEvent.insert) {
+                        DomUtils.addChildElement(editedEvent.anchor?.$parent as DOMElement, editedEvent.elem, editedEvent.anchor as DOMElement, editedEvent.insert);
+                    }
+                    setEditedEvent(undefined)
+                }
+                } renderer={renderer} root={root} />}
             </Modal.Content>
         </Modal>
         <Label basic>
@@ -33,11 +38,29 @@ export const StoryScene: React.FC<{ scene: Element, renderer: Renderer, onChange
             }
         </Label>
         <List celled animated>
-            {events.elements?.map(e => <StoryEvent event={e} renderer={renderer} setEditedEvent={setEditedEvent} onClick={() => {
-                const status = attr(e, 'status');
-                attr(e, 'status', status ? null : 'completed');
-                onChange();
-            }}
+            {events.elements?.map(e => <StoryEvent
+                event={e}
+                renderer={renderer}
+                setEditedEvent={event => {
+                    if (event.insert) {
+                        setEditedEvent({
+                            insert: event.insert, elem: {
+                                type: 'element',
+                                name: 'event',
+                                $parent: e.$parent
+                            }, anchor: e
+                        });
+                    } else {
+                        setEditedEvent({ elem: e });
+
+                    }
+
+                }}
+                onClick={() => {
+                    const status = attr(e, 'status');
+                    attr(e, 'status', status ? null : 'completed');
+                    onChange();
+                }}
                 addComment={comment => {
                     addComment(e, root, comment);
                     onChange();
@@ -53,7 +76,7 @@ export const StoryScene: React.FC<{ scene: Element, renderer: Renderer, onChange
     </>
 }
 
-const ensureComments = (root: Element) => {
+const ensureComments = (root: DOMElement) => {
     const story = child(root, 'story');
     if (!story) {
         throw new Error('story is missing');
@@ -61,7 +84,7 @@ const ensureComments = (root: Element) => {
     return child(story, 'comments') || addChild(story, 'comments');
 }
 
-const addComment = (event: Element, root: Element, contents: string) => {
+const addComment = (event: DOMElement, root: DOMElement, contents: string) => {
     const eventId = ensureEventId(event);
     const comments = ensureComments(root);
     const lastComment = children(comments, 'comment').pop();
@@ -70,20 +93,20 @@ const addComment = (event: Element, root: Element, contents: string) => {
     addText(comment, contents);
 }
 
-const deleteComment = (comment: Element, root: Element) => {
+const deleteComment = (comment: DOMElement, root: DOMElement) => {
     const comments = ensureComments(root);
     deleteChild(comments, comment);
 }
 
 
-const findComments = (event: Element, root: Element): Element[] => {
+const findComments = (event: DOMElement, root: DOMElement): Array<DOMElement> => {
     const eventId = attr(event, 'id');
     const allComments = findElementsByName(root, 'comment');
     return allComments.filter(c => attr(c, 'event') === eventId);
 }
 
 
-const ensureEventId = (event: Element) => {
+const ensureEventId = (event: DOMElement) => {
     let id = attr(event, 'id') || v4();
     attr(event, 'id', id);
     return id;
