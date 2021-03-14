@@ -13,7 +13,7 @@ export const EditableText: React.FC<EditableTextProps> = ({ text, onChange }) =>
         setEditedText(text ?? '');
     }, [text]);
     if (edited) {
-        return <Input transparent autoFocus value={editedText} onChange={(e, { value }) => { setEditedText(value) }} onBlur={() => { setEdited(false); onChange(editedText) }} />
+        return <form onSubmit={() => { setEdited(false); onChange(editedText) }}><Input transparent autoFocus value={editedText} onChange={(e, { value }) => { setEditedText(value) }} onBlur={() => { setEdited(false); onChange(editedText) }} /></form>
     } else {
         return <span onClick={() => setEdited(true)}>{text ?? ''}</span>;
     }

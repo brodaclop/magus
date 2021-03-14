@@ -95,7 +95,7 @@ const calculateKepessegHarcertek = (karakter: { kepessegek: KarakterKepesseg }, 
     }
 }
 
-const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
+export const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
     if (karakter.maxEp > 0 && karakter.ep <= karakter.maxEp * 0.25) {
         return {
             ke: -15,

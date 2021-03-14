@@ -1,7 +1,8 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
+import { NumberInput } from './NumberInput';
 
-const NumberInput: any = require('semantic-ui-react-numberinput').default;
+//const NumberInput: any = require('semantic-ui-react-numberinput').default;
 
 interface Point {
     name: string;
@@ -14,7 +15,7 @@ interface Point {
 
 export const PointsTable: React.FC<{ points: Array<Point>, onChange: (name: string, newValue: number) => unknown, maxChange?: boolean, title?: string }> = ({ points, onChange, maxChange, title }) => {
     const aktChange = maxChange === undefined;
-    return <Table striped celled definition>
+    return <Table striped celled definition fluid>
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>{title ?? 'Pontok'}</Table.HeaderCell>
@@ -25,11 +26,11 @@ export const PointsTable: React.FC<{ points: Array<Point>, onChange: (name: stri
         <Table.Body>
             <Table.Row>
                 <Table.HeaderCell>Max</Table.HeaderCell>
-                {points.map(p => <Table.Cell>{maxChange ? <NumberInput maxLength={4} size='mini narrow' allowEmptyValue value={p.max} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: any) => onChange(p.name, Number(e))} /> : p.max}</Table.Cell>)}
+                {points.map(p => <Table.Cell>{maxChange ? <NumberInput value={p.max} min={0} max={1000} onChange={(e: number) => onChange(p.name, e)} /> : p.max}</Table.Cell>)}
             </Table.Row>
             <Table.Row>
                 <Table.HeaderCell>Akt</Table.HeaderCell>
-                {points.map(p => <Table.Cell>{!aktChange ? p.akt : <NumberInput maxLength={4} size='mini narrow' allowEmptyValue value={p.akt} stepAmount={1} minValue={0} maxValue={p.max} onChange={(e: any) => onChange(p.name, Math.min(p.max, Number(e)))} />}</Table.Cell>)}
+                {points.map(p => <Table.Cell>{!aktChange ? p.akt : <NumberInput value={p.akt} min={0} max={p.max} onChange={(e: number) => onChange(p.name, Math.min(p.max, e))} />}</Table.Cell>)}
             </Table.Row>
         </Table.Body>
     </Table>

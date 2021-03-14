@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Card, Dropdown, DropdownItemProps, Grid, GridColumn, GridRow, Label, Table } from 'semantic-ui-react';
+import { Button, Card, Dropdown, DropdownItemProps, Table } from 'semantic-ui-react';
 import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
-import { calculateHarcertek, Karakter } from '../engine/karakter';
+import { calculateHarcertek, calculateSebesulesHatrany, Karakter } from '../engine/karakter';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
 import { PointsTable } from './PointsTable';
+import { SzituacioSelector } from './SzituacioSelector';
 
-export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown }> = ({ karakter, save }) => {
-    const [dobasEredmeny, setDobasEredmeny] = useState<DiceRollResult>();
+export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown, dobasEredmeny: Record<string, DiceRollResult>, setDobasEredmeny(value: Record<string, DiceRollResult>): unknown }> = ({ karakter, save, dobasEredmeny, setDobasEredmeny }) => {
     const [szituaciok, setSzituaciok] = useState<Array<string>>([]);
 
     const fegyver = karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN;
@@ -19,11 +19,6 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
         save(karakter);
     };
 
-    const szituacioOptions: Array<DropdownItemProps> = Object.keys(SZITUACIOK).map(nev => ({
-        id: nev,
-        value: nev,
-        text: nev
-    }));
 
     const options: Array<DropdownItemProps> = [
         {
@@ -36,20 +31,37 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
 
     const cellContents = (name: string) => {
         switch (name) {
-            case 'sebzes': return <Button circular color='orange' onClick={() => {
-                setDobasEredmeny(roll(sebzesRoll, fegyver.harcertek.ce > 0));
-            }}>{formatDiceRoll(sebzesRoll)}</Button>
-            case 'ke': return <Button circular color='olive' onClick={() => setDobasEredmeny(roll('1k10+' + harcertekMatrix.sum[name]))}>{harcertekMatrix.sum[name]}</Button>
+            case 'sebzes': return <><Button circular color='orange' onClick={() => {
+                setDobasEredmeny({ ...dobasEredmeny, 'sebzes': roll(sebzesRoll, fegyver.harcertek.ce > 0) });
+            }}>{formatDiceRoll(sebzesRoll)}</Button><DobasEredmeny result={dobasEredmeny.sebzes} /></>
+            case 'ke': return <><Button circular color='olive' onClick={() => setDobasEredmeny({ ...dobasEredmeny, 'ke': roll('1k10+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny.ke} /></>
             case 'ce':
-            case 'te': return <Button circular color='purple' onClick={() => setDobasEredmeny(roll('1k100+' + harcertekMatrix.sum[name]))}>{harcertekMatrix.sum[name]}</Button>
+            case 'te': return <><Button circular color='purple' onClick={() => setDobasEredmeny({ ...dobasEredmeny, [name]: roll('1k100+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny[name]} /></>
             case 've': return harcertekMatrix.sum[name];
         }
     }
 
-    return <Card>
+    const headerColour = () => {
+        const down = karakter.ep <= 0 || karakter.fp <= 0;
+        if (down) {
+            return 'darkgrey';
+        }
+        const hatrany = calculateSebesulesHatrany(karakter);
+        if (!hatrany) {
+            return 'white';
+        }
+        if (hatrany.te === -10) {
+            return 'bisque';
+        }
+        if (hatrany.te === -20) {
+            return 'coral';
+        }
+    }
+
+    return <Card style={{ backgroundColor: headerColour(), filter: 'drop-shadow(5px 5px 3px #333)' }}>
         <Card.Content>
-            <Card.Header>{karakter.name}</Card.Header>
-            <Card.Meta>
+            <Card.Header >{karakter.name}</Card.Header>
+            <Card.Description>
                 <PointsTable
                     points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
                     onChange={(name, value) => {
@@ -57,53 +69,33 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
                         save(karakter);
                     }}
                 />
-            </Card.Meta>
-            <Card.Description>
-                <Grid columns={2}>
-                    <GridColumn>
-                        <GridRow>
-                            <Table columns={2} singleLine>
-                                <Table.Header>
-                                    <Table.HeaderCell colspan={2}>
-                                        <Dropdown disabled={false} compact
-                                            text={fegyver.name}
-                                            onChange={(e, v) => fegyverCsere(v.value !== undefined ? Number(v.value) : undefined)}
-                                            options={options}
-                                            value={karakter.valasztottFegyver}>
-                                        </Dropdown>
-                                    </Table.HeaderCell>
-                                </Table.Header>
-                                {harcertekMatrix.keys.map(m => <Table.Row>
-                                    <Table.HeaderCell>{(HARCERTEK_DISPLAY_NAMES as any)[m]}</Table.HeaderCell>
-                                    <Table.Cell>{cellContents(m)}</Table.Cell>
-                                </Table.Row>
-                                )}
-                                {fegyver.name !== FEGYVERTELEN.name &&
-                                    <Table.Row>
-                                        <Table.HeaderCell>Tám/kör</Table.HeaderCell>
-                                        <Table.Cell>{`${fegyver.lassu ? '1/' : ''}${fegyver.tamPerKor}`}</Table.Cell>
-                                    </Table.Row>
-                                }
-                                <Table.Row>
-                                    <Table.HeaderCell>Dobás</Table.HeaderCell>
-                                    <Table.Cell><DobasEredmeny result={dobasEredmeny} /></Table.Cell>
-                                </Table.Row>
-                            </Table>
-                        </GridRow>
-                    </GridColumn>
-                    <GridColumn textAlign='center'>
-                        <GridRow>
-                            <Label pointing='below' fluid>Szituáció</Label>
-                            <Dropdown disabled={false} multiple
-                                text='normál'
-                                onChange={(e, v) => { setSzituaciok([...v.value as Array<string>]) }}
-                                options={szituacioOptions}
-                                value={szituaciok}>
+                <Table columns={2} singleLine>
+                    <Table.Header>
+                        <Table.HeaderCell colspan={2}>
+                            <Dropdown disabled={false} compact
+                                text={fegyver.name}
+                                onChange={(e, v) => fegyverCsere(v.value !== undefined ? Number(v.value) : undefined)}
+                                options={options}
+                                value={karakter.valasztottFegyver}>
                             </Dropdown>
-                        </GridRow>
-                    </GridColumn>
-                </Grid>
+                        </Table.HeaderCell>
+                    </Table.Header>
+                    {harcertekMatrix.keys.map(m => <Table.Row>
+                        <Table.HeaderCell>{(HARCERTEK_DISPLAY_NAMES as any)[m]}</Table.HeaderCell>
+                        <Table.Cell>{cellContents(m)}</Table.Cell>
+                    </Table.Row>
+                    )}
+                    {fegyver.name !== FEGYVERTELEN.name &&
+                        <Table.Row>
+                            <Table.HeaderCell>Tám/kör</Table.HeaderCell>
+                            <Table.Cell>{`${fegyver.lassu ? '1/' : ''}${fegyver.tamPerKor}`}</Table.Cell>
+                        </Table.Row>
+                    }
+                </Table>
             </Card.Description>
+        </Card.Content>
+        <Card.Content extra textAlign='center'>
+            <SzituacioSelector szituaciok={szituaciok} setSzituaciok={setSzituaciok} />
         </Card.Content>
     </Card >
 }
