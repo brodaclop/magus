@@ -26,11 +26,11 @@ export const PointsTable: React.FC<{ points: Array<Point>, onChange: (name: stri
         <Table.Body>
             <Table.Row>
                 <Table.HeaderCell>Max</Table.HeaderCell>
-                {points.map(p => <Table.Cell>{maxChange ? <NumberInput value={p.max} min={0} max={1000} onChange={(e: number) => onChange(p.name, e)} /> : p.max}</Table.Cell>)}
+                {points.map(p => <Table.Cell>{maxChange ? <NumberInput icons value={p.max} min={0} max={1000} onChange={(e: number) => onChange(p.name, e)} /> : p.max}</Table.Cell>)}
             </Table.Row>
             <Table.Row>
                 <Table.HeaderCell>Akt</Table.HeaderCell>
-                {points.map(p => <Table.Cell>{!aktChange ? p.akt : <NumberInput value={p.akt} min={0} max={p.max} onChange={(e: number) => onChange(p.name, Math.min(p.max, e))} />}</Table.Cell>)}
+                {points.map(p => <Table.Cell>{!aktChange ? p.akt : <NumberInput icons value={p.akt} min={0} max={p.max} onChange={(e: number) => onChange(p.name, Math.min(p.max, e))} />}</Table.Cell>)}
             </Table.Row>
         </Table.Body>
     </Table>

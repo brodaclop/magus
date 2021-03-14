@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Button, Card, Dropdown, DropdownItemProps, Table } from 'semantic-ui-react';
+import { DobasMatrix } from '../engine/dobasmatrix';
 import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
 import { calculateHarcertek, calculateSebesulesHatrany, Karakter } from '../engine/karakter';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
@@ -7,18 +8,41 @@ import { DobasEredmeny } from './DobasEredmeny';
 import { PointsTable } from './PointsTable';
 import { SzituacioSelector } from './SzituacioSelector';
 
-export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakter) => unknown, dobasEredmeny: Record<string, DiceRollResult>, setDobasEredmeny(value: Record<string, DiceRollResult>): unknown }> = ({ karakter, save, dobasEredmeny, setDobasEredmeny }) => {
+export interface KombatCardProps {
+    karakter: Karakter,
+    save: (karakter: Karakter) => unknown,
+    dobasEredmeny: Record<string, DiceRollResult>,
+    setDobasEredmeny(value: Record<string, DiceRollResult>): unknown,
+}
+
+
+export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React.RefAttributes<unknown>> = forwardRef(({ karakter, save, dobasEredmeny, setDobasEredmeny }, ref) => {
     const [szituaciok, setSzituaciok] = useState<Array<string>>([]);
 
     const fegyver = karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN;
     const harcertekMatrix = calculateHarcertek(karakter, fegyver, szituaciok.map(sz => ({ ...SZITUACIOK[sz], name: sz }))).roll(['ke', 'te', 'ce', 've']);
     const sebzesRoll = sumRolls(harcertekMatrix.getRolls('sebzes')) ?? parseDiceRoll();
 
+    useImperativeHandle(ref, () => ({
+        rollKe: () => {
+            return roll('1k10+' + harcertekMatrix.sum.ke);
+        },
+        rollTe: () => {
+            return roll('1k100+' + harcertekMatrix.sum.te);
+        },
+        rollCe: () => {
+            return roll('1k100+' + harcertekMatrix.sum.ce);
+        },
+        rollSebzes: () => {
+            return roll(sebzesRoll, fegyver.harcertek.ce > 0);
+        },
+    }), [harcertekMatrix, sebzesRoll, fegyver]);
+
+
     const fegyverCsere = (v?: number) => {
         karakter.valasztottFegyver = v === undefined ? undefined : Number(v);
         save(karakter);
     };
-
 
     const options: Array<DropdownItemProps> = [
         {
@@ -58,7 +82,7 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
         }
     }
 
-    return <Card style={{ backgroundColor: headerColour(), filter: 'drop-shadow(5px 5px 3px #333)' }}>
+    return <Card fluid style={{ backgroundColor: headerColour(), filter: 'drop-shadow(5px 5px 3px #333)' }}>
         <Card.Content>
             <Card.Header >{karakter.name}</Card.Header>
             <Card.Description>
@@ -71,7 +95,7 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
                 />
                 <Table columns={2} singleLine>
                     <Table.Header>
-                        <Table.HeaderCell colspan={2}>
+                        <Table.HeaderCell colSpan={2}>
                             <Dropdown disabled={false} compact
                                 text={fegyver.name}
                                 onChange={(e, v) => fegyverCsere(v.value !== undefined ? Number(v.value) : undefined)}
@@ -98,4 +122,4 @@ export const KombatCard: React.FC<{ karakter: Karakter, save: (karakter: Karakte
             <SzituacioSelector szituaciok={szituaciok} setSzituaciok={setSzituaciok} />
         </Card.Content>
     </Card >
-}
+});
