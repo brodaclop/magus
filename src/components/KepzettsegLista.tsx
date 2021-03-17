@@ -13,7 +13,7 @@ const compare = (a: Kepzettseg, b: Kepzettseg): number => {
     return a.name.localeCompare(b.name);
 }
 
-export const KepzettsegLista: React.FC<{ kepzettsegek: Array<Kepzettseg> }> = ({ kepzettsegek }) => {
+export const KepzettsegLista: React.FC<{ kepzettsegek?: Array<Kepzettseg> }> = ({ kepzettsegek }) => {
     return <Table striped celled>
         <Table.Header>
             <Table.Row>
@@ -23,7 +23,7 @@ export const KepzettsegLista: React.FC<{ kepzettsegek: Array<Kepzettseg> }> = ({
             </Table.Row>
         </Table.Header>
         <Table.Body>
-            {kepzettsegek.sort(compare).map((r, i) => {
+            {kepzettsegek?.sort(compare).map((r, i) => {
                 return <Table.Row>
                     <Table.Cell>{r.name}</Table.Cell>
                     <Table.Cell>{r.szint}</Table.Cell>

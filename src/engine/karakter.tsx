@@ -33,7 +33,7 @@ export interface Karakter extends KarakterInfo, HasEPFP {
     kaszt: Kaszt;
     szint: number;
     kepessegek: KarakterKepesseg;
-    kepzettsegek: Array<Kepzettseg>;
+    kepzettsegek?: Array<Kepzettseg>;
     alapHarcertek: Harcertek;
     hmHarcertek: Harcertek;
     hm: number;
@@ -74,6 +74,10 @@ export interface Kepzettseg {
     kp: number;
 }
 
+export const findKepzettseg = ({ kepzettsegek }: Pick<Karakter, 'kepzettsegek'>, kepzettseg: string): Kepzettseg | undefined => {
+    return kepzettsegek?.find(k => k.name.toLowerCase() === kepzettseg.toLowerCase());
+}
+
 export const folottiResz = (kepesseg?: number, hatar: number = 10) => {
     return Math.max(0, ((kepesseg === undefined || Number.isNaN(kepesseg)) ? 0 : kepesseg) - hatar);
 }
@@ -88,12 +92,15 @@ export const szintlepes = (karakter: Karakter): Karakter => {
     return karakter;
 }
 
-const calculateKepessegHarcertek = (karakter: { kepessegek: KarakterKepesseg }, fegyver: Fegyver): Record<string, string | number> => {
+const calculateKepessegHarcertek = (karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'pancelok' | 'valasztottPancel'>, fegyver: Fegyver): Record<string, string | number> => {
+    const mgt = calculateMGT(karakter);
+    const ugy = folottiResz(karakter.kepessegek.ugy - mgt[0]);
+    const gy = folottiResz(karakter.kepessegek.gy - mgt[0]);
     return {
-        ke: folottiResz(karakter.kepessegek.gy) + folottiResz(karakter.kepessegek.ugy),
-        te: folottiResz(karakter.kepessegek.gy) + folottiResz(karakter.kepessegek.ugy) + folottiResz(karakter.kepessegek.ero),
-        ve: folottiResz(karakter.kepessegek.gy) + folottiResz(karakter.kepessegek.ugy),
-        ce: folottiResz(karakter.kepessegek.ugy),
+        ke: gy + ugy,
+        te: gy + ugy + folottiResz(karakter.kepessegek.ero),
+        ve: gy + ugy,
+        ce: ugy,
         sebzes: folottiResz(karakter.kepessegek.ero, 16)
     }
 }
@@ -117,7 +124,20 @@ export const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null =
     return null;
 }
 
-export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, kepessegek: KarakterKepesseg, szint?: number, kaszt?: { name: string } } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
+export const calculateMGT = ({ kepzettsegek, pancelok, valasztottPancel }: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'pancelok' | 'valasztottPancel'>): [number, boolean?] => {
+    const pancel = valasztottPancel !== undefined ? pancelok?.[valasztottPancel] : undefined;
+    if (!pancel) {
+        return [0]; // no pancel, no mgt
+    }
+    const nehezvertViselet = kepzettsegek?.find(k => k.name === 'Nehézvértviselet')?.szint;
+    switch (nehezvertViselet) {
+        case 'Mf': return [0];
+        case 'Af': return [pancel.nehez ? pancel.mgt : 0];
+        default: return [pancel.mgt, pancel.nehez];
+    }
+}
+
+export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, pancelok?: Array<Pancel>, valasztottPancel?: number, kepessegek: KarakterKepesseg, szint?: number, kaszt?: { name: string } } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
     const fegyvertelen = fegyver.name === FEGYVERTELEN.name;
     const okol = fegyver.name === 'Puszta kéz';
     const lofegyver: boolean = fegyver.harcertek.ce > 0;
@@ -133,7 +153,10 @@ export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarce
         ret.add(fegyver.name, { ...fegyver.harcertek, 'sebzes': fegyver.sebzes });
     }
     ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
-    if (!kepzettseg) {
+    const mgt = calculateMGT(karakter);
+    if (mgt[1]) {
+        ret.add('Nehézvért', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+    } else if (!kepzettseg) {
         if (!fegyvertelen) {
             if (!fejvadasz) {
                 ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen'] });

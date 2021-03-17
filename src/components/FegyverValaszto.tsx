@@ -106,7 +106,7 @@ function addFegyverAndKepzettseg(karakter: Karakter, fegyver: Fegyver, kepzettse
     }
     karakter.valasztottFegyver = karakter.fegyverek.findIndex(f => f.name === fegyver.name);
     const kepzettsegName = `Fegyverhasználat - ${fegyver.name.toLowerCase()}`;
-    karakter.kepzettsegek = karakter.kepzettsegek.filter(k => k.name !== kepzettsegName);
+    karakter.kepzettsegek = (karakter.kepzettsegek ?? []).filter(k => k.name !== kepzettsegName);
     if (kepzettsegSzint) {
         const kepzettseg: Kepzettseg = {
             name: kepzettsegName,

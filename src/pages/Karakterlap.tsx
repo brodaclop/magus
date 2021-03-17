@@ -8,7 +8,7 @@ import { HMEloszto } from '../components/HMEloszto';
 import { KepzettsegLista } from '../components/KepzettsegLista';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
-import { calculateHarcertek, Fegyver, Karakter, szintlepes } from '../engine/karakter';
+import { calculateHarcertek, calculateMGT, Fegyver, Karakter, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 import { KepzettsegModal } from '../components/KepzettsegModal';
@@ -38,6 +38,12 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
         fileDownload(JSON.stringify(karakter), `${karakter.name}.json`, 'text/json');
     }
 
+    const mgt = calculateMGT(karakter);
+    const kepessegMatrix = new DobasMatrix(Object.keys(KEPESSEG_NEV)).add('alap', karakter.kepessegek as any);
+    if (mgt[0] > 0) {
+        kepessegMatrix.add('mgt', { gy: -mgt[0], ugy: -mgt[0] });
+    }
+    kepessegMatrix.roll();
     return <Grid relaxed>
         <GridRow columns={3}>
             <GridColumn>
@@ -134,7 +140,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 </Modal>
             </GridColumn>
             <GridColumn>
-                <div><DobasMatrixDisplay title='Képességek' matrix={new DobasMatrix(Object.keys(KEPESSEG_NEV)).add('alap', karakter.kepessegek as any).roll()} direction='vertical' keyMap={KEPESSEG_NEV} /></div>
+                <div><DobasMatrixDisplay title='Képességek' matrix={kepessegMatrix} direction='vertical' keyMap={KEPESSEG_NEV} /></div>
             </GridColumn>
         </GridRow>
         <GridRow>

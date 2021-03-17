@@ -10,6 +10,7 @@ export const KepzettsegModal: React.FC<{ karakter: Karakter; save: (karakter: Ka
     const [kp, setKp] = useState<number>();
 
     const saveKepzettseg = () => {
+        karakter.kepzettsegek = karakter.kepzettsegek ?? [];
         if (kepzettseg && szint !== undefined) {
             const curr = karakter.kepzettsegek.findIndex(k => k.name === kepzettseg);
             const newKepzettseg: Kepzettseg = {
