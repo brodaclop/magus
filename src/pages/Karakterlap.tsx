@@ -12,18 +12,24 @@ import { calculateHarcertek, Fegyver, Karakter, szintlepes } from '../engine/kar
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 import { KepzettsegModal } from '../components/KepzettsegModal';
+import { PancelLista } from '../components/PancelLista';
+import { PancelValaszto } from '../components/PancelValaszto';
+import { Pancel } from '../engine/pancel';
 
 interface KarakterlapProps {
     categories: Array<string>,
     karakter: Karakter,
     fegyverek: Array<Fegyver>,
+    pancelok: Array<Pancel>,
+    savePancelok: (pancelok: Array<Pancel>) => unknown,
     save: (karakter: Karakter) => unknown,
     saveFegyverek: (fegyverek: Array<Fegyver>) => unknown,
     remove: () => unknown
 }
 
-export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek }) => {
+export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
+    const [ujPancel, setUjPancel] = useState(false)
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
     const [torlesKerdes, setTorlesKerdes] = useState(false);
@@ -113,10 +119,17 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
             <GridColumn>
                 <div><DobasMatrixDisplay title='Harcértékek' matrix={calculateHarcertek(karakter, karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>
                 <FegyverLista fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }} />
+                <PancelLista pancelok={karakter.pancelok} selected={karakter.valasztottPancel} onSelectionChange={f => { karakter.valasztottPancel = f; save(karakter) }} />
                 <Modal trigger={<Button primary>Fegyverlista módosítása</Button>} onOpen={() => setUjFegyver(true)} onClose={() => setUjFegyver(false)} open={ujfegyver} size='fullscreen'>
                     <Modal.Header>Fegyverlista módosítása</Modal.Header>
                     <Modal.Content>
                         <FegyverValaszto saveFegyverek={saveFegyverek} fegyverek={fegyverek} karakter={karakter} save={k => { save(k); }} />
+                    </Modal.Content>
+                </Modal>
+                <Modal trigger={<Button primary>Páncéllista módosítása</Button>} onOpen={() => setUjPancel(true)} onClose={() => setUjPancel(false)} open={ujPancel} size='fullscreen'>
+                    <Modal.Header>Páncéllista módosítása</Modal.Header>
+                    <Modal.Content>
+                        <PancelValaszto savePancelok={savePancelok} pancelok={pancelok} karakter={karakter} save={save} />
                     </Modal.Content>
                 </Modal>
             </GridColumn>

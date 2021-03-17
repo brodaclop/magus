@@ -1,6 +1,7 @@
 import { DobasMatrix } from "./dobasmatrix";
 import { FEGYVERTELEN, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
 import { Kaszt, osszead } from "./kasztok";
+import { Pancel } from "./pancel";
 import { roll } from "./roll";
 
 
@@ -37,6 +38,8 @@ export interface Karakter extends KarakterInfo, HasEPFP {
     hmHarcertek: Harcertek;
     hm: number;
     fegyverek: Array<Fegyver>;
+    pancelok?: Array<Pancel>;
+    valasztottPancel?: number;
     valasztottFegyver?: number;
     pszi?: {
         max: number;

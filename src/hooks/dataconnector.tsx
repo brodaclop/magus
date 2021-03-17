@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FEGYVEREK } from "../engine/harc";
 import { Fegyver, Karakter, KarakterInfo } from "../engine/karakter";
 import { FAJ_KEPESSEG, KepessegDobas } from "../engine/kasztok";
+import { Pancel, PANCELOK } from "../engine/pancel";
 
 const PREFIX = 'magus.';
 const CONFIG_PREFIX = 'magus-config.';
@@ -16,6 +17,8 @@ interface DataConnector {
     listFajok: () => Record<string, KepessegDobas>;
     listFegyverek: () => Array<Fegyver>;
     saveFegyverek: (fegyverek: Array<Fegyver>) => void;
+    listPancelok: () => Array<Pancel>;
+    savePancelok: (pancelok: Array<Pancel>) => void;
     loadStory: () => string,
     saveStory: (story: string) => unknown;
     key?: number;
@@ -90,6 +93,15 @@ export function useDataConnector(): DataConnector {
             return ret;
         },
         saveFegyverek: fegyverek => put(CONFIG_PREFIX + 'fegyverek', fegyverek),
+        listPancelok: () => {
+            let ret = fetch<Array<Pancel>>(CONFIG_PREFIX + 'pancelok');
+            if (!ret) {
+                put(CONFIG_PREFIX + 'pancelok', PANCELOK);
+                ret = PANCELOK;
+            }
+            return ret;
+        },
+        savePancelok: pancelok => put(CONFIG_PREFIX + 'pancelok', pancelok),
         loadStory: () => fetch(STORY_KEY) ?? '<story/>',
         saveStory: (story: string) => put(STORY_KEY, story),
         key: operations
