@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Button, Card, Dropdown, DropdownItemProps, Table } from 'semantic-ui-react';
 import { DobasMatrix } from '../engine/dobasmatrix';
-import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
+import { FEGYVERTELEN, FegyverUtils, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
 import { calculateHarcertek, calculateSebesulesHatrany, Karakter } from '../engine/karakter';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
@@ -34,7 +34,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
             return roll('1k100+' + harcertekMatrix.sum.ce);
         },
         rollSebzes: () => {
-            return roll(sebzesRoll, fegyver.harcertek.ce > 0);
+            return roll(sebzesRoll, FegyverUtils.tipus(fegyver) === 'lofegyver');
         },
     }), [harcertekMatrix, sebzesRoll, fegyver]);
 
@@ -56,7 +56,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
     const cellContents = (name: string) => {
         switch (name) {
             case 'sebzes': return <><Button circular color='orange' onClick={() => {
-                setDobasEredmeny({ ...dobasEredmeny, 'sebzes': roll(sebzesRoll, fegyver.harcertek.ce > 0) });
+                setDobasEredmeny({ ...dobasEredmeny, 'sebzes': roll(sebzesRoll, FegyverUtils.tipus(fegyver) === 'lofegyver') });
             }}>{formatDiceRoll(sebzesRoll)}</Button><DobasEredmeny result={dobasEredmeny.sebzes} /></>
             case 'ke': return <><Button circular color='olive' onClick={() => setDobasEredmeny({ ...dobasEredmeny, 'ke': roll('1k10+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny.ke} /></>
             case 'ce':

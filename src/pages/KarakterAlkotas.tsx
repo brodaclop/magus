@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
-import { Kaszt, KASZTOK, KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
+import { Kaszt, KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { PointsTable } from '../components/PointsTable';
 import { KarakterAlkotasBackground } from '../components/KarakterAlkotasBackground';
@@ -14,34 +14,30 @@ const NumberInput: any = require('semantic-ui-react-numberinput').default;
 export interface BackgroundSelection {
     name: string;
     faj?: string;
-    kaszt?: string;
-    manual?: Kaszt;
+    kaszt?: Kaszt;
     szint?: number;
 }
 
 
-const calculateKepessegek = (fajok: Record<string, KepessegDobas>, { kaszt, faj, manual }: { kaszt?: string, faj?: string, manual?: Kaszt }, roll?: boolean) => {
+const calculateKepessegek = (fajok: Record<string, KepessegDobas>, { kaszt, faj }: { kaszt?: Kaszt, faj?: string }, roll?: boolean) => {
     const newMatrix = new DobasMatrix(Object.keys(KEPESSEG_NEV));
-    if (manual) {
-        newMatrix.add('Kaszt: ' + kaszt, manual.kepesseg as unknown as Record<string, string>);
-    } else if (kaszt && KASZTOK[kaszt]) {
-        newMatrix.add('Kaszt: ' + kaszt, KASZTOK[kaszt].kepesseg as unknown as Record<string, string>);
+    if (kaszt) {
+        newMatrix.add('Kaszt: ' + kaszt.name, kaszt.kepesseg as unknown as Record<string, string>);
     }
     if (faj && fajok[faj]) {
         newMatrix.add('Faj: ' + faj, fajok[faj] as unknown as Record<string, string>);
     }
-    if (roll || manual) {
+    if (roll) {
         newMatrix.roll();
     }
     return newMatrix;
 }
 
-const createKarakter = ({ kaszt, faj, manual, szint, name }: BackgroundSelection, kepessegek: DobasMatrix) => {
-    const kasztOb = manual ?? KASZTOK[kaszt ?? ''];
-    if (!kasztOb || !kepessegek.sum || !faj) {
+const createKarakter = ({ kaszt, faj, szint, name }: BackgroundSelection, kepessegek: DobasMatrix) => {
+    if (!kaszt || !kepessegek.sum || !faj) {
         return null;
     }
-    const epfp = kasztOb.epfp;
+    const epfp = kaszt.epfp;
     const ep = epfp.ep + folottiResz(kepessegek.sum.egs);
     const fp = epfp.fp + folottiResz(kepessegek.sum.ae) + folottiResz(kepessegek.sum.ak);
     const karakter: Karakter = {
@@ -50,7 +46,7 @@ const createKarakter = ({ kaszt, faj, manual, szint, name }: BackgroundSelection
         faj,
         categories: [],
         kepessegek: kepessegek.sum as unknown as KarakterKepesseg,
-        kaszt: kasztOb,
+        kaszt,
         szint: 0,
         hm: 0,
         maxEp: ep,
@@ -59,7 +55,7 @@ const createKarakter = ({ kaszt, faj, manual, szint, name }: BackgroundSelection
         fp,
         hmHarcertek: { ke: 0, te: 0, ve: 0, ce: 0 },
         kepzettsegek: [],
-        alapHarcertek: kasztOb.alapHarcertek,
+        alapHarcertek: kaszt.alapHarcertek,
         fegyverek: [FEGYVERTELEN]
     };
     [...Array(szint).keys()].forEach(() => szintlepes(karakter));
@@ -73,8 +69,8 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
     const [matrix, setMatrix] = useState<DobasMatrix>(new DobasMatrix(Object.keys(KEPESSEG_NEV)));
 
     useEffect(() => {
-        setMatrix(calculateKepessegek(fajok, { kaszt: backgroundSelection.kaszt, faj: backgroundSelection.faj, manual: backgroundSelection.manual }));
-    }, [fajok, backgroundSelection.manual, backgroundSelection.faj, backgroundSelection.kaszt, setMatrix]);
+        setMatrix(calculateKepessegek(fajok, { kaszt: backgroundSelection.kaszt, faj: backgroundSelection.faj }));
+    }, [fajok, backgroundSelection.faj, backgroundSelection.kaszt, setMatrix]);
 
     const dob = () => {
         setMatrix(calculateKepessegek(fajok, backgroundSelection, true));
@@ -82,7 +78,7 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
 
 
 
-    const kaszt = backgroundSelection.manual ?? KASZTOK[backgroundSelection.kaszt ?? ''];
+    const { kaszt } = backgroundSelection;
     const karakter = kaszt ? {
         kepessegek: matrix.sum as unknown as KarakterKepesseg,
         alapHarcertek: kaszt.alapHarcertek,
@@ -92,8 +88,6 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
         ep: kaszt.epfp.ep + folottiResz(matrix.sum.egs),
         fp: kaszt.epfp.fp + folottiResz(matrix.sum.ae) + folottiResz(matrix.sum.ak)
     } : undefined;
-
-    const kezi = backgroundSelection.manual;
 
     return <Grid relaxed>
         <GridRow columns={2} divided>
@@ -105,36 +99,40 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                     <div>
                         <Button as='div' basic floated='left'>
                             <Label basic>Elosztható HM:</Label>
-                            {backgroundSelection.manual ? <NumberInput size='mini' allowEmptyValue value={backgroundSelection.manual.hm.szabad} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: string) => {
-                                if (backgroundSelection.manual) {
-                                    backgroundSelection.manual.hm.szabad = Number(e);
+                            <NumberInput size='mini' allowEmptyValue value={backgroundSelection.kaszt?.hm.szabad} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: string) => {
+                                if (backgroundSelection.kaszt) {
+                                    backgroundSelection.kaszt.hm.szabad = Number(e);
                                     setBackgroundSelection({ ...backgroundSelection });
                                 }
-                            }} /> : <Label basic>{kaszt.hm.szabad}</Label>}
+                            }} />
                         </Button>
                         <Button as='div' basic floated='right'>
                             <Label basic>Szintenkénti FP:</Label>
-                            {kezi && <Input value={kaszt.epfp.fpPerSzint} onChange={e => {
-                                kezi.epfp.fpPerSzint = e.target.value;
-                                setBackgroundSelection({ ...backgroundSelection, manual: kezi })
-                            }} />}
-                            {!kezi && <Label basic>{kaszt.epfp.fpPerSzint}</Label>}
+                            <Input disabled={!kaszt} value={kaszt?.epfp.fpPerSzint} onChange={e => {
+                                if (kaszt) {
+                                    kaszt.epfp.fpPerSzint = e.target.value;
+                                    setBackgroundSelection({ ...backgroundSelection, kaszt })
+                                }
+                            }} />
+
                         </Button>
                     </div>
                     <div><DobasMatrixDisplay
                         title='Harcértékek'
-                        editable={kezi ? ['alap', 'hm'] : []}
+                        editable={kaszt ? ['alap', 'hm'] : []}
+                        numberOnly
                         setValue={(name, key, value) => {
-                            if (kezi) {
+                            const intValue = Number(value);
+                            if (kaszt && !isNaN(intValue)) {
                                 if (name === 'alap') {
-                                    (kezi.alapHarcertek as any)[key] = value;
+                                    (kaszt.alapHarcertek as any)[key] = value;
                                 } else if (name === 'hm') {
-                                    (kezi.hm.kotelezo as any)[key] = value;
+                                    (kaszt.hm.kotelezo as any)[key] = value;
                                 }
-                                setBackgroundSelection({ ...backgroundSelection, manual: kezi })
+                                setBackgroundSelection({ ...backgroundSelection, kaszt })
                             }
                         }}
-                        matrix={calculateHarcertek(karakter, FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])}
+                        matrix={calculateHarcertek(karakter as Karakter, FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])}
                         direction='vertical'
                         keyMap={HARCERTEK_DISPLAY_NAMES} />
                     </div>
@@ -144,17 +142,17 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                             points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
 
                             onChange={(name, value) => {
-                                if (kezi) {
+                                if (kaszt) {
                                     if (name === 'ep') {
-                                        kezi.epfp.ep = value - folottiResz(matrix.sum.egs);
+                                        kaszt.epfp.ep = value - folottiResz(matrix.sum.egs);
                                     }
                                     if (name === 'fp') {
-                                        kezi.epfp.fp = value - folottiResz(matrix.sum.ae) - folottiResz(matrix.sum.ak);
+                                        kaszt.epfp.fp = value - folottiResz(matrix.sum.ae) - folottiResz(matrix.sum.ak);
                                     }
-                                    setBackgroundSelection({ ...backgroundSelection, manual: kezi })
+                                    setBackgroundSelection({ ...backgroundSelection, kaszt })
                                 }
                             }}
-                            maxChange={kezi !== undefined}
+                            maxChange={kaszt !== undefined}
                         />
                     </div>
                 </>
@@ -166,13 +164,13 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                     matrix={matrix}
                     keyMap={KEPESSEG_NEV}
                     direction='vertical'
-                    editable={kezi ? ['Kaszt: egyéb'] : []}
-                    setValue={(name, key, value) => kezi && setBackgroundSelection({ ...backgroundSelection, manual: { ...kezi, kepesseg: { ...kezi.kepesseg, [key]: value } } })} />
+                    editable={kaszt?.name ? ['Kaszt: ' + kaszt.name] : []}
+                    setValue={(name, key, value) => kaszt && setBackgroundSelection({ ...backgroundSelection, kaszt: { ...kaszt, kepesseg: { ...kaszt.kepesseg, [key]: value } } })} />
             </GridColumn>
         </GridRow>
         <GridRow columns={1} textAlign='center'>
             <GridColumn>
-                <Button disabled={!!kezi} secondary onClick={dob}>Dob</Button>
+                <Button disabled={!kaszt} secondary onClick={dob}>Dob</Button>
                 <Button disabled={!backgroundSelection.name || backgroundSelection.szint === undefined || !matrix.sum} primary onClick={() => { const kar = createKarakter(backgroundSelection, matrix); if (kar) { save(kar) } }}>Ment</Button>
             </GridColumn>
         </GridRow>

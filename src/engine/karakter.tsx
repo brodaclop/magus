@@ -1,5 +1,5 @@
 import { DobasMatrix } from "./dobasmatrix";
-import { FEGYVERTELEN, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
+import { FEGYVERTELEN, FegyverUtils, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
 import { Kaszt, osszead } from "./kasztok";
 import { Pancel } from "./pancel";
 import { roll } from "./roll";
@@ -137,41 +137,54 @@ export const calculateMGT = ({ kepzettsegek, pancelok, valasztottPancel }: Pick<
     }
 }
 
-export const calculateHarcertek = (karakter: { alapHarcertek: Harcertek, hmHarcertek: Harcertek, kepzettsegek?: Array<Kepzettseg>, pancelok?: Array<Pancel>, valasztottPancel?: number, kepessegek: KarakterKepesseg, szint?: number, kaszt?: { name: string } } & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
-    const fegyvertelen = fegyver.name === FEGYVERTELEN.name;
-    const okol = fegyver.name === 'Puszta kéz';
-    const lofegyver: boolean = fegyver.harcertek.ce > 0;
+const addKepzettseg = (ret: DobasMatrix, karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'kaszt' | 'pancelok' | 'valasztottPancel'>, fegyver: Fegyver) => {
+    const tipus = FegyverUtils.tipus(fegyver);
     const fejvadasz = karakter.kaszt?.name === 'fejvadász';
-    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => okol ? (k.name === 'Ökölharc') : (k.name === 'Fegyverhasználat - ' + fegyver.name.toLowerCase()));
-    const ret: DobasMatrix = new DobasMatrix(fegyvertelen ? ['ke', 'te', 've', 'ce', 'sebzes'] : (lofegyver ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
-    ret.add('alap', karakter.alapHarcertek as unknown as Record<string, number>);
-    if (fejvadasz && karakter.szint) {
-        ret.add('spec', { ke: Math.floor(karakter.szint / 2), sebzes: Math.floor(karakter.szint / 2) });
-    }
-    ret.add('hm', karakter.hmHarcertek as unknown as Record<string, number>)
-    if (!fegyvertelen) {
-        ret.add(fegyver.name, { ...fegyver.harcertek, 'sebzes': fegyver.sebzes });
-    }
-    ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
+    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => k.name === FegyverUtils.kepzettseg(fegyver));
     const mgt = calculateMGT(karakter);
     if (mgt[1]) {
         ret.add('Nehézvért', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
     } else if (!kepzettseg) {
-        if (!fegyvertelen) {
+        if (tipus) {
             if (!fejvadasz) {
                 ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
             } else {
                 ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen, fejvadász'] });
             }
         }
-    } else if (!okol) {
+    } else if (tipus !== 'ököl') { // ökölharcnál nincs bónusz
         ret.add('Képzettség ' + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
     }
+
+}
+
+export const calculateHarcertek = (karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'szint' | 'alapHarcertek' | 'kaszt' | 'hmHarcertek' | 'pancelok' | 'valasztottPancel'> & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
+    const tipus = FegyverUtils.tipus(fegyver);
+    const ret: DobasMatrix = new DobasMatrix(!tipus ? ['ke', 'te', 've', 'ce', 'sebzes'] : (tipus === 'lofegyver' ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
+
+    ret.add('alap', karakter.alapHarcertek as unknown as Record<string, number>);
+
+    const fejvadasz = karakter.kaszt?.name === 'fejvadász';
+    if (fejvadasz && karakter.szint) {
+        ret.add('spec', { ke: Math.floor(karakter.szint / 2), sebzes: Math.floor(karakter.szint / 2) });
+    }
+
+    ret.add('hm', karakter.hmHarcertek as unknown as Record<string, number>)
+
+    if (tipus) {
+        ret.add(fegyver.name, { ...fegyver.harcertek, 'sebzes': fegyver.sebzes });
+    }
+
+    ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
+
+    addKepzettseg(ret, karakter, fegyver);
 
     const sebesules = calculateSebesulesHatrany(karakter);
     if (sebesules) {
         ret.add('Sebesülés', { ...sebesules });
     }
+
     szituaciok?.forEach(sz => ret.add(sz.name, { ...sz }));
+
     return ret;
 }

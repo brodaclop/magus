@@ -1,12 +1,12 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import { DobasMatrix } from '../engine/dobasmatrix';
-import { formatDiceRoll } from '../engine/roll';
+import { formatDiceRoll, parseDiceRoll } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
+import { DobasInput } from './DobasInput';
+import { NumberInput } from './NumberInput';
 
-const NumberInput: any = require('semantic-ui-react-numberinput').default;
-
-export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string | React.ReactNode, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string> }> = ({ matrix, keyMap, direction, title, editable, setValue }) => {
+export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string | React.ReactNode, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string>, numberOnly?: boolean }> = ({ matrix, keyMap, direction, title, editable, setValue, numberOnly }) => {
     const displayCell = (name: string, key: string) => {
         const value = matrix.values[name][key];
         const constantRoll = (value?.roll?.die ?? 0) === 0;
@@ -17,7 +17,11 @@ export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<
             </Table.Cell>;
         } else {
             return <Table.Cell key={name + '-' + key}>
-                <NumberInput size='mini' allowEmptyValue value={value.roll.plus} stepAmount={1} minValue={0} maxValue={1000} onChange={(e: string) => setValue?.(name, key, e)} />
+                {numberOnly ?
+                    <NumberInput value={value?.roll.plus ?? 0} onChange={v => setValue?.(name, key, String(v))} min={0} max={100000} />
+                    :
+                    <DobasInput value={value?.roll ?? parseDiceRoll('')} onChange={e => setValue?.(name, key, formatDiceRoll(e))} />
+                }
             </Table.Cell>;
         }
     }

@@ -9,6 +9,8 @@ export interface Harcertek {
     ce: number;
 }
 
+export type fegyverTipus = 'kozelharc' | 'lofegyver' | 'pajzs' | 'ököl';
+
 export const HARCERTEK_DISPLAY_NAMES = { 'ke': 'KÉ', 'te': 'TÉ', 've': 'VÉ', 'ce': 'CÉ', 'sebzes': 'Sebzés' };
 
 export const FEGYVER_KEPZETTSEG: Record<string, Harcertek> = {
@@ -1003,3 +1005,33 @@ export const SZITUACIOK: Record<string, Harcertek> = {
         ce: 0
     },
 }
+
+const tipus = (fegyver?: Fegyver): fegyverTipus | undefined => {
+    if (!fegyver || fegyver.name === FEGYVERTELEN.name) {
+        return undefined;
+    }
+    if (fegyver.harcertek.ce > 0) {
+        return 'lofegyver';
+    }
+    if (fegyver.name.toLowerCase() === 'ököl') {
+        return 'ököl';
+    }
+    return 'kozelharc';
+}
+
+const kepzettseg = (fegyver: Fegyver, dobas?: boolean): string => {
+    if (fegyver.name.toLowerCase() === 'ököl') {
+        return 'Ökölharc';
+    }
+    if (dobas) {
+        return 'Fegyverdobás - ' + fegyver.name.toLowerCase();
+    } else {
+        return 'Fegyverhasználat - ' + fegyver.name.toLowerCase();
+    }
+}
+
+export const FegyverUtils = {
+    tipus,
+    kepzettseg
+}
+

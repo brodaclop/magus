@@ -15,6 +15,7 @@ import { KepzettsegModal } from '../components/KepzettsegModal';
 import { PancelLista } from '../components/PancelLista';
 import { PancelValaszto } from '../components/PancelValaszto';
 import { Pancel } from '../engine/pancel';
+import { EditableText } from '../story/components/EditableText';
 
 interface KarakterlapProps {
     categories: Array<string>,
@@ -48,7 +49,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
         <GridRow columns={3}>
             <GridColumn>
                 <Table striped definition>
-                    <Table.Row><Table.Cell>Név:</Table.Cell><Table.Cell>{karakter.name}</Table.Cell></Table.Row>
+                    <Table.Row><Table.Cell>Név:</Table.Cell><Table.Cell><EditableText text={karakter.name} onChange={n => { karakter.name = n; save(karakter); }} /> </Table.Cell></Table.Row>
                     <Table.Row><Table.Cell>Faj:</Table.Cell><Table.Cell>{karakter.faj}</Table.Cell></Table.Row>
                     <Table.Row><Table.Cell>Kaszt:</Table.Cell><Table.Cell>{karakter.kaszt.name}</Table.Cell></Table.Row>
                     <Table.Row><Table.Cell>Szint:</Table.Cell>
