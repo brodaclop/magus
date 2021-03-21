@@ -56,7 +56,7 @@ const createKarakter = ({ kaszt, faj, szint, name }: BackgroundSelection, kepess
         hmHarcertek: { ke: 0, te: 0, ve: 0, ce: 0 },
         kepzettsegek: [],
         alapHarcertek: kaszt.alapHarcertek,
-        fegyverek: [FEGYVERTELEN]
+        fegyverek: []
     };
     [...Array(szint).keys()].forEach(() => szintlepes(karakter));
     return karakter;
@@ -132,7 +132,7 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                                 setBackgroundSelection({ ...backgroundSelection, kaszt })
                             }
                         }}
-                        matrix={calculateHarcertek(karakter as Karakter, FEGYVERTELEN).roll(['te', 've', 'ce', 'ke'])}
+                        matrix={calculateHarcertek(karakter as Karakter).roll(['te', 've', 'ce', 'ke'])}
                         direction='vertical'
                         keyMap={HARCERTEK_DISPLAY_NAMES} />
                     </div>

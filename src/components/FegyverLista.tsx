@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import { Fegyver } from '../engine/karakter';
 
-export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: number, onSelectionChange?: (newSelection: number | undefined) => unknown }> = ({ fegyverek, selected, onSelectionChange }) => {
+export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: number, onSelectionChange?: (newSelection: number | undefined) => unknown, title?: string }> = ({ fegyverek, selected, onSelectionChange, title }) => {
     const fegyverLista: Array<Record<string, string | number>> = fegyverek.map(fegyver => {
         const rec: Record<string, string | number> = {};
         rec.name = fegyver.name;
@@ -19,7 +19,7 @@ export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: numb
     return <Table celled striped definition selectable={onSelectionChange !== undefined}>
         <Table.Header>
             <Table.Row>
-                <Table.HeaderCell>Fegyver</Table.HeaderCell>
+                <Table.HeaderCell>{title ?? 'Fegyver'}</Table.HeaderCell>
                 <Table.HeaderCell>KÉ</Table.HeaderCell>
                 <Table.HeaderCell>TÉ</Table.HeaderCell>
                 <Table.HeaderCell>VÉ</Table.HeaderCell>

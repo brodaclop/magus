@@ -41,6 +41,7 @@ export interface Karakter extends KarakterInfo, HasEPFP {
     pancelok?: Array<Pancel>;
     valasztottPancel?: number;
     valasztottFegyver?: number;
+    masodlagosFegyver?: number;
     pszi?: {
         max: number;
         akt: number;
@@ -155,10 +156,42 @@ const addKepzettseg = (ret: DobasMatrix, karakter: Pick<Karakter, 'kepessegek' |
     } else if (tipus !== 'ököl') { // ökölharcnál nincs bónusz
         ret.add('Képzettség ' + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
     }
-
 }
 
-export const calculateHarcertek = (karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'szint' | 'alapHarcertek' | 'kaszt' | 'hmHarcertek' | 'pancelok' | 'valasztottPancel'> & HasEPFP, fegyver: Fegyver, szituaciok?: Array<Harcertek & { name: string }>): DobasMatrix => {
+const addKetkezes = (ret: DobasMatrix, karakter: Karakter, masodlagos?: boolean) => {
+    if (karakter.valasztottFegyver === undefined || karakter.masodlagosFegyver === undefined) {
+        return;
+    }
+    const ketkezesHarc = findKepzettseg(karakter, 'Kétkezes harc');
+    switch (ketkezesHarc?.szint) {
+        case 'Mf': return;
+        case 'Af': {
+            if (masodlagos) {
+                ret.add('kétkezes harc', { ke: -2, te: -5, ve: -5 });
+            }
+            return;
+        }
+        default: {
+            if (masodlagos) {
+                ret.add('kétkezes har', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+            } else {
+                ret.add('kétkezes harc', { ke: -5, te: -10, ve: -10 });
+            }
+            return;
+        }
+    }
+}
+
+const findFegyver = (karakter: Karakter, masodlagos?: boolean): Fegyver => {
+    const index = masodlagos ? karakter.masodlagosFegyver : karakter.valasztottFegyver;
+    if (index === undefined) {
+        return FEGYVERTELEN;
+    }
+    return karakter.fegyverek[index] ?? FEGYVERTELEN;
+}
+
+export const calculateHarcertek = (karakter: Karakter, szituaciok?: Array<Harcertek & { name: string }>, masodlagos?: boolean): DobasMatrix => {
+    const fegyver = findFegyver(karakter, masodlagos);
     const tipus = FegyverUtils.tipus(fegyver);
     const ret: DobasMatrix = new DobasMatrix(!tipus ? ['ke', 'te', 've', 'ce', 'sebzes'] : (tipus === 'lofegyver' ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
 
@@ -178,6 +211,8 @@ export const calculateHarcertek = (karakter: Pick<Karakter, 'kepessegek' | 'kepz
     ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
 
     addKepzettseg(ret, karakter, fegyver);
+
+    addKetkezes(ret, karakter, masodlagos);
 
     const sebesules = calculateSebesulesHatrany(karakter);
     if (sebesules) {

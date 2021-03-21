@@ -20,7 +20,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
     const [szituaciok, setSzituaciok] = useState<Array<string>>([]);
 
     const fegyver = karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN;
-    const harcertekMatrix = calculateHarcertek(karakter, fegyver, szituaciok.map(sz => ({ ...SZITUACIOK[sz], name: sz }))).roll(['ke', 'te', 'ce', 've']);
+    const harcertekMatrix = calculateHarcertek(karakter, szituaciok.map(sz => ({ ...SZITUACIOK[sz], name: sz }))).roll(['ke', 'te', 'ce', 've']);
     const sebzesRoll = sumRolls(harcertekMatrix.getRolls('sebzes')) ?? parseDiceRoll();
 
     useImperativeHandle(ref, () => ({
