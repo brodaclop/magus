@@ -93,7 +93,7 @@ export const szintlepes = (karakter: Karakter): Karakter => {
     return karakter;
 }
 
-const calculateKepessegHarcertek = (karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'pancelok' | 'valasztottPancel'>, fegyver: Fegyver): Record<string, string | number> => {
+const calculateKepessegHarcertek = (karakter: Karakter, fegyver: Fegyver): Record<string, string | number> => {
     const mgt = calculateMGT(karakter);
     const ugy = folottiResz(karakter.kepessegek.ugy - mgt[0]);
     const gy = folottiResz(karakter.kepessegek.gy - mgt[0]);
@@ -125,12 +125,12 @@ export const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null =
     return null;
 }
 
-export const calculateMGT = ({ kepzettsegek, pancelok, valasztottPancel }: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'pancelok' | 'valasztottPancel'>): [number, boolean?] => {
-    const pancel = valasztottPancel !== undefined ? pancelok?.[valasztottPancel] : undefined;
+export const calculateMGT = (karakter: Karakter): [number, boolean?] => {
+    const pancel = karakter.valasztottPancel !== undefined ? karakter.pancelok?.[karakter.valasztottPancel] : undefined;
     if (!pancel) {
         return [0]; // no pancel, no mgt
     }
-    const nehezvertViselet = kepzettsegek?.find(k => k.name === 'Nehézvértviselet')?.szint;
+    const nehezvertViselet = findKepzettseg(karakter, 'Nehézvértviselet')?.szint;
     switch (nehezvertViselet) {
         case 'Mf': return [0];
         case 'Af': return [pancel.nehez ? pancel.mgt : 0];
@@ -138,7 +138,7 @@ export const calculateMGT = ({ kepzettsegek, pancelok, valasztottPancel }: Pick<
     }
 }
 
-const addKepzettseg = (ret: DobasMatrix, karakter: Pick<Karakter, 'kepessegek' | 'kepzettsegek' | 'kaszt' | 'pancelok' | 'valasztottPancel'>, fegyver: Fegyver) => {
+const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver) => {
     const tipus = FegyverUtils.tipus(fegyver);
     const fejvadasz = karakter.kaszt?.name === 'fejvadász';
     const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => k.name === FegyverUtils.kepzettseg(fegyver));
@@ -173,7 +173,7 @@ const addKetkezes = (ret: DobasMatrix, karakter: Karakter, masodlagos?: boolean)
         }
         default: {
             if (masodlagos) {
-                ret.add('kétkezes har', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+                ret.add('kétkezes harc', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
             } else {
                 ret.add('kétkezes harc', { ke: -5, te: -10, ve: -10 });
             }
