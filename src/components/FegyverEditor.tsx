@@ -13,7 +13,10 @@ interface FormValues {
     lotav?: number;
     sebzes: string;
     tamPerKor?: number;
+    erobonusz?: number;
     lassu: boolean;
+    pajzs: boolean;
+    mgt?: number;
 }
 
 export type FEGYVER_KEPZETTSEG = 'képzetlen' | 'Af' | 'Mf';
@@ -29,7 +32,10 @@ const convertToFormValues = (fegyver?: Fegyver): FormValues => {
         lotav: fegyver?.lotav,
         sebzes: fegyver?.sebzes ?? '',
         tamPerKor: fegyver?.tamPerKor,
-        lassu: fegyver?.lassu ?? false
+        erobonusz: fegyver?.erobonusz,
+        lassu: fegyver?.lassu ?? false,
+        pajzs: fegyver?.pajzs ?? false,
+        mgt: fegyver?.mgt ?? 0
     }
 }
 
@@ -45,7 +51,10 @@ const convertFromFormValues = (fegyver: FormValues): Fegyver => {
         lotav: fegyver.lotav,
         sebzes: fegyver.sebzes,
         tamPerKor: fegyver.tamPerKor ?? 1,
-        lassu: fegyver.lassu
+        erobonusz: fegyver.erobonusz,
+        lassu: fegyver.lassu,
+        pajzs: fegyver.pajzs,
+        mgt: fegyver.mgt
     }
 }
 
@@ -94,6 +103,13 @@ export const FegyverEditor: React.FC<{ kepzettseg?: boolean, fegyver?: Fegyver, 
                     </Checkbox>
                 </div>
                 <div><IntegerInput value={form.tamPerKor} onChange={tamPerKor => setForm({ ...form, tamPerKor })} label={`Támadás körönként: ${form.lassu ? '1 / ' : ''}`} /></div>
+                <div><IntegerInput value={form.erobonusz} onChange={erobonusz => setForm({ ...form, erobonusz })} label={`Minimum erő bónuszhoz:`} /></div>
+                <div>
+                    <Label pointing='right' basic>Pajzs:</Label>
+                    <Checkbox fitted={true} toggle checked={form.pajzs} onChange={() => setForm({ ...form, pajzs: !form.pajzs })}>
+                    </Checkbox>
+                </div>
+                <div><IntegerInput disabled={!form.pajzs} value={form.mgt} onChange={mgt => setForm({ ...form, mgt })} label='MGT' /></div>
             </GridColumn>
         </GridRow>
         <GridRow textAlign='center'>

@@ -1,6 +1,5 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Button, Card, Dropdown, DropdownItemProps, Table } from 'semantic-ui-react';
-import { DobasMatrix } from '../engine/dobasmatrix';
 import { FEGYVERTELEN, FegyverUtils, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
 import { calculateHarcertek, calculateSebesulesHatrany, Karakter } from '../engine/karakter';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
@@ -66,7 +65,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
     }
 
     const headerColour = () => {
-        const down = karakter.ep <= 0 || karakter.fp <= 0;
+        const down = karakter.ep.akt <= 0 || karakter.fp.akt <= 0;
         if (down) {
             return 'darkgrey';
         }
@@ -87,9 +86,9 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
             <Card.Header >{karakter.name}</Card.Header>
             <Card.Description>
                 <PointsTable
-                    points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
-                    onChange={(name, value) => {
-                        (karakter as any)[name] = value;
+                    points={[{ name: 'ep', label: 'ÉP', ...karakter.ep }, { name: 'fp', label: 'FP', ...karakter.fp }]}
+                    onChange={(name, max, value) => {
+                        (karakter as any)[name][max ? 'max' : 'akt'] = value;
                         save(karakter);
                     }}
                 />

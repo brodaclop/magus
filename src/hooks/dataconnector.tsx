@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FEGYVEREK } from "../engine/harc";
-import { Fegyver, Karakter, KarakterInfo } from "../engine/karakter";
+import { Fegyver, Karakter, KarakterInfo, KarakterV1 } from "../engine/karakter";
 import { FAJ_KEPESSEG, KepessegDobas } from "../engine/kasztok";
 import { Pancel, PANCELOK } from "../engine/pancel";
 
@@ -51,7 +51,15 @@ export function useDataConnector(): DataConnector {
     };
 
     const load = (info: KarakterInfo): Karakter => {
-        return fetch(PREFIX + info.id);
+        const karakter: Karakter | KarakterV1 = fetch(PREFIX + info.id);
+        if (karakter.version === 2) {
+            return karakter;
+        }
+        //Convert v1 to v2
+        (karakter as any).version = 2;
+        (karakter as any).ep = { max: karakter.maxEp, akt: karakter.ep };
+        (karakter as any).fp = { max: karakter.maxFp, akt: karakter.fp };
+        return karakter as unknown as Karakter;
     };
 
     const save = (karakter: Karakter): void => {

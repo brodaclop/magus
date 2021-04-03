@@ -1016,6 +1016,9 @@ const tipus = (fegyver?: Fegyver): fegyverTipus | undefined => {
     if (fegyver.name.toLowerCase() === 'ököl') {
         return 'ököl';
     }
+    if (fegyver.pajzs) {
+        return 'pajzs';
+    }
     return 'kozelharc';
 }
 

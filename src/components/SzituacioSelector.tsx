@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, DropdownItemProps, Label } from 'semantic-ui-react';
+import { Dropdown, DropdownItemProps } from 'semantic-ui-react';
 import { SZITUACIOK } from '../engine/harc';
 
 export const SzituacioSelector: React.FC<{ szituaciok: Array<string>, setSzituaciok: (value: Array<string>) => unknown }> = ({ szituaciok, setSzituaciok }) => {

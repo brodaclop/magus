@@ -28,7 +28,13 @@ export interface KarakterInfo {
     name: string;
 }
 
-export interface Karakter extends KarakterInfo, HasEPFP {
+export interface Points {
+    akt: number;
+    max: number;
+}
+
+export interface KarakterV1 extends KarakterInfo {
+    version: 1;
     faj: string;
     kaszt: Kaszt;
     szint: number;
@@ -42,22 +48,37 @@ export interface Karakter extends KarakterInfo, HasEPFP {
     valasztottPancel?: number;
     valasztottFegyver?: number;
     masodlagosFegyver?: number;
-    pszi?: {
-        max: number;
-        akt: number;
-    },
-    mp?: {
-        max: number;
-        akt: number;
-    },
-}
+    pszi?: Points,
+    mp?: Points,
 
-export interface HasEPFP {
     maxFp: number;
     maxEp: number;
     fp: number;
     ep: number;
 }
+
+export interface Karakter extends KarakterInfo {
+    version: 2;
+    faj: string;
+    kaszt: Kaszt;
+    szint: number;
+    kepessegek: KarakterKepesseg;
+    kepzettsegek?: Array<Kepzettseg>;
+    alapHarcertek: Harcertek;
+    hmHarcertek: Harcertek;
+    hm: number;
+    fegyverek: Array<Fegyver>;
+    pancelok?: Array<Pancel>;
+    valasztottPancel?: number;
+    valasztottFegyver?: number;
+    masodlagosFegyver?: number;
+    pszi?: Points,
+    mp?: Points,
+    ep: Points,
+    fp: Points
+}
+
+
 
 export interface Fegyver {
     name: string;
@@ -66,6 +87,9 @@ export interface Fegyver {
     tamPerKor: number;
     lassu?: boolean;
     lotav?: number;
+    erobonusz?: number;
+    pajzs?: boolean;
+    mgt?: number;
 }
 
 export interface Kepzettseg {
@@ -88,8 +112,8 @@ export const szintlepes = (karakter: Karakter): Karakter => {
     const hm = karakter.kaszt.hm;
     karakter.hm += hm.szabad;
     karakter.hmHarcertek = osszead(karakter.hmHarcertek, hm.kotelezo);
-    karakter.maxFp += roll(karakter.kaszt.epfp.fpPerSzint).value;
-    karakter.fp = karakter.maxFp;
+    karakter.fp.max += roll(karakter.kaszt.epfp.fpPerSzint).value;
+    karakter.fp.akt = karakter.fp.max;
     return karakter;
 }
 
@@ -97,24 +121,25 @@ const calculateKepessegHarcertek = (karakter: Karakter, fegyver: Fegyver): Recor
     const mgt = calculateMGT(karakter);
     const ugy = folottiResz(karakter.kepessegek.ugy - mgt[0]);
     const gy = folottiResz(karakter.kepessegek.gy - mgt[0]);
+    const erobonusz = fegyver.erobonusz ?? 16;
     return {
         ke: gy + ugy,
         te: gy + ugy + folottiResz(karakter.kepessegek.ero),
         ve: gy + ugy,
         ce: ugy,
-        sebzes: folottiResz(karakter.kepessegek.ero, 16)
+        sebzes: erobonusz !== 0 ? folottiResz(karakter.kepessegek.ero, erobonusz) : 0
     }
 }
 
-export const calculateSebesulesHatrany = (karakter: HasEPFP): Harcertek | null => {
-    if (karakter.maxEp > 0 && karakter.ep <= karakter.maxEp * 0.25) {
+export const calculateSebesulesHatrany = (karakter: Karakter): Harcertek | null => {
+    if (karakter.ep.max > 0 && karakter.ep.akt <= karakter.ep.max * 0.25) {
         return {
             ke: -15,
             te: -20,
             ve: -25,
             ce: -30
         }
-    } else if ((karakter.maxEp > 0 && karakter.ep <= karakter.maxEp * 0.5) || (karakter.maxFp > 0 && karakter.fp < karakter.maxFp * 0.1)) {
+    } else if ((karakter.ep.max > 0 && karakter.ep.akt <= karakter.ep.max * 0.5) || (karakter.fp.akt > 0 && karakter.fp.akt < karakter.fp.max * 0.1)) {
         return {
             ke: -5,
             te: -10,
@@ -142,11 +167,13 @@ const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver) =
     const tipus = FegyverUtils.tipus(fegyver);
     const fejvadasz = karakter.kaszt?.name === 'fejvadász';
     const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => k.name === FegyverUtils.kepzettseg(fegyver));
+    const pajzsHasznalat = findKepzettseg(karakter, 'Pajzshasználat');
+
     const mgt = calculateMGT(karakter);
     if (mgt[1]) {
         ret.add('Nehézvért', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
     } else if (!kepzettseg) {
-        if (tipus) {
+        if (tipus && !(tipus === 'pajzs' && pajzsHasznalat?.szint)) {
             if (!fejvadasz) {
                 ret.add('képzetlen', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
             } else {
@@ -162,22 +189,30 @@ const addKetkezes = (ret: DobasMatrix, karakter: Karakter, masodlagos?: boolean)
     if (karakter.valasztottFegyver === undefined || karakter.masodlagosFegyver === undefined) {
         return;
     }
+    const pajzsHasznalat = findKepzettseg(karakter, 'Pajzshasználat');
     const ketkezesHarc = findKepzettseg(karakter, 'Kétkezes harc');
-    switch (ketkezesHarc?.szint) {
-        case 'Mf': return;
-        case 'Af': {
-            if (masodlagos) {
-                ret.add('kétkezes harc', { ke: -2, te: -5, ve: -5 });
-            }
-            return;
+    const masodlagosFegyver = karakter.fegyverek[karakter.masodlagosFegyver];
+    if (masodlagosFegyver?.pajzs && pajzsHasznalat) {
+        if (!masodlagos) {
+            ret.add('Pajzs', { ve: masodlagosFegyver.harcertek.ve });
         }
-        default: {
-            if (masodlagos) {
-                ret.add('kétkezes harc', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
-            } else {
-                ret.add('kétkezes harc', { ke: -5, te: -10, ve: -10 });
+    } else {
+        switch (ketkezesHarc?.szint) {
+            case 'Mf': return;
+            case 'Af': {
+                if (masodlagos) {
+                    ret.add('kétkezes harc', { ke: -2, te: -5, ve: -5 });
+                }
+                return;
             }
-            return;
+            default: {
+                if (masodlagos) {
+                    ret.add('kétkezes harc', { ...FEGYVER_KEPZETTSEG['képzetlen'] });
+                } else {
+                    ret.add('kétkezes harc', { ke: -5, te: -10, ve: -10 });
+                }
+                return;
+            }
         }
     }
 }

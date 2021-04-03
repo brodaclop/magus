@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Icon, Popup, SemanticICONS } from 'semantic-ui-react';
+import { List, Icon, SemanticICONS } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { CommentEditorModal } from './CommentEditorModal';

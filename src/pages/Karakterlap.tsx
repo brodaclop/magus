@@ -7,9 +7,9 @@ import { FegyverValaszto } from '../components/FegyverValaszto';
 import { HMEloszto } from '../components/HMEloszto';
 import { KepzettsegLista } from '../components/KepzettsegLista';
 import { DobasMatrix } from '../engine/dobasmatrix';
-import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
+import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, calculateMGT, Fegyver, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
-import { KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
+import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 import { KepzettsegModal } from '../components/KepzettsegModal';
 import { PancelLista } from '../components/PancelLista';
@@ -39,12 +39,25 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
         fileDownload(JSON.stringify(karakter), `${karakter.name}.json`, 'text/json');
     }
 
+    const points = [
+        { name: 'ep', label: 'ÉP', ...karakter.ep },
+        { name: 'fp', label: 'FP', ...karakter.fp }];
+    if (karakter.pszi) {
+        points.push({ name: 'pszi', label: 'ΨP', ...karakter.pszi })
+    }
+    if (karakter.mp) {
+        points.push({ name: 'mp', label: 'MP', ...karakter.mp })
+    }
+
     const mgt = calculateMGT(karakter);
     const kepessegMatrix = new DobasMatrix(Object.keys(KEPESSEG_NEV)).add('alap', karakter.kepessegek as any);
     if (mgt[0] > 0) {
         kepessegMatrix.add('mgt', { gy: -mgt[0], ugy: -mgt[0] });
     }
     kepessegMatrix.roll();
+
+
+
     return <Grid relaxed>
         <GridColumn width={5} >
             <Table striped definition>
@@ -100,24 +113,9 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 save(karakter);
             }} /> </div>}
             <PointsTable
-                points={(function () {
-                    const ret = [
-                        { name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep },
-                        { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }];
-                    if (karakter.pszi) {
-                        ret.push({ name: 'pszi', label: 'ΨP', max: karakter.pszi.max, akt: karakter.pszi.akt })
-                    }
-                    if (karakter.mp) {
-                        ret.push({ name: 'mp', label: 'MP', max: karakter.mp.max, akt: karakter.mp.akt })
-                    }
-                    return ret;
-                })()}
-                onChange={(name, value) => {
-                    if (name === 'ep' || name === 'fp') {
-                        (karakter as any)[name] = value;
-                    } else {
-                        (karakter as any)[name].akt = value;
-                    }
+                points={points}
+                onChange={(name, max, value) => {
+                    (karakter as any)[name][max ? 'max' : 'akt'] = value;
                     save(karakter);
                 }}
             />

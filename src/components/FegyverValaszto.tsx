@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Grid, GridColumn, GridRow, Header, Label, Modal } from 'semantic-ui-react';
 import { Fegyver, Karakter, Kepzettseg } from '../engine/karakter';
-import { FegyverEditor } from './FegyverEditor';
+import { FegyverEditor, FEGYVER_KEPZETTSEG } from './FegyverEditor';
 import { FegyverLista } from './FegyverLista';
 
 interface FegyverValasztoProps {
@@ -18,7 +18,7 @@ export const FegyverValaszto: React.FC<FegyverValasztoProps> = ({ karakter, save
     const [editorOpen, setEditorOpen] = useState<boolean>(false);
     const [listEditorOpen, setListEditorOpen] = useState<boolean>(false);
 
-    const saveSelection = useCallback((kepzettsegSzint: string) => {
+    const saveSelection = useCallback((kepzettsegSzint: FEGYVER_KEPZETTSEG) => {
         const fegyver = selected !== undefined ? fegyverek[selected] : undefined;
         if (fegyver) {
             addFegyverAndKepzettseg(karakter, fegyver, kepzettsegSzint);
@@ -65,7 +65,7 @@ export const FegyverValaszto: React.FC<FegyverValasztoProps> = ({ karakter, save
                         <Label pointing='right'>
                             Képzettség
                         </Label>
-                        <Button disabled={selected === undefined} onClick={() => saveSelection('')}>Képzetlen</Button>
+                        <Button disabled={selected === undefined} onClick={() => saveSelection('képzetlen')}>Képzetlen</Button>
                         <Button secondary disabled={selected === undefined} onClick={() => saveSelection('Af')}>Af</Button>
                         <Button primary disabled={selected === undefined} onClick={() => saveSelection('Mf')}>Mf</Button>
                     </Button>
@@ -97,7 +97,7 @@ export const FegyverValaszto: React.FC<FegyverValasztoProps> = ({ karakter, save
     </Grid>
 }
 
-function addFegyverAndKepzettseg(karakter: Karakter, fegyver: Fegyver, kepzettsegSzint: string, idx?: number) {
+function addFegyverAndKepzettseg(karakter: Karakter, fegyver: Fegyver, kepzettsegSzint: FEGYVER_KEPZETTSEG, idx?: number) {
     const fIdx = idx ?? karakter.fegyverek.findIndex(f => f.name === fegyver.name);
     if (fIdx === -1) {
         karakter.fegyverek.push({ ...fegyver });
@@ -107,7 +107,7 @@ function addFegyverAndKepzettseg(karakter: Karakter, fegyver: Fegyver, kepzettse
     karakter.valasztottFegyver = karakter.fegyverek.findIndex(f => f.name === fegyver.name);
     const kepzettsegName = `Fegyverhasználat - ${fegyver.name.toLowerCase()}`;
     karakter.kepzettsegek = (karakter.kepzettsegek ?? []).filter(k => k.name !== kepzettsegName);
-    if (kepzettsegSzint) {
+    if (kepzettsegSzint !== 'képzetlen') {
         const kepzettseg: Kepzettseg = {
             name: kepzettsegName,
             szint: kepzettsegSzint as any,

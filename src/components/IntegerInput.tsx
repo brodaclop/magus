@@ -7,11 +7,12 @@ interface IntegerInputProps {
     label?: string;
     labelPosition?: 'left' | 'right';
     mandatory?: boolean;
+    disabled?: boolean;
 }
 
 
-export const IntegerInput: React.FC<IntegerInputProps> = ({ value, onChange, label, labelPosition = 'left', mandatory }) => {
-    return <Input labelPosition={labelPosition} error={mandatory && (value === undefined)} value={value ?? ''} onChange={e => {
+export const IntegerInput: React.FC<IntegerInputProps> = ({ value, onChange, label, labelPosition = 'left', mandatory, disabled }) => {
+    return <Input disabled={disabled} labelPosition={labelPosition} error={mandatory && (value === undefined)} value={value ?? ''} onChange={e => {
         const newValue = e.target.value ? Math.max(0, Math.floor(Number(e.target.value))) : undefined;
         if (newValue === undefined || !Number.isNaN(newValue)) {
             onChange(newValue);

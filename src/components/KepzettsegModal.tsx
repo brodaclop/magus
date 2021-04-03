@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Grid, GridColumn, GridRow, Input, Label, Select } from 'semantic-ui-react';
+import { Modal, Button, Grid, GridColumn, Input, Label } from 'semantic-ui-react';
 import { Karakter, Kepzettseg } from '../engine/karakter';
 import { IntegerInput } from './IntegerInput';
 

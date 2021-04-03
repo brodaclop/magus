@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Grid, GridColumn, GridRow, Input, Label } from 'semantic-ui-react';
 import { v4 } from 'uuid';
 import { DobasMatrix } from '../engine/dobasmatrix';
-import { FEGYVERTELEN, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
+import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
 import { calculateHarcertek, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
 import { Kaszt, KepessegDobas, KEPESSEG_NEV } from '../engine/kasztok';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
@@ -41,6 +41,7 @@ const createKarakter = ({ kaszt, faj, szint, name }: BackgroundSelection, kepess
     const ep = epfp.ep + folottiResz(kepessegek.sum.egs);
     const fp = epfp.fp + folottiResz(kepessegek.sum.ae) + folottiResz(kepessegek.sum.ak);
     const karakter: Karakter = {
+        version: 2,
         id: v4(),
         name,
         faj,
@@ -49,10 +50,8 @@ const createKarakter = ({ kaszt, faj, szint, name }: BackgroundSelection, kepess
         kaszt,
         szint: 0,
         hm: 0,
-        maxEp: ep,
-        maxFp: fp,
-        ep,
-        fp,
+        ep: { max: ep, akt: ep },
+        fp: { max: fp, akt: fp },
         hmHarcertek: { ke: 0, te: 0, ve: 0, ce: 0 },
         kepzettsegek: [],
         alapHarcertek: kaszt.alapHarcertek,
@@ -83,10 +82,8 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
         kepessegek: matrix.sum as unknown as KarakterKepesseg,
         alapHarcertek: kaszt.alapHarcertek,
         hmHarcertek: kaszt.hm.kotelezo,
-        maxEp: kaszt.epfp.ep + folottiResz(matrix.sum.egs),
-        maxFp: kaszt.epfp.fp + folottiResz(matrix.sum.ae) + folottiResz(matrix.sum.ak),
-        ep: kaszt.epfp.ep + folottiResz(matrix.sum.egs),
-        fp: kaszt.epfp.fp + folottiResz(matrix.sum.ae) + folottiResz(matrix.sum.ak)
+        ep: { max: kaszt.epfp.ep + folottiResz(matrix.sum.egs), akt: kaszt.epfp.ep + folottiResz(matrix.sum.egs) },
+        fp: { max: kaszt.epfp.fp + folottiResz(matrix.sum.ae) + folottiResz(matrix.sum.ak), akt: kaszt.epfp.fp + folottiResz(matrix.sum.ae) + folottiResz(matrix.sum.ak) }
     } : undefined;
 
     return <Grid relaxed>
@@ -139,10 +136,10 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                     <div>
                         <PointsTable
                             title='Életerő 0. szinten'
-                            points={[{ name: 'ep', label: 'ÉP', max: karakter.maxEp, akt: karakter.ep }, { name: 'fp', label: 'FP', max: karakter.maxFp, akt: karakter.fp }]}
+                            points={[{ name: 'ep', label: 'ÉP', ...karakter.ep }, { name: 'fp', label: 'FP', ...karakter.fp }]}
 
-                            onChange={(name, value) => {
-                                if (kaszt) {
+                            onChange={(name, max, value) => {
+                                if (kaszt && max) {
                                     if (name === 'ep') {
                                         kaszt.epfp.ep = value - folottiResz(matrix.sum.egs);
                                     }
@@ -152,7 +149,6 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
                                     setBackgroundSelection({ ...backgroundSelection, kaszt })
                                 }
                             }}
-                            maxChange={kaszt !== undefined}
                         />
                     </div>
                 </>

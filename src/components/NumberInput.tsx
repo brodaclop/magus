@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Input, Label } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
 
 export const NumberInput: React.FC<{ value: number, onChange: (value: number) => unknown, min: number, max: number, icons?: boolean }> = ({ value, onChange, min, max, icons }) => {
     return <div style={{ whiteSpace: 'nowrap' }}>
