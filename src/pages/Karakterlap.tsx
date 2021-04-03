@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Confirm, Grid, GridColumn, GridRow, Input, Label, Modal, Table } from 'semantic-ui-react';
+import { Button, Confirm, Grid, GridColumn, GridRow, Icon, Input, Label, Modal, Table } from 'semantic-ui-react';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { PointsTable } from '../components/PointsTable';
 import { FegyverLista } from '../components/FegyverLista';
@@ -16,6 +16,7 @@ import { PancelLista } from '../components/PancelLista';
 import { PancelValaszto } from '../components/PancelValaszto';
 import { Pancel } from '../engine/pancel';
 import { EditableText } from '../story/components/EditableText';
+import { KategoriaEditor } from '../components/KategoriaEditor';
 
 interface KarakterlapProps {
     categories: Array<string>,
@@ -31,8 +32,6 @@ interface KarakterlapProps {
 export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
     const [ujPancel, setUjPancel] = useState(false)
-    const [kategoriak, setKategoriak] = useState(false);
-    const [ujKategoria, setUjKategoria] = useState('');
     const [torlesKerdes, setTorlesKerdes] = useState(false);
 
     const exportKarakter = () => {
@@ -76,20 +75,10 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 </Table.Row>
                 <Table.Row>
                     <Table.Cell>Kategóriák
-                        <Modal trigger={<Button floated='right' size='tiny' circular color='orange'>+</Button>} onOpen={() => setKategoriak(true)} onClose={() => setKategoriak(false)} open={kategoriak} size='fullscreen' title='Új kategória'>
-                            <Modal.Header>Új kategória</Modal.Header>
-                            <Modal.Content>
-                                <Input list='categories' value={ujKategoria} onChange={e => setUjKategoria(e.target.value)} />
-                                <datalist id='categories'>
-                                    {categories.map(c => <option value={c}>{c}</option>)}
-                                </datalist>
-                                <Button onClick={() => { karakter.categories.push(ujKategoria); setKategoriak(false); save(karakter) }}>Hozzáad</Button>
-                            </Modal.Content>
-                        </Modal>
-
+                        <KategoriaEditor categories={categories} save={value => { karakter.categories = [...new Set([...karakter.categories, value])]; save(karakter) }} />
                     </Table.Cell>
                     <Table.Cell>
-                        {karakter.categories.map(c => <Label tag>{c}</Label>)}
+                        {karakter.categories.map(c => <Label tag>{c} <Icon name='delete' onClick={() => { karakter.categories = karakter.categories.filter(value => value !== c); save(karakter) }} /></Label>)}
                     </Table.Cell>
                 </Table.Row>
                 <Table.Row>
