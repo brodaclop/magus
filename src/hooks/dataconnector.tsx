@@ -47,7 +47,7 @@ export function useDataConnector(): DataConnector {
     const list = (category?: string): Array<KarakterInfo> => {
         const all: Array<KarakterInfo> = [...Array(window.localStorage.length)].map((_, i) => window.localStorage.key(i) ?? '').filter(key => key.startsWith(PREFIX)).map(key => fetch(key));
         if (!category) {
-            return all;
+            return all.sort((a, b) => a.name.localeCompare(b.name));
         }
         return all.filter(k => k.categories.some(cat => cat === category)).sort((a, b) => a.name.localeCompare(b.name));
     };
