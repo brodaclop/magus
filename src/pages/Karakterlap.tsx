@@ -25,11 +25,13 @@ interface KarakterlapProps {
     pancelok: Array<Pancel>,
     savePancelok: (pancelok: Array<Pancel>) => unknown,
     save: (karakter: Karakter) => unknown,
+    clone: (karakter: Karakter) => Karakter;
+
     saveFegyverek: (fegyverek: Array<Fegyver>) => unknown,
     remove: () => unknown
 }
 
-export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok }) => {
+export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok, clone }) => {
     const [ujfegyver, setUjFegyver] = useState(false)
     const [ujPancel, setUjPancel] = useState(false)
     const [torlesKerdes, setTorlesKerdes] = useState(false);
@@ -93,6 +95,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                             cancelButton='Nem'
                             confirmButton='De' />
                         <Button onClick={exportKarakter} color='green' circular>Export</Button>
+                        <Button onClick={() => clone(karakter)} color='green' circular>Klón</Button>
                     </Table.Cell>
                 </Table.Row>
             </Table>

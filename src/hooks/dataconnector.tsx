@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 } from "uuid";
 import { FEGYVEREK } from "../engine/harc";
 import { Fegyver, Karakter, KarakterInfo, KarakterV1 } from "../engine/karakter";
 import { FAJ_KEPESSEG, KepessegDobas } from "../engine/kasztok";
@@ -13,6 +14,7 @@ interface DataConnector {
     list: (category?: string) => Array<KarakterInfo>;
     load: (info: KarakterInfo) => Karakter;
     save: (karakter: Karakter) => void;
+    clone: (karakter: Karakter) => Karakter;
     remove: (info: KarakterInfo) => void;
     listFajok: () => Record<string, KepessegDobas>;
     listFegyverek: () => Array<Fegyver>;
@@ -47,7 +49,7 @@ export function useDataConnector(): DataConnector {
         if (!category) {
             return all;
         }
-        return all.filter(k => k.categories.some(cat => cat === category));
+        return all.filter(k => k.categories.some(cat => cat === category)).sort((a, b) => a.name.localeCompare(b.name));
     };
 
     const load = (info: KarakterInfo): Karakter => {
@@ -65,6 +67,21 @@ export function useDataConnector(): DataConnector {
     const save = (karakter: Karakter): void => {
         put(PREFIX + karakter.id, karakter);
     };
+
+    const clone = (karakter: Karakter): Karakter => {
+        const karakterek = list();
+        let newNev: string;
+        let i = 2;
+        do {
+            newNev = `${karakter.name} (${i})`;
+            i++;
+            // eslint-disable-next-line no-loop-func
+        } while (karakterek.some(k => k.name === newNev));
+
+        const ret = { ...karakter, id: v4(), name: newNev };
+        save(ret);
+        return ret;
+    }
 
     const remove = (info: KarakterInfo) => {
         window.localStorage.removeItem(PREFIX + info.id);
@@ -90,6 +107,7 @@ export function useDataConnector(): DataConnector {
         list,
         load,
         save,
+        clone,
         remove,
         listFajok: () => FAJ_KEPESSEG,
         listFegyverek: () => {
