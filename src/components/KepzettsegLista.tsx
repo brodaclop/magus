@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { Icon, Table } from 'semantic-ui-react';
 import { Kepzettseg } from '../engine/karakter';
 
 
@@ -13,13 +13,14 @@ const compare = (a: Kepzettseg, b: Kepzettseg): number => {
     return a.name.localeCompare(b.name);
 }
 
-export const KepzettsegLista: React.FC<{ kepzettsegek?: Array<Kepzettseg> }> = ({ kepzettsegek }) => {
+export const KepzettsegLista: React.FC<{ kepzettsegek?: Array<Kepzettseg>, remove: (kepzettseg: Kepzettseg) => unknown }> = ({ kepzettsegek, remove }) => {
     return <Table striped celled>
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>Képzettség</Table.HeaderCell>
                 <Table.HeaderCell>Szint</Table.HeaderCell>
                 <Table.HeaderCell>KP</Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -28,6 +29,7 @@ export const KepzettsegLista: React.FC<{ kepzettsegek?: Array<Kepzettseg> }> = (
                     <Table.Cell>{r.name}</Table.Cell>
                     <Table.Cell>{r.szint}</Table.Cell>
                     <Table.Cell>{r.kp ? r.kp : '-'}</Table.Cell>
+                    <Table.Cell><Icon name='delete' onClick={() => remove(r)} /></Table.Cell>
                 </Table.Row>
             })}
         </Table.Body>

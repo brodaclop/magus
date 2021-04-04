@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Input, Grid, GridRow, GridColumn } from 'semantic-ui-react';
+import { Modal, Button, Input, Grid, GridColumn } from 'semantic-ui-react';
 
 export const KategoriaEditor: React.FC<{ categories: Array<string>, save: (value: string) => unknown }> = ({ categories, save }) => {
     const [kategoriak, setKategoriak] = useState(false);

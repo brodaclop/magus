@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Confirm, Grid, GridColumn, GridRow, Icon, Input, Label, Modal, Table } from 'semantic-ui-react';
+import { Button, Confirm, Grid, GridColumn, GridRow, Icon, Label, Modal, Table } from 'semantic-ui-react';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { PointsTable } from '../components/PointsTable';
 import { FegyverLista } from '../components/FegyverLista';
@@ -145,7 +145,10 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 </GridRow>
                 <GridRow>
                     <GridColumn width={16}>
-                        <div><KepzettsegLista kepzettsegek={karakter.kepzettsegek} /></div>
+                        <div><KepzettsegLista kepzettsegek={karakter.kepzettsegek} remove={kepzettseg => {
+                            karakter.kepzettsegek = (karakter.kepzettsegek ?? []).filter(k => k !== kepzettseg);
+                            save(karakter);
+                        }} /></div>
                     </GridColumn>
                 </GridRow>
             </Grid>

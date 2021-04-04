@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Table } from 'semantic-ui-react';
 import { Harcertek, HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
-
-const NumberInput: any = require('semantic-ui-react-numberinput').default;
+import { NumberInput } from './NumberInput';
 
 interface State {
     harcertek: Harcertek,
@@ -32,7 +31,7 @@ export const HMEloszto: React.FC<{ harcertek: Harcertek, hm: number, complete: (
         {(Object.keys(harcertek) as Array<any>).map((he: ('ke' | 'te' | 've' | 'ce')) => <Table.Row>
             <Table.Cell>{HARCERTEK_DISPLAY_NAMES[he]}:</Table.Cell>
             <Table.Cell><i>{harcertek[he]}</i></Table.Cell>
-            <Table.Cell><NumberInput className={he} allowEmptyValue size='mini' value={current.harcertek[he]} stepAmount={1} minValue={harcertek[he]} maxValue={(current.harcertek[he] ?? 0) + current.hm} onChange={(e: any) => change(he, Number(e ?? 0))} /></Table.Cell>
+            <Table.Cell><NumberInput icons value={current.harcertek[he]} min={harcertek[he]} max={(current.harcertek[he] ?? 0) + current.hm} onChange={e => change(he, e ?? 0)} /></Table.Cell>
         </Table.Row>)}
         <Button onClick={() => complete(current.harcertek, current.hm)}>Eloszt</Button>
     </Table>
