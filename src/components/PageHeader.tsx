@@ -46,27 +46,27 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
     const karaktersDisplayed = karakterek.slice(karakterStart, karakterStart + MAX_KARAKTERS_PER_PAGE);
 
     return <Menu tabular>
-        <Menu.Item header>
+        <Menu.Item key='header' header>
             <Image src={logo} size='mini' onClick={() => setPage({ page: page.page === 'story' ? 'home' : 'story' })} />
         </Menu.Item>
         <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={setCurrentCategory} />
         {scrolled &&
-            <Menu.Item disabled={!canScrollLeft} onClick={() => setKarakterStart(karakterStart - 1)}>
+            <Menu.Item key='scroll_left' disabled={!canScrollLeft} onClick={() => setKarakterStart(karakterStart - 1)}>
                 <Icon name='triangle left' />
             </Menu.Item>
         }
         {karaktersDisplayed.map(k =>
-            <Menu.Item style={{ flexGrow: 1 }} active={k.id === karakter?.id} name={k.name} onClick={() => k.id === karakter?.id ? setPage({ page: 'home' }) : setPage({ page: 'karakterlap', karakter: k })} />
+            <Menu.Item key={k.id} style={{ flexGrow: 1 }} active={k.id === karakter?.id} name={k.name} onClick={() => k.id === karakter?.id ? setPage({ page: 'home' }) : setPage({ page: 'karakterlap', karakter: k })} />
         )}
-        <Menu.Item active={page.page === 'karakteralkoto'} onClick={() => setPage({ page: 'karakteralkoto' })}>
+        <Menu.Item key='new' active={page.page === 'karakteralkoto'} onClick={() => setPage({ page: 'karakteralkoto' })}>
             <Icon name='plus' />
         </Menu.Item>
         {scrolled &&
-            <Menu.Item disabled={!canScrollRight} onClick={() => setKarakterStart(karakterStart + 1)}>
+            <Menu.Item key='scroll_right' disabled={!canScrollRight} onClick={() => setKarakterStart(karakterStart + 1)}>
                 <Icon name='triangle right' />
             </Menu.Item>
         }
-        <Menu.Item position='right'>
+        <Menu.Item key='floated' position='right'>
             <KarakterImport save={save} saveMese={saveMese} />
             <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />

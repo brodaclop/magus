@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { List } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { StoryEvent } from './StoryEvent';
 import { v4 } from 'uuid';
 import { EventEditorModal } from './EventEditorModal';
+import { Timeline } from './timeline/Timeline';
+import { StoryContextMenu } from './StoryContextMenu';
 
 const { attr, children, child, addChild, addText, findElementsByName, deleteChild } = DomUtils;
 
@@ -15,38 +17,44 @@ export interface EventEditingState {
 }
 
 
+
 export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onChange: () => unknown, root: DOMElement }> = ({ scene, renderer, onChange, root }) => {
     const events = children(scene, 'events')[0];
     const [editedEvent, setEditedEvent] = useState<EventEditingState>();
+    const [contextMenu, setContextMenu] = useState<{ elem: DOMElement, event: React.MouseEvent }>();
+    const [displayMode, setDisplayMode] = useState<'list' | 'timeline'>('list');
+
     return <>
+        {contextMenu && <StoryContextMenu setEditedEvent={event => {
+            if (event.operation === 'insertAfter' || event.operation === 'insertBefore') {
+                setEditedEvent({
+                    insert: event.operation === 'insertAfter' ? 'after' : 'before', elem: {
+                        type: 'element',
+                        name: 'event',
+                        $parent: contextMenu.elem.$parent
+                    }, anchor: contextMenu.elem
+                });
+            } else if (event.operation === 'delete') {
+                DomUtils.deleteChild(contextMenu.elem.$parent, contextMenu.elem);
+                onChange();
+            } else {
+                setEditedEvent({ elem: contextMenu.elem });
+            }
+        }
+        }
+            onClose={() => setContextMenu(undefined)}
+            event={contextMenu.event}
+        />}
         <EventEditorModal
             editedEvent={editedEvent}
-            onEditingFinished={() => setEditedEvent(undefined)}
-            renderer={renderer}
+            onEditingFinished={() => { setEditedEvent(undefined); onChange(); }}
             root={root}
         />
-        <List celled animated>
-            {events?.elements?.map(e => <StoryEvent
+        <div>
+            {displayMode === 'list' && events?.elements?.map(e => <StoryEvent
                 event={e}
                 renderer={renderer}
-                setEditedEvent={event => {
-                    if (event.operation === 'insertAfter' || event.operation === 'insertBefore') {
-                        setEditedEvent({
-                            insert: event.operation === 'insertAfter' ? 'after' : 'before', elem: {
-                                type: 'element',
-                                name: 'event',
-                                $parent: e.$parent
-                            }, anchor: e
-                        });
-                    } else if (event.operation === 'delete') {
-                        DomUtils.deleteChild(e.$parent, e);
-                        onChange();
-                    } else {
-                        setEditedEvent({ elem: e });
-
-                    }
-
-                }}
+                onContextMenu={event => setContextMenu({ elem: e, event })}
                 onClick={() => {
                     const status = attr(e, 'status');
                     attr(e, 'status', status ? null : 'completed');
@@ -62,24 +70,25 @@ export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onCha
                     onChange();
                 }}
             />)}
-            <List.Item style={{ backgroundColor: 'gainsboro' }} onClick={() => {
-                setEditedEvent({
-                    insert: 'after',
-                    elem: {
-                        type: 'element',
-                        name: 'event',
-                        $parent: events
-                    }
-                });
+            {displayMode === 'timeline' && <Timeline width={5} events={events?.elements?.filter(e => attr(e, 'date') !== '').map(e => ({ date: Number(attr(e, 'date')), content: <>{renderer.renderElement(e)}</> })) ?? []} />}
 
-            }}>
-                <List.Icon name='plus' />
-                <List.Content>
-                    <i>Új elem</i>
-                </List.Content>
-            </List.Item>
+            <div style={{ backgroundColor: 'gainsboro' }}>
+                <Button icon='plus' onClick={() => {
+                    setEditedEvent({
+                        insert: 'after',
+                        elem: {
+                            type: 'element',
+                            name: 'event',
+                            $parent: events
+                        }
+                    });
 
-        </List>
+                }} content='Új elem' />
+                {displayMode === 'list' && <Button icon='calendar' onClick={() => setDisplayMode('timeline')} content='Idővonal' />}
+                {displayMode === 'timeline' && <Button icon='list' onClick={() => setDisplayMode('list')} content='Lista' />}
+            </div>
+        </div>
+
     </>
 }
 

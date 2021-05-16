@@ -10,8 +10,8 @@ interface CategoriesDropdownProps {
 export const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({ currentCategory, setCurrentCategory, categories }) => {
     return <Dropdown item text={`Karakterek: ${currentCategory || 'Összes'}`}>
         <Dropdown.Menu>
-            <Dropdown.Item onClick={() => setCurrentCategory('')}>Összes</Dropdown.Item>
-            {categories.map(k => <Dropdown.Item onClick={() => setCurrentCategory(k)}>{k}</Dropdown.Item>)}
+            <Dropdown.Item key='__all' onClick={() => setCurrentCategory('')}>Összes</Dropdown.Item>
+            {categories.map(k => <Dropdown.Item key={k} onClick={() => setCurrentCategory(k)}>{k}</Dropdown.Item>)}
         </Dropdown.Menu>
     </Dropdown>
 }

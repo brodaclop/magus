@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { Renderer } from '../../utils/RenderUtils';
-import { CompositeDecorator, ContentState, Editor, EditorState } from 'draft-js';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CompositeDecorator, ContentState, Editor, EditorState, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { Button, Segment } from 'semantic-ui-react';
+import { Button, Label, Segment } from 'semantic-ui-react';
 import { EditorUtils } from '../../utils/EditorUtils';
 import { EditingButtons } from './EditingButtons';
 import { IconComponent } from './IconComponent';
 import { DOMElement, DomUtils } from '../../utils/DomUtils';
 import { EventRowSelector } from './EventRoleSelector';
+import { NumberInput } from '../../../components/NumberInput';
 
 const { processElement, toElements } = EditorUtils;
 
 
+interface EventEditorProps { elem: DOMElement, onFinished(save: boolean): unknown, root: DOMElement, eventEdited?: boolean };
 
-
-export const EventEditor: React.FC<{ event: DOMElement, onFinished(event: DOMElement): unknown, renderer: Renderer, root: DOMElement }> = ({ event, onFinished, root }) => {
+export const EventEditor: React.FC<EventEditorProps> = ({ elem, onFinished, root, eventEdited }) => {
     const [editorState, setEditorState] = useState(
         () => EditorState.createEmpty(),
     );
-    const [eventRole, setEventRole] = useState<string>();
+    const [eventRole, setEventRole] = useState<string | undefined>(eventEdited ? DomUtils.attr(elem, 'role') : undefined);
+    const [eventDate, setEventDate] = useState<string | undefined>(eventEdited ? DomUtils.attr(elem, 'date') : undefined);
+
+    const onEscape = useCallback(() => {
+        onFinished(false);
+    }, [onFinished]);
 
     useEffect(() => {
-        const state = processElement(event, ContentState.createFromText(''));
+        const state = processElement(elem, ContentState.createFromBlockArray([]), true);
         const inlineDecorator = new CompositeDecorator([
             {
                 strategy: (block, callback, _state) => {
@@ -31,20 +36,50 @@ export const EventEditor: React.FC<{ event: DOMElement, onFinished(event: DOMEle
             }
         ]);
         setEditorState(EditorState.createWithContent(state, inlineDecorator));
-    }, [event]);
+    }, [elem, eventEdited]);
 
 
     return <>
-        <EventRowSelector role={eventRole} onRoleSelected={setEventRole} />
+        {eventEdited && <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>
+                <EventRowSelector role={eventRole} onRoleSelected={setEventRole} />
+            </span>
+            <span>
+                <NumberInput icons={false} min={-100000} max={100000} value={Number(eventDate || 0)} onChange={v => setEventDate(String(v))} />
+                <Label pointing='left'>Nap</Label>
+            </span>
+        </div>
+        }
         <EditingButtons editorState={editorState} setEditorState={setEditorState} root={root} />
         <Segment>
-            <Editor editorState={editorState} onChange={setEditorState} />
+            <Editor editorState={editorState} onChange={setEditorState} keyBindingFn={e => {
+                if (e.key === 'Escape') {
+                    return 'my-escape';
+                }
+                return getDefaultKeyBinding(e);
+            }}
+                handleKeyCommand={c => {
+                    if (c === 'my-escape') {
+                        onEscape();
+                        return 'handled';
+                    }
+                    return 'not-handled';
+                }}
+
+            />
         </Segment>
-        <Button onClick={() => {
-            DomUtils.attr(event, 'role', eventRole);
-            event.elements = toElements(editorState.getCurrentContent(), event);
-            onFinished(event);
+        <Button floated='left' primary onClick={() => {
+            if (eventEdited) {
+                DomUtils.attr(elem, 'role', eventRole);
+                if (eventDate !== undefined) {
+                    DomUtils.attr(elem, 'date', eventDate.toString());
+                }
+            }
+            elem.elements = toElements(editorState.getCurrentContent(), elem);
+            console.log('edited', DomUtils.print(elem))
+            onFinished(true);
         }
         }>Save</Button>
+        <Button floated='right' circular color='red' icon='cancel' onClick={() => onFinished(false)} />
     </>;
 }

@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
+import { Button, Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
+import { EditableNode } from '../components/EditableNode';
 import { DOMElement, DomUtils } from './DomUtils';
 import { EventRenderer } from './inlinerenderers/EventRenderer';
 import { JumpRenderer } from './inlinerenderers/JumpRenderer';
@@ -50,7 +51,7 @@ const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switch
                     const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : 'gift';
                     return <Popup hoverable trigger={<span><Icon name={targetIcon} fitted /> <strong>{contents}</strong></span>} wide>
                         <Popup.Content>
-                            <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} />
+                            <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} readOnly={true} save={() => { throw new Error('edit not implemented') }} />
                         </Popup.Content>
                     </Popup>
                 }
@@ -65,66 +66,125 @@ const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switch
     }
 }
 
-const StoryCard: React.FC<{ tag: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ tag, root, switchToScene }) => {
+const StoryCard: React.FC<{ tag: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown, save: () => unknown, readOnly: boolean }> = ({ tag, root, switchToScene, save, readOnly }) => {
     if (tag.name === 'character') {
-        return <CharacterCard elem={tag} root={root} switchToScene={switchToScene} />
+        return <CharacterCard save={save} elem={tag} root={root} switchToScene={switchToScene} readOnly={readOnly} />
     }
     if (tag.name === 'item') {
-        return <ItemCard elem={tag} root={root} switchToScene={switchToScene} />
+        return <ItemCard save={save} elem={tag} root={root} switchToScene={switchToScene} readOnly={readOnly} />
     }
     return null;
 }
 
-const TableRow: React.FC<{ label: string, elem: DOMElement | null, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ label, elem, root, switchToScene }) => <Table.Row>
-    <Table.Cell>{label}</Table.Cell>
-    <Table.Cell><StoryElement elem={elem} root={root} switchToScene={switchToScene} /></Table.Cell>
-</Table.Row>;
-
-const NestedTableRow: React.FC<{ elems: DOMElement[], label: string, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elems, label, root, switchToScene }) => {
-    const [first, ...rest] = elems;
-    return <>
-        <Table.Row>
-            <Table.Cell rowSpan={elems.length}>{label}</Table.Cell>
-            <Table.Cell><StoryElement elem={first} root={root} switchToScene={switchToScene} /></Table.Cell>
-        </Table.Row>
-        {rest.map(r => <Table.Row><Table.Cell><StoryElement elem={r} root={root} switchToScene={switchToScene} /></Table.Cell></Table.Row>)}
-    </>;
+const TableRow: React.FC<{ label: string, elem: DOMElement | null, root: DOMElement, switchToScene: (id: string) => unknown, save: () => unknown, create: () => unknown, readOnly: boolean }> = ({ label, elem, root, switchToScene, save, create, readOnly }) => {
+    return <Table.Row>
+        <Table.Cell>{label}</Table.Cell>
+        <Table.Cell><EditableNode readOnly={readOnly} elem={elem} root={root} onChange={save} create={create}><StoryElement elem={elem} root={root} switchToScene={switchToScene} /></EditableNode> </Table.Cell>
+    </Table.Row>;
 }
 
 
-const CharacterCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => <Table definition striped columns={2} structured>
-    <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
-    <TableRow label='Faj' elem={DomUtils.child(elem, 'race')} root={root} switchToScene={switchToScene} />
-    <TableRow label='Jellem' elem={DomUtils.child(elem, 'alignment')} root={root} switchToScene={switchToScene} />
-    <TableRow label='Kaszt' elem={DomUtils.child(elem, 'class')} root={root} switchToScene={switchToScene} />
-    <TableRow label='Szülőföld' elem={DomUtils.child(elem, 'origin')} root={root} switchToScene={switchToScene} />
-    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'language')} label='Nyelvek' root={root} switchToScene={switchToScene} />
-    <TableRow label='Kinézet' elem={DomUtils.child(elem, 'looks')} root={root} switchToScene={switchToScene} />
-    <TableRow label='Viselkedés' elem={DomUtils.child(elem, 'behaviour')} root={root} switchToScene={switchToScene} />
-    <NestedTableRow elems={DomUtils.findElementsByName(elem, 'loot')} label='Felszerelés' root={root} switchToScene={switchToScene} />
-</Table>;
 
+const CharacterCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown, save: () => unknown, readOnly: boolean }> = ({ elem, root, switchToScene, save, readOnly }) => {
 
-const ItemCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown }> = ({ elem, root, switchToScene }) => {
-    return <Table definition striped columns={2}>
-        <TableRow label='Név' elem={DomUtils.child(elem, 'name')} root={root} switchToScene={switchToScene} />
-        <TableRow label='Érték' elem={DomUtils.child(elem, 'value')} root={root} switchToScene={switchToScene} />
-        <Table.Row>
-            <Table.Cell colSpan={2}>
-                {DomUtils.children(elem, 'description').map(e => <StoryElement elem={e} root={root} switchToScene={switchToScene} />)}
-            </Table.Cell>
-        </Table.Row>
+    const NestedTableRow: React.FC<{ name: string, parent: DOMElement, label: string }> = ({ name, parent, label }) => {
+        const elems = DomUtils.findElementsByName(parent, name);
+        const [first, ...rest] = elems;
+        return <>
+            <Table.Row key={`${name}-first`}>
+                <Table.Cell rowSpan={elems.length + 1}>{label}</Table.Cell>
+                <Table.Cell>
+                    <EditableNode readOnly={readOnly} elem={first} root={root} onChange={save} create={() => { DomUtils.addChild(parent, name); save() }}>
+                        <Button size='tiny' basic floated='right' icon='delete' onClick={() => { DomUtils.deleteChild(parent, first); save(); }} />
+                        <StoryElement elem={first} root={root} switchToScene={switchToScene} />
+                    </EditableNode>
+                </Table.Cell>
+            </Table.Row>
+            {rest.map((r, i) => <Table.Row key={`${name}-${i}`}><Table.Cell>
+                <EditableNode readOnly={readOnly} elem={r} root={root} onChange={save} create={() => { throw new Error('not applicable') }}>
+                    {!readOnly && <Button size='tiny' basic floated='right' icon='delete' onClick={() => { DomUtils.deleteChild(parent, r); save(); }} />}
+                    <StoryElement elem={r} root={root} switchToScene={switchToScene} />
+                </EditableNode>
+
+            </Table.Cell></Table.Row>)}
+            {first && !readOnly && <Table.Row key={`${name}-plus`}><Table.Cell><Button basic size='tiny' onClick={() => { DomUtils.addChild(parent, name); save() }} icon='plus' /></Table.Cell></Table.Row>}
+        </>;
+    }
+
+    const Row: React.FC<{ label: string, name: string }> = ({ label, name }) => <TableRow
+        key={name}
+        save={save}
+        label={label}
+        readOnly={readOnly}
+        elem={DomUtils.child(elem, name)}
+        create={() => { DomUtils.addChild(elem, name); save() }}
+        root={root}
+        switchToScene={switchToScene} />
+
+    return <Table definition striped columns={2} structured>
+        <Table.Body>
+            <Row label='Név' name='name' />
+            <Row label='Faj' name='race' />
+            <Row label='Jellem' name='alignment' />
+            <Row label='Kaszt' name='class' />
+            <Row label='Szülőföld' name='origin' />
+            <NestedTableRow parent={elem} name='language' label='Nyelvek' />
+            <Row label='Kinézet' name='looks' />
+            <Row label='Viselkedés' name='behaviour' />
+            <NestedTableRow parent={elem} name='loot' label='Felszerelés' />
+        </Table.Body>
     </Table>;
 }
 
-const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id: string) => unknown }> = ({ root, name, switchToScene }) => {
+
+const ItemCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown, save: () => unknown, readOnly: boolean }> = ({ elem, root, switchToScene, save, readOnly }) => {
+
+    const Row: React.FC<{ label: string, name: string }> = ({ label, name }) => <TableRow
+        key={name}
+        save={save}
+        label={label}
+        readOnly={readOnly}
+        elem={DomUtils.child(elem, name)}
+        create={() => { DomUtils.addChild(elem, name); save() }}
+        root={root}
+        switchToScene={switchToScene} />
+
+
+    return <Table definition striped columns={2}>
+        <Table.Body>
+            <Row label='Név' name='name' />
+            <Row label='Érték' name='value' />
+            <Table.Row>
+                <Table.Cell colSpan={2}>
+                    <EditableNode
+                        readOnly={readOnly}
+                        elem={DomUtils.child(elem, 'description')}
+                        root={root}
+                        onChange={save}
+                        create={() => { DomUtils.addChild(elem, 'description'); save() }}>
+                        <StoryElement elem={DomUtils.child(elem, 'description')} root={root} switchToScene={switchToScene} />
+                    </EditableNode>
+                </Table.Cell>
+            </Table.Row>
+        </Table.Body>
+    </Table>;
+}
+
+const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id: string) => unknown, save: () => unknown }> = ({ root, name, switchToScene, save }) => {
     const cards = DomUtils.findElementsByName(root, name).filter(e => !e.attributes?.ref);
     return <CardGroup itemsPerRow={5}>
-        {cards.map(c => <Card raised>
+        {cards.map(c => <Card raised key={DomUtils.attr(c, 'id')}>
             <Card.Content>
-                <Card.Header>{DomUtils.childText(c, 'name')}</Card.Header>
+                <Card.Header>{DomUtils.childText(c, 'name')}
+                    <Button floated='right' icon='delete' color='red'
+                        disabled={DomUtils.findReferences(root, c).length > 0}
+                        onClick={() => {
+                            DomUtils.deleteChild(c.$parent, c);
+                            save();
+                        }} />
+                </Card.Header>
                 <Card.Meta>
-                    <StoryCard tag={c} root={root} switchToScene={switchToScene} />
+                    <StoryCard readOnly={false} save={save} tag={c} root={root} switchToScene={switchToScene} />
                 </Card.Meta>
             </Card.Content>
         </Card>
@@ -134,13 +194,13 @@ const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id:
 
 export interface Renderer {
     renderElement: (elem: DOMElement) => ReactNode
-    renderCards: (name: string) => ReactNode
+    renderCards: (name: string, save: () => unknown) => ReactNode
 }
 
 const createRenderer = (root: DOMElement, switchScene: (id: string) => unknown): Renderer => {
     return {
         renderElement: elem => <StoryElement elem={elem} root={root} switchToScene={switchScene} />,
-        renderCards: name => <StoryCards root={root} name={name} switchToScene={switchScene} />
+        renderCards: (name, save) => <StoryCards save={save} root={root} name={name} switchToScene={switchScene} />
     }
 }
 

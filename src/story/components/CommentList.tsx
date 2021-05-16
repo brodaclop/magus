@@ -11,7 +11,7 @@ export interface CommentListProps {
 
 export const CommentList: React.FC<CommentListProps> = ({ comments, deleteComment, renderer }) => (
     <>
-        {comments && comments.length ? <Popup hoverable trigger={<List.Description>{comments.length} komment</List.Description>} wide>
+        {comments && comments.length ? <Popup hoverable trigger={<List.Description>{comments.length}&nbsp;komment</List.Description>} wide>
             <List>
                 {comments.map(c => <List.Item><List.Icon name='delete' onClick={() => deleteComment(c)} /><List.Content>{renderer.renderElement(c)}</List.Content></List.Item>)}
             </List>

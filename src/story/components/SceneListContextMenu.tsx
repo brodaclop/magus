@@ -6,7 +6,7 @@ export interface ScheneListContextMenuProps {
 }
 
 export const SceneListContextMenu: React.FC<ScheneListContextMenuProps> = ({ onSelected, children }) => (
-    <ContextMenu items={[
+    <ContextMenu onClose={() => { }} items={[
         { name: 'insertBefore', content: 'Új elem', icon: 'left arrow' },
         { name: 'delete', content: 'Töröl', icon: 'delete' },
         { name: 'insertAfter', content: 'Új elem', icon: 'right arrow' },

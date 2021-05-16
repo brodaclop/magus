@@ -3,11 +3,15 @@ import { ContextMenu } from './ContextMenu';
 import { EditedEvent } from './StoryEvent';
 
 export interface StoryContextMenuProps {
-    setEditedEvent: (editedEvent: EditedEvent) => unknown
+    setEditedEvent: (editedEvent: EditedEvent) => unknown;
+    onClose: () => unknown;
+    event: React.MouseEvent;
 }
 
-export const StoryContextMenu: React.FC<StoryContextMenuProps> = ({ setEditedEvent, children }) => (
-    <ContextMenu items={[
+export const StoryContextMenu: React.FC<StoryContextMenuProps> = ({ setEditedEvent, children, onClose, event }) => (
+
+
+    <ContextMenu onClose={onClose} event={event} items={[
         { name: 'insertBefore', content: 'Új elem', icon: 'up arrow' },
         { name: 'edit', content: 'Szerkeszt', icon: 'edit' },
         { name: 'delete', content: 'Töröl', icon: 'delete' },

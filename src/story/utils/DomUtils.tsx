@@ -26,6 +26,15 @@ const findById = (root: DOMElement, name: string, id: string): DOMElement | null
     return found.length > 0 ? found[0] : null;
 }
 
+const findReferences = (root: DOMElement, target: DOMElement): Array<DOMElement> => {
+    const id = DomUtils.attr(target, 'id');
+    if (!id) {
+        return [];
+    }
+    return findElements(root, e => DomUtils.attr(e, 'ref') === id);
+}
+
+
 const children = (elem: DOMElement, name: string): Array<DOMElement> => {
     return elem.elements?.filter(e => e.name === name) ?? [];
 }
@@ -132,6 +141,7 @@ export const DomUtils = {
     deleteChild,
     findById,
     findElementsByName,
+    findReferences,
     findElements,
     parse,
     convertLegacyLinks,

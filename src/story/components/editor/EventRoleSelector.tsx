@@ -10,7 +10,7 @@ const options: Array<DropdownItemProps> = Object.keys(ROLE_ICONS).map(role => ({
 }));
 
 export const EventRowSelector: React.FC<{ role?: string, onRoleSelected(role?: string): unknown }> = ({ role, onRoleSelected }) => (
-    <div>
+    <>
         <Label pointing='right'>
             Event role:
         </Label>
@@ -23,5 +23,5 @@ export const EventRowSelector: React.FC<{ role?: string, onRoleSelected(role?: s
             options={options}
         >
         </Dropdown>
-    </div>
+    </>
 )

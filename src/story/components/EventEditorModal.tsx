@@ -1,27 +1,27 @@
 import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
-import { Renderer } from '../utils/RenderUtils';
 import { EventEditor } from './editor/EventEditor';
 import { EventEditingState } from './StoryScene';
 
 export interface EventEditorModalProps {
-    onEditingFinished: () => unknown;
+    onEditingFinished: (save: boolean) => unknown;
     editedEvent?: EventEditingState;
-    renderer: Renderer;
     root: DOMElement;
 }
 
-export const EventEditorModal: React.FC<EventEditorModalProps> = ({ editedEvent, onEditingFinished, renderer, root }) => {
-    return <Modal open={editedEvent !== undefined} onClose={onEditingFinished}>
+export const EventEditorModal: React.FC<EventEditorModalProps> = ({ editedEvent, onEditingFinished, root }) => {
+    return <Modal style={{ padding: '1em' }} open={editedEvent !== undefined} onClose={() => onEditingFinished(false)}>
         <Modal.Content>
-            {editedEvent && <EventEditor event={editedEvent.elem} onFinished={() => {
-                if (editedEvent.insert) {
-                    DomUtils.addChildElement(editedEvent.elem.$parent as DOMElement, editedEvent.elem, editedEvent.anchor as DOMElement, editedEvent.insert);
+            <div>
+                {editedEvent && <EventEditor elem={editedEvent.elem} onFinished={save => {
+                    if (save && editedEvent.insert) {
+                        DomUtils.addChildElement(editedEvent.elem.$parent as DOMElement, editedEvent.elem, editedEvent.anchor as DOMElement, editedEvent.insert);
+                    }
+                    onEditingFinished(save);
                 }
-                onEditingFinished();
-            }
-            } renderer={renderer} root={root} />}
+                } root={root} eventEdited />}
+            </div>
         </Modal.Content>
     </Modal>;
 }

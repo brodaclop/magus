@@ -4,7 +4,7 @@ import { Button, Dropdown, Input, Label, Modal } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../../utils/DomUtils';
 import { EditorUtils } from '../../utils/EditorUtils';
 
-const { addEntity } = EditorUtils;
+const { addEntityToSelection } = EditorUtils;
 
 
 export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState(s: EditorState): unknown, root: DOMElement }> = ({ editorState, setEditorState, root }) => {
@@ -14,7 +14,7 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
 
     function addTag(name: string, attrs?: Record<string, string>) {
         const selection = editorState.getSelection();
-        const newContent = addEntity(editorState.getCurrentContent(), name, attrs, selection.getStartOffset(), selection.getEndOffset());
+        const newContent = addEntityToSelection(editorState.getCurrentContent(), name, attrs, selection);
         setEditorState(EditorState.push(editorState, newContent, 'apply-entity'));
     }
 

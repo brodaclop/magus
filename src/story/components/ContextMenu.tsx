@@ -23,16 +23,23 @@ function createContextFromEvent(e: React.MouseEvent): HTMLElement {
 export interface ContextMenuProps {
     items: Array<StrictMenuItemProps>,
     onClicked: (target: StrictMenuItemProps) => unknown;
+    onClose: () => unknown;
+    event?: React.MouseEvent;
 }
 
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, onClicked }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, onClicked, onClose, event }) => {
     const contextRef = React.useRef<HTMLElement | null>(null);
     const [open, setOpen] = React.useState(false)
 
+    const close = () => {
+        setOpen(false);
+        onClose();
+    }
+
     return (
         <>
-            <div
+            {!event && <div
                 onContextMenu={(e: React.MouseEvent) => {
                     e.preventDefault()
 
@@ -41,17 +48,17 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, onCli
                 }}
             >
                 {children}
-            </div>
+            </div>}
 
             <Popup
                 basic
-                context={contextRef}
-                onClose={() => setOpen(false)}
-                open={open}
+                context={event ? { current: createContextFromEvent(event) } : contextRef}
+                onClose={close}
+                open={open || !!event}
             >
                 <Menu
                     items={items}
-                    onItemClick={(_, data) => { setOpen(false); onClicked(data) }}
+                    onItemClick={(_, data) => { close(); onClicked(data) }}
                     secondary
                     vertical
                 />
