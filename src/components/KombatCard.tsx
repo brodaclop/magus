@@ -93,6 +93,20 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
                     }}
                 />
                 <Table columns={2} singleLine>
+                    <Table.Row>
+                        <Table.HeaderCell>SFÉ</Table.HeaderCell>
+                        <Table.Cell>{karakter.valasztottPancel ? karakter.pancelok?.[karakter.valasztottPancel].sfe : '-'}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.HeaderCell>Asztrál ME</Table.HeaderCell>
+                        <Table.Cell>{karakter.pajzs ? karakter.pajzs.asztral.termeszetes + karakter.pajzs.asztral.statikus + karakter.pajzs.asztral.dinamikus : '-'}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.HeaderCell>Mentál ME</Table.HeaderCell>
+                        <Table.Cell>{karakter.pajzs ? karakter.pajzs.mental.termeszetes + karakter.pajzs.mental.statikus + karakter.pajzs.mental.dinamikus : '-'}</Table.Cell>
+                    </Table.Row>
+                </Table>
+                <Table columns={2} singleLine>
                     <Table.Header>
                         <Table.HeaderCell colSpan={2}>
                             <Dropdown disabled={false} compact

@@ -8,7 +8,7 @@ import { HMEloszto } from '../components/HMEloszto';
 import { KepzettsegLista } from '../components/KepzettsegLista';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
-import { calculateHarcertek, calculateMGT, Fegyver, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
+import { calculateHarcertek, calculateMGT, Fegyver, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
 import fileDownload from 'js-file-download';
 import { KepzettsegModal } from '../components/KepzettsegModal';
@@ -17,6 +17,7 @@ import { PancelValaszto } from '../components/PancelValaszto';
 import { Pancel } from '../engine/pancel';
 import { EditableText } from '../story/components/EditableText';
 import { KategoriaEditor } from '../components/KategoriaEditor';
+import { Pajzsok } from '../components/Pajzsok';
 
 interface KarakterlapProps {
     categories: Array<string>,
@@ -60,7 +61,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
 
 
     return <Grid relaxed>
-        <GridColumn width={5} >
+        <GridColumn width={4} >
             <Table striped definition>
                 <Table.Row><Table.Cell>Név:</Table.Cell><Table.Cell><EditableText text={karakter.name} onChange={n => { karakter.name = n; save(karakter); }} /> </Table.Cell></Table.Row>
                 <Table.Row><Table.Cell>Faj:</Table.Cell><Table.Cell>{karakter.faj}</Table.Cell></Table.Row>
@@ -111,6 +112,13 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                     save(karakter);
                 }}
             />
+            <Pajzsok
+                pajzs={karakter.pajzs ?? {
+                    asztral: { termeszetes: folottiResz(karakter.kepessegek.asz, 10), statikus: 0, dinamikus: 0 },
+                    mental: { termeszetes: folottiResz(karakter.kepessegek.ae, 10), statikus: 0, dinamikus: 0 }
+                }}
+                onChange={pajzs => { karakter.pajzs = pajzs; save(karakter); }}
+            />
             <DobasMatrixDisplay
                 title='Képességek'
                 matrix={kepessegMatrix}
@@ -120,7 +128,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 keyMap={KEPESSEG_NEV}
                 setValue={(_, key, value) => { karakter.kepessegek[key as keyof KarakterKepesseg] = Number(value); save(karakter); }} />
         </GridColumn>
-        <GridColumn width={11} >
+        <GridColumn width={12} >
             <Grid columns={2}>
                 <GridRow>
                     <GridColumn>

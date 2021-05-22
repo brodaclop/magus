@@ -22,6 +22,10 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
         return DomUtils.findElementsByName(root, type).filter(e => DomUtils.attr(e, 'id')).map(e => ({ key: DomUtils.attr(e, 'id'), value: DomUtils.attr(e, 'id'), text: DomUtils.childText(e, 'name') }));
     }
 
+    function findScenes(): Array<{ key: string, text: string, value: string }> {
+        return DomUtils.findElementsByName(root, 'scene').map(e => ({ key: DomUtils.attr(e, 'id'), value: DomUtils.attr(e, 'id'), text: DomUtils.attr(e, 'title') }));
+    }
+
     return <>
         <Modal open={editorPopup !== undefined} onClose={() => setEditorPopup(undefined)}>
             <Modal.Content>
@@ -45,6 +49,21 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
                         value={editedValue.ref}
                         options={findTargets(editorPopup)}
                         onChange={(e, data) => setEditedValue({ ref: data.value?.toString() ?? '' })} />
+                    <Button primary onClick={() => {
+                        addTag(editorPopup, editedValue);
+                        setEditedValue({});
+                        setEditorPopup(undefined)
+                    }
+                    }>OK</Button>
+                </>}
+                {(editorPopup === 'jump') && <>
+                    <Dropdown
+                        fluid
+                        search
+                        selection
+                        value={editedValue.ref}
+                        options={findScenes()}
+                        onChange={(e, data) => setEditedValue({ scene: data.value?.toString() ?? '' })} />
                     <Button primary onClick={() => {
                         addTag(editorPopup, editedValue);
                         setEditedValue({});
@@ -79,6 +98,7 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
         <Button onClick={() => setEditorPopup('setting')} icon='map marker alternate'></Button>
         <Button onClick={() => setEditorPopup('character')} icon='user outline'></Button>
         <Button onClick={() => setEditorPopup('item')} icon='gift'></Button>
+        <Button onClick={() => setEditorPopup('jump')} icon='paper plane outline'></Button>
         <Button floated='right' onClick={() => {
             const newContent = Modifier.applyEntity(editorState.getCurrentContent(), editorState.getSelection(), null);
 

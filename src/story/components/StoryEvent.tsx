@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon, SemanticICONS } from 'semantic-ui-react';
+import { CommentUtils } from '../utils/CommentUtils';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { CommentEditorModal } from './CommentEditorModal';
@@ -28,15 +29,16 @@ export interface StoryEventProps {
     event: DOMElement,
     renderer: Renderer,
     onClick: () => unknown,
-    addComment: (contents: string) => unknown,
-    comments?: DOMElement[],
-    deleteComment: (comment: DOMElement) => unknown,
-    onContextMenu: (event: React.MouseEvent) => unknown
+    commentUtils: CommentUtils,
+    onChange: () => unknown;
+    onContextMenu: (event: React.MouseEvent) => unknown,
+    onEdit: () => unknown;
 };
 
-export const StoryEvent: React.FC<StoryEventProps> = ({ event, renderer, onClick, addComment, comments, deleteComment, onContextMenu }) => {
+export const StoryEvent: React.FC<StoryEventProps> = ({ event, renderer, onClick, commentUtils, onChange, onContextMenu, onEdit }) => {
     const role = DomUtils.attr(event, 'role').toString() || 'normal';
     const status = DomUtils.attr(event, 'status');
+    const [active, setActive] = useState(false);
 
     return <div onContextMenu={e => {
         onContextMenu(e);
@@ -51,18 +53,24 @@ export const StoryEvent: React.FC<StoryEventProps> = ({ event, renderer, onClick
             padding: '1em',
             borderTop: '1px solid #444',
             borderBottom: '1px solid #444',
-        }}>
+        }}
+        onMouseEnter={() => !active && setActive(true)}
+        onMouseLeave={() => active && setActive(false)}
+    >
         <div>
-            <Icon name={iconForRole(role)} />
+            <ul style={{ listStyle: 'none', margin: '0' }}>
+                <li><Icon name={iconForRole(role)} /></li>
+                {active && <li style={{ cursor: 'pointer' }}><Icon name='edit' onClick={onEdit} /></li>}
+            </ul>
         </div>
         <div style={{ flexGrow: 1 }}>
 
             {renderer.renderElement(event)}
         </div>
         <div style={{ textAlign: 'right' }}>
-            <CommentEditorModal addComment={addComment} />
+            <CommentEditorModal addComment={content => { commentUtils.add(content); onChange(); }} />
             <Icon name='checkmark' color={status === 'completed' ? 'green' : undefined} onClick={onClick} />
-            <CommentList comments={comments} deleteComment={deleteComment} renderer={renderer} />
+            <CommentList comments={commentUtils.list()} deleteComment={comment => { commentUtils.remove(comment); onChange() }} renderer={renderer} />
         </div>
     </div>
 }

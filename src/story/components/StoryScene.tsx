@@ -3,12 +3,12 @@ import { Button } from 'semantic-ui-react';
 import { DOMElement, DomUtils } from '../utils/DomUtils';
 import { Renderer } from '../utils/RenderUtils';
 import { StoryEvent } from './StoryEvent';
-import { v4 } from 'uuid';
 import { EventEditorModal } from './EventEditorModal';
 import { Timeline } from './timeline/Timeline';
 import { StoryContextMenu } from './StoryContextMenu';
+import { CommentUtils } from '../utils/CommentUtils';
 
-const { attr, children, child, addChild, addText, findElementsByName, deleteChild } = DomUtils;
+const { attr, children } = DomUtils;
 
 export interface EventEditingState {
     insert?: 'after' | 'before',
@@ -55,20 +55,14 @@ export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onCha
                 event={e}
                 renderer={renderer}
                 onContextMenu={event => setContextMenu({ elem: e, event })}
+                onEdit={() => setEditedEvent({ elem: e })}
                 onClick={() => {
                     const status = attr(e, 'status');
                     attr(e, 'status', status ? null : 'completed');
                     onChange();
                 }}
-                addComment={comment => {
-                    addComment(e, root, comment);
-                    onChange();
-                }}
-                comments={findComments(e, root)}
-                deleteComment={c => {
-                    deleteComment(c, root);
-                    onChange();
-                }}
+                commentUtils={new CommentUtils(root, e)}
+                onChange={onChange}
             />)}
             {displayMode === 'timeline' && <Timeline width={5} events={events?.elements?.filter(e => attr(e, 'date') !== '').map(e => ({ date: Number(attr(e, 'date')), content: <>{renderer.renderElement(e)}</> })) ?? []} />}
 
@@ -92,39 +86,3 @@ export const StoryScene: React.FC<{ scene: DOMElement, renderer: Renderer, onCha
     </>
 }
 
-const ensureComments = (root: DOMElement) => {
-    const story = child(root, 'story');
-    if (!story) {
-        throw new Error('story is missing');
-    }
-    return child(story, 'comments') || addChild(story, 'comments');
-}
-
-const addComment = (event: DOMElement, root: DOMElement, contents: string) => {
-    const eventId = ensureEventId(event);
-    const comments = ensureComments(root);
-    const lastComment = children(comments, 'comment').pop();
-    const comment = addChild(comments, 'comment', lastComment);
-    attr(comment, 'event', eventId);
-    addText(comment, contents);
-}
-
-const deleteComment = (comment: DOMElement, root: DOMElement) => {
-    const comments = ensureComments(root);
-    deleteChild(comments, comment);
-}
-
-
-const findComments = (event: DOMElement, root: DOMElement): Array<DOMElement> => {
-    const eventId = attr(event, 'id');
-    const allComments = findElementsByName(root, 'comment');
-    return allComments.filter(c => attr(c, 'event') === eventId);
-}
-
-
-const ensureEventId = (event: DOMElement) => {
-    let id = attr(event, 'id') || v4();
-    attr(event, 'id', id);
-    return id;
-
-}

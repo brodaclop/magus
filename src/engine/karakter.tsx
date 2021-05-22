@@ -57,6 +57,12 @@ export interface KarakterV1 extends KarakterInfo {
     ep: number;
 }
 
+export interface Pajzs {
+    termeszetes: number;
+    statikus: number;
+    dinamikus: number;
+}
+
 export interface Karakter extends KarakterInfo {
     version: 2;
     faj: string;
@@ -75,7 +81,11 @@ export interface Karakter extends KarakterInfo {
     pszi?: Points,
     mp?: Points,
     ep: Points,
-    fp: Points
+    fp: Points,
+    pajzs?: {
+        asztral: Pajzs;
+        mental: Pajzs;
+    };
 }
 
 

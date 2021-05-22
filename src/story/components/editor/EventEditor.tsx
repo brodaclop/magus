@@ -80,6 +80,6 @@ export const EventEditor: React.FC<EventEditorProps> = ({ elem, onFinished, root
             onFinished(true);
         }
         }>Save</Button>
-        <Button floated='right' circular color='red' icon='cancel' onClick={() => onFinished(false)} />
+        <Button floated='right' circular color='red' basic content='Cancel' onClick={() => onFinished(false)} />
     </>;
 }
