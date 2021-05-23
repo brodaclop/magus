@@ -54,12 +54,12 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
 
     const cellContents = (name: string) => {
         switch (name) {
-            case 'sebzes': return <><Button circular color='orange' onClick={() => {
+            case 'sebzes': return <><Button compact circular color='orange' onClick={() => {
                 setDobasEredmeny({ ...dobasEredmeny, 'sebzes': roll(sebzesRoll, FegyverUtils.tipus(fegyver) === 'lofegyver') });
             }}>{formatDiceRoll(sebzesRoll)}</Button><DobasEredmeny result={dobasEredmeny.sebzes} /></>
-            case 'ke': return <><Button circular color='olive' onClick={() => setDobasEredmeny({ ...dobasEredmeny, 'ke': roll('1k10+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny.ke} /></>
+            case 'ke': return <><Button compact circular color='olive' onClick={() => setDobasEredmeny({ ...dobasEredmeny, 'ke': roll('1k10+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny.ke} /></>
             case 'ce':
-            case 'te': return <><Button circular color='purple' onClick={() => setDobasEredmeny({ ...dobasEredmeny, [name]: roll('1k100+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny[name]} /></>
+            case 'te': return <><Button compact circular color='purple' onClick={() => setDobasEredmeny({ ...dobasEredmeny, [name]: roll('1k100+' + harcertekMatrix.sum[name]) })}>{harcertekMatrix.sum[name]}</Button><DobasEredmeny result={dobasEredmeny[name]} /></>
             case 've': return harcertekMatrix.sum[name];
         }
     }
@@ -92,7 +92,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
                         save(karakter);
                     }}
                 />
-                <Table columns={2} singleLine>
+                <Table columns={2} singleLine compact>
                     <Table.Row>
                         <Table.HeaderCell>SFÉ</Table.HeaderCell>
                         <Table.Cell>{karakter.valasztottPancel ? karakter.pancelok?.[karakter.valasztottPancel].sfe : '-'}</Table.Cell>
@@ -106,7 +106,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
                         <Table.Cell>{karakter.pajzs ? karakter.pajzs.mental.termeszetes + karakter.pajzs.mental.statikus + karakter.pajzs.mental.dinamikus : '-'}</Table.Cell>
                     </Table.Row>
                 </Table>
-                <Table columns={2} singleLine>
+                <Table columns={2} singleLine compact>
                     <Table.Header>
                         <Table.HeaderCell colSpan={2}>
                             <Dropdown disabled={false} compact

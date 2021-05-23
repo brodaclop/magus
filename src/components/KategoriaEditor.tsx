@@ -5,7 +5,7 @@ export const KategoriaEditor: React.FC<{ categories: Array<string>, save: (value
     const [kategoriak, setKategoriak] = useState(false);
     const [ujKategoria, setUjKategoria] = useState('');
 
-    return <Modal trigger={<Button floated='right' size='tiny' circular color='orange'>+</Button>} onOpen={() => setKategoriak(true)} onClose={() => setKategoriak(false)} open={kategoriak} size='mini' title='Új kategória'>
+    return <Modal trigger={<Button floated='right' size='tiny' circular compact color='orange'>+</Button>} onOpen={() => setKategoriak(true)} onClose={() => setKategoriak(false)} open={kategoriak} size='mini' title='Új kategória'>
         <Modal.Header>Új kategória</Modal.Header>
         <Modal.Content>
             <Grid columns={2} fluid relaxed>

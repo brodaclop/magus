@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Confirm, Grid, GridColumn, GridRow, Icon, Label, Modal, Table } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Grid, GridColumn, GridRow, Modal } from 'semantic-ui-react';
 import { DobasMatrixDisplay } from '../components/DobasMatrixDisplay';
 import { PointsTable } from '../components/PointsTable';
 import { FegyverLista } from '../components/FegyverLista';
@@ -8,16 +8,15 @@ import { HMEloszto } from '../components/HMEloszto';
 import { KepzettsegLista } from '../components/KepzettsegLista';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { HARCERTEK_DISPLAY_NAMES } from '../engine/harc';
-import { calculateHarcertek, calculateMGT, Fegyver, folottiResz, Karakter, KarakterKepesseg, szintlepes } from '../engine/karakter';
+import { calculateHarcertek, calculateMGT, Fegyver, folottiResz, Karakter, KarakterKepesseg } from '../engine/karakter';
 import { KEPESSEG_NEV } from '../engine/kasztok';
-import fileDownload from 'js-file-download';
-import { KepzettsegModal } from '../components/KepzettsegModal';
 import { PancelLista } from '../components/PancelLista';
 import { PancelValaszto } from '../components/PancelValaszto';
 import { Pancel } from '../engine/pancel';
-import { EditableText } from '../story/components/EditableText';
-import { KategoriaEditor } from '../components/KategoriaEditor';
 import { Pajzsok } from '../components/Pajzsok';
+import { Jegyzetek } from '../components/Jegyzetek';
+import { Felszereles } from '../components/Felszereles';
+import { KarakterTabla } from '../components/KarakterTabla';
 
 interface KarakterlapProps {
     categories: Array<string>,
@@ -33,13 +32,6 @@ interface KarakterlapProps {
 }
 
 export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok, clone }) => {
-    const [ujfegyver, setUjFegyver] = useState(false)
-    const [ujPancel, setUjPancel] = useState(false)
-    const [torlesKerdes, setTorlesKerdes] = useState(false);
-
-    const exportKarakter = () => {
-        fileDownload(JSON.stringify(karakter), `${karakter.name}.json`, 'text/json');
-    }
 
     const points = [
         { name: 'ep', label: 'ÉP', ...karakter.ep },
@@ -62,50 +54,13 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
 
     return <Grid relaxed>
         <GridColumn width={4} >
-            <Table striped definition>
-                <Table.Row><Table.Cell>Név:</Table.Cell><Table.Cell><EditableText text={karakter.name} onChange={n => { karakter.name = n; save(karakter); }} /> </Table.Cell></Table.Row>
-                <Table.Row><Table.Cell>Faj:</Table.Cell><Table.Cell>{karakter.faj}</Table.Cell></Table.Row>
-                <Table.Row><Table.Cell>Kaszt:</Table.Cell><Table.Cell>{karakter.kaszt.name}</Table.Cell></Table.Row>
-                <Table.Row><Table.Cell>Szint:</Table.Cell>
-                    <Table.Cell>
-                        <Button as='div' labelPosition='left'>
-                            <Label pointing='right'>
-                                {karakter.szint}
-                            </Label>
-                            <Button secondary onClick={() => { save(szintlepes(karakter)) }}>Szintlépés</Button>
-                        </Button>
-                    </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                    <Table.Cell>Kategóriák
-                        <KategoriaEditor categories={categories} save={value => { karakter.categories = [...new Set([...karakter.categories, value])]; save(karakter) }} />
-                    </Table.Cell>
-                    <Table.Cell>
-                        {karakter.categories.map(c => <Label tag>{c} <Icon name='delete' onClick={() => { karakter.categories = karakter.categories.filter(value => value !== c); save(karakter) }} /></Label>)}
-                    </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                    <Table.Cell colSpan={2}>
-                        <Button onClick={() => setTorlesKerdes(true)} color='red' circular>Karakter törlése</Button>
-                        <Confirm
-                            open={torlesKerdes}
-                            onCancel={() => setTorlesKerdes(false)}
-                            onConfirm={() => { setTorlesKerdes(false); remove() }}
-                            header='Karakter törlése'
-                            content='Tuti?'
-                            cancelButton='Nem'
-                            confirmButton='De' />
-                        <Button onClick={exportKarakter} color='green' circular>Export</Button>
-                        <Button onClick={() => clone(karakter)} color='green' circular>Klón</Button>
-                    </Table.Cell>
-                </Table.Row>
-            </Table>
+            <KarakterTabla karakter={karakter} categories={categories} save={save} clone={clone} remove={remove} />
             {karakter.hm > 0 && <div><HMEloszto harcertek={karakter.hmHarcertek} hm={karakter.hm} complete={(he, hm) => {
                 karakter.hmHarcertek = he;
                 karakter.hm = hm;
                 save(karakter);
             }} /> </div>}
-            <PointsTable
+            <PointsTable color='olive'
                 points={points}
                 onChange={(name, max, value) => {
                     (karakter as any)[name][max ? 'max' : 'akt'] = value;
@@ -120,6 +75,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 onChange={pajzs => { karakter.pajzs = pajzs; save(karakter); }}
             />
             <DobasMatrixDisplay
+                color='purple'
                 title='Képességek'
                 matrix={kepessegMatrix}
                 direction='vertical'
@@ -132,34 +88,41 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
             <Grid columns={2}>
                 <GridRow>
                     <GridColumn>
-                        <DobasMatrixDisplay title='Harcértékek' matrix={calculateHarcertek(karakter).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} />
-                        <FegyverLista fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }} />
-                        <PancelLista pancelok={karakter.pancelok} selected={karakter.valasztottPancel} onSelectionChange={f => { karakter.valasztottPancel = f; save(karakter) }} />
-                        <Modal trigger={<Button primary>Fegyverlista módosítása</Button>} onOpen={() => setUjFegyver(true)} onClose={() => setUjFegyver(false)} open={ujfegyver} size='fullscreen'>
-                            <Modal.Header>Fegyverlista módosítása</Modal.Header>
-                            <Modal.Content>
-                                <FegyverValaszto saveFegyverek={saveFegyverek} fegyverek={fegyverek} karakter={karakter} save={k => { save(k); }} />
-                            </Modal.Content>
-                        </Modal>
-                        <Modal trigger={<Button primary>Páncéllista módosítása</Button>} onOpen={() => setUjPancel(true)} onClose={() => setUjPancel(false)} open={ujPancel} size='fullscreen'>
-                            <Modal.Header>Páncéllista módosítása</Modal.Header>
-                            <Modal.Content>
-                                <PancelValaszto savePancelok={savePancelok} pancelok={pancelok} karakter={karakter} save={save} />
-                            </Modal.Content>
-                        </Modal>
-                        <KepzettsegModal karakter={karakter} save={save} />
+                        <DobasMatrixDisplay color='orange' title='Harcértékek' matrix={calculateHarcertek(karakter).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} />
+                        <FegyverLista color='green' fegyverek={karakter.fegyverek} selected={karakter.valasztottFegyver} onSelectionChange={f => { karakter.valasztottFegyver = f; save(karakter) }}
+                            extraButton={<Modal trigger={<Button fluid circular icon='edit' content='Fegyverlista szerkesztése' />} size='fullscreen'>
+                                <Modal.Header>Fegyverek</Modal.Header>
+                                <Modal.Content>
+                                    <FegyverValaszto saveFegyverek={saveFegyverek} fegyverek={fegyverek} karakter={karakter} save={k => { save(k); }} />
+                                </Modal.Content>
+                            </Modal>} />
+                        <PancelLista color='teal' pancelok={karakter.pancelok} selected={karakter.valasztottPancel} onSelectionChange={f => { karakter.valasztottPancel = f; save(karakter) }}
+                            extraButton={<Modal trigger={<Button fluid circular icon='edit' content='Páncéllista szerkesztése' />} size='fullscreen'>
+                                <Modal.Header>Páncélok</Modal.Header>
+                                <Modal.Content>
+                                    <PancelValaszto savePancelok={savePancelok} pancelok={pancelok} karakter={karakter} save={save} />
+                                </Modal.Content>
+                            </Modal>
+                            } />
+                        <KepzettsegLista karakter={karakter} save={() => save(karakter)} />
                     </GridColumn>
                     <GridColumn>
-                        {karakter.masodlagosFegyver !== undefined && <div><DobasMatrixDisplay title='Másodlagos harcértékek' matrix={calculateHarcertek(karakter, undefined, true).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>}
-                        <FegyverLista title='Másodlagos fegyver' fegyverek={karakter.fegyverek} selected={karakter.masodlagosFegyver} onSelectionChange={f => { karakter.masodlagosFegyver = f; save(karakter) }} />
-                    </GridColumn>
-                </GridRow>
-                <GridRow>
-                    <GridColumn width={16}>
-                        <div><KepzettsegLista kepzettsegek={karakter.kepzettsegek} remove={kepzettseg => {
-                            karakter.kepzettsegek = (karakter.kepzettsegek ?? []).filter(k => k !== kepzettseg);
+                        {(karakter.masodlagosFegyverMutat ?? true) && <>
+                            {karakter.masodlagosFegyver !== undefined && <div><DobasMatrixDisplay color='orange' title='Másodlagos harcértékek' matrix={calculateHarcertek(karakter, undefined, true).roll(['te', 've', 'ce', 'ke'])} direction='vertical' keyMap={HARCERTEK_DISPLAY_NAMES} /></div>}
+                            <FegyverLista color='green' title='Másodlagos fegyver' fegyverek={karakter.fegyverek} selected={karakter.masodlagosFegyver} onSelectionChange={f => { karakter.masodlagosFegyver = f; save(karakter) }}
+                                extraButton={<Modal trigger={<Button fluid circular icon='edit' content='Fegyverlista szerkesztése' />} size='fullscreen'>
+                                    <Modal.Header>Fegyverek</Modal.Header>
+                                    <Modal.Content>
+                                        <FegyverValaszto saveFegyverek={saveFegyverek} fegyverek={fegyverek} karakter={karakter} save={k => { save(k); }} />
+                                    </Modal.Content>
+                                </Modal>} />
+                        </>}
+                        <Button fluid circular icon={(karakter.masodlagosFegyverMutat ?? true) ? 'eye slash' : 'eye'} content='Másodlagos fegyver' onClick={() => {
+                            karakter.masodlagosFegyverMutat = !(karakter.masodlagosFegyverMutat ?? true);
                             save(karakter);
-                        }} /></div>
+                        }} />
+                        <Felszereles karakter={karakter} save={() => save(karakter)} />
+                        <Jegyzetek karakter={karakter} save={() => save(karakter)} />
                     </GridColumn>
                 </GridRow>
             </Grid>

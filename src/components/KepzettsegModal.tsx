@@ -3,7 +3,7 @@ import { Modal, Button, Grid, GridColumn, Input, Label } from 'semantic-ui-react
 import { Karakter, Kepzettseg } from '../engine/karakter';
 import { IntegerInput } from './IntegerInput';
 
-export const KepzettsegModal: React.FC<{ karakter: Karakter; save: (karakter: Karakter) => unknown }> = ({ karakter, save }) => {
+export const KepzettsegModal: React.FC<{ karakter: Karakter; save: () => unknown }> = ({ karakter, save }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [kepzettseg, setKepzettseg] = useState<string>();
     const [szint, setSzint] = useState<number | '1' | '2' | '3' | '4' | '5' | 'Af' | 'Mf'>();
@@ -23,14 +23,14 @@ export const KepzettsegModal: React.FC<{ karakter: Karakter; save: (karakter: Ka
             } else {
                 karakter.kepzettsegek.push(newKepzettseg);
             }
-            save(karakter);
+            save();
             setSzint(undefined);
             setKp(undefined);
             setKepzettseg('');
         }
     }
 
-    return <Modal trigger={<Button primary>Képzettségek szerkesztése</Button>} onOpen={() => setModalOpen(true)} onClose={() => setModalOpen(false)} open={modalOpen}>
+    return <Modal trigger={<Button fluid circular icon='plus' content='Hozzáad' />} onOpen={() => setModalOpen(true)} onClose={() => setModalOpen(false)} open={modalOpen}>
         <Modal.Content>
             <div style={{ marginBottom: '0.5rem' }}>
                 <Input fluid labelPosition='left' placeholder='Képzettség...' error={!kepzettseg} value={kepzettseg} onChange={e => setKepzettseg(e.target.value)}>

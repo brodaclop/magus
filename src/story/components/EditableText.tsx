@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Input } from 'semantic-ui-react';
 
 export interface EditableTextProps {
@@ -6,9 +6,12 @@ export interface EditableTextProps {
     onChange: (text: string) => unknown;
 }
 
-export const EditableText: React.FC<EditableTextProps> = ({ text, onChange }) => {
+export const EditableText = forwardRef<any, EditableTextProps>(({ text, onChange }, ref) => {
     const [editedText, setEditedText] = useState<string>('');
     const [edited, setEdited] = useState<boolean>(false);
+    useImperativeHandle(ref, () => ({
+        edit: () => setEdited(true)
+    }));
     useEffect(() => {
         setEditedText(text ?? '');
     }, [text]);
@@ -17,4 +20,4 @@ export const EditableText: React.FC<EditableTextProps> = ({ text, onChange }) =>
     } else {
         return <span onClick={() => setEdited(true)}>{text ?? ''}</span>;
     }
-}
+});

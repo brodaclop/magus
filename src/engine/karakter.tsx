@@ -86,9 +86,15 @@ export interface Karakter extends KarakterInfo {
         asztral: Pajzs;
         mental: Pajzs;
     };
+    jegyzetek?: string;
+    felszereles?: Array<FelszerelesItem>;
+    masodlagosFegyverMutat?: boolean;
 }
 
-
+export interface FelszerelesItem {
+    name: string;
+    qty: number;
+}
 
 export interface Fegyver {
     name: string;

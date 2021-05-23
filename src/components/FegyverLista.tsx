@@ -1,8 +1,18 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { SemanticCOLORS, Table } from 'semantic-ui-react';
 import { Fegyver } from '../engine/karakter';
 
-export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: number, onSelectionChange?: (newSelection: number | undefined) => unknown, title?: string }> = ({ fegyverek, selected, onSelectionChange, title }) => {
+interface FegyverListaProps {
+    fegyverek: Array<Fegyver>,
+    selected?: number,
+    onSelectionChange?: (newSelection: number | undefined) => unknown,
+    title?: string;
+    extraButton?: JSX.Element;
+    color?: SemanticCOLORS;
+
+}
+
+export const FegyverLista: React.FC<FegyverListaProps> = ({ fegyverek, selected, onSelectionChange, title, extraButton, color }) => {
     const fegyverLista: Array<Record<string, string | number>> = fegyverek.map(fegyver => {
         const rec: Record<string, string | number> = {};
         rec.name = fegyver.name;
@@ -16,7 +26,7 @@ export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: numb
         return rec;
     });
 
-    return <Table celled striped definition selectable={onSelectionChange !== undefined}>
+    return <Table compact celled striped definition selectable={onSelectionChange !== undefined} color={color}>
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>{title ?? 'Fegyver'}</Table.HeaderCell>
@@ -30,18 +40,20 @@ export const FegyverLista: React.FC<{ fegyverek: Array<Fegyver>, selected?: numb
             </Table.Row>
         </Table.Header>
         <Table.Body>
-            {fegyverLista.map((r, i) => {
-                return <Table.Row active={selected === i} onClick={() => onSelectionChange?.(selected === i ? undefined : i)}>
-                    <Table.Cell>{r.name}</Table.Cell>
-                    <Table.Cell>{r.ke}</Table.Cell>
-                    <Table.Cell>{r.te}</Table.Cell>
-                    <Table.Cell>{r.ve}</Table.Cell>
-                    <Table.Cell>{r.ce}</Table.Cell>
-                    <Table.Cell>{r.sebzes}</Table.Cell>
-                    <Table.Cell>{r.tamPerKor}</Table.Cell>
-                    <Table.Cell>{r.lotav}</Table.Cell>
-                </Table.Row>
-            })}
+            {fegyverLista.map((r, i) => <Table.Row key={i} active={selected === i} onClick={() => onSelectionChange?.(selected === i ? undefined : i)}>
+                <Table.Cell>{r.name}</Table.Cell>
+                <Table.Cell>{r.ke}</Table.Cell>
+                <Table.Cell>{r.te}</Table.Cell>
+                <Table.Cell>{r.ve}</Table.Cell>
+                <Table.Cell>{r.ce}</Table.Cell>
+                <Table.Cell>{r.sebzes}</Table.Cell>
+                <Table.Cell>{r.tamPerKor}</Table.Cell>
+                <Table.Cell>{r.lotav}</Table.Cell>
+            </Table.Row>
+            )}
+            {extraButton && <Table.Row key='__extra'>
+                <Table.Cell colspan={8}>{extraButton}</Table.Cell>
+            </Table.Row>}
         </Table.Body>
     </Table>
 }

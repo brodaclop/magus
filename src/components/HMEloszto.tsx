@@ -23,16 +23,21 @@ export const HMEloszto: React.FC<{ harcertek: Harcertek, hm: number, complete: (
         setCurrent(newCurrent);
     }, [current, setCurrent, harcertek, hm]);
 
-    return <Table definition striped>
-        <Table.Row>
-            <Table.Cell>HM:</Table.Cell>
-            <Table.Cell colSpan={2}>{current.hm}</Table.Cell>
-        </Table.Row>
-        {(Object.keys(harcertek) as Array<any>).map((he: ('ke' | 'te' | 've' | 'ce')) => <Table.Row>
-            <Table.Cell>{HARCERTEK_DISPLAY_NAMES[he]}:</Table.Cell>
-            <Table.Cell><i>{harcertek[he]}</i></Table.Cell>
-            <Table.Cell><NumberInput icons value={current.harcertek[he]} min={harcertek[he]} max={(current.harcertek[he] ?? 0) + current.hm} onChange={e => change(he, e ?? 0)} /></Table.Cell>
-        </Table.Row>)}
-        <Button onClick={() => complete(current.harcertek, current.hm)}>Eloszt</Button>
+    return <Table definition striped compact color='orange'>
+        <Table.Header>
+            <Table.Row>
+                <Table.HeaderCell>HM:</Table.HeaderCell>
+                <Table.Cell colSpan={2} style={!current.hm ? { padding: '0' } : {}} textAlign={current.hm ? 'left' : 'center'}>
+                    {current.hm ? current.hm : <Button compact color='green' circular icon='check' content='Eloszt' onClick={() => complete(current.harcertek, current.hm)} />}
+                </Table.Cell>
+            </Table.Row>
+        </Table.Header>
+        <Table.Body>
+            {(Object.keys(harcertek) as Array<any>).map((he: ('ke' | 'te' | 've' | 'ce')) => <Table.Row>
+                <Table.Cell>{HARCERTEK_DISPLAY_NAMES[he]}:</Table.Cell>
+                <Table.Cell collapsing><i>{harcertek[he]}</i></Table.Cell>
+                <Table.Cell collapsing><NumberInput icons value={current.harcertek[he]} min={harcertek[he]} max={(current.harcertek[he] ?? 0) + current.hm} onChange={e => change(he, e ?? 0)} /></Table.Cell>
+            </Table.Row>)}
+        </Table.Body>
     </Table>
 }

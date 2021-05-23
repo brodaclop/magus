@@ -1,22 +1,33 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { SemanticCOLORS, Table } from 'semantic-ui-react';
 import { DobasMatrix } from '../engine/dobasmatrix';
 import { formatDiceRoll, parseDiceRoll } from '../engine/roll';
 import { DobasEredmeny } from './DobasEredmeny';
 import { DobasInput } from './DobasInput';
 import { NumberInput } from './NumberInput';
 
-export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<string, string>, direction: 'horizontal' | 'vertical', title: string | React.ReactNode, setValue?: (name: string, key: string, value: string) => unknown, editable?: Array<string>, numberOnly?: boolean }> = ({ matrix, keyMap, direction, title, editable, setValue, numberOnly }) => {
+interface DobasMatrixDisplayProps {
+    matrix: DobasMatrix,
+    keyMap: Record<string, string>,
+    direction: 'horizontal' | 'vertical',
+    title: string | React.ReactNode,
+    setValue?: (name: string, key: string, value: string) => unknown,
+    editable?: Array<string>,
+    numberOnly?: boolean,
+    color?: SemanticCOLORS
+}
+
+export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, keyMap, direction, title, editable, setValue, numberOnly, color }) => {
     const displayCell = (name: string, key: string) => {
         const value = matrix.values[name][key];
         const constantRoll = (value?.roll?.die ?? 0) === 0;
         const rollString = value?.roll ? formatDiceRoll(value.roll) : '';
         if (!editable?.includes(name)) {
-            return <Table.Cell key={name + '-' + key}>
+            return <Table.Cell key={name + '-' + key} collapsing>
                 {rollString}{!constantRoll && value?.result && <> = <DobasEredmeny result={value?.result} /></>}
             </Table.Cell>;
         } else {
-            return <Table.Cell key={name + '-' + key}>
+            return <Table.Cell key={name + '-' + key} collapsing>
                 {numberOnly ?
                     <NumberInput value={value?.roll.plus ?? 0} onChange={v => setValue?.(name, key, String(v))} min={0} max={100000} />
                     :
@@ -27,7 +38,7 @@ export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<
     }
 
     if (direction === 'horizontal') {
-        return <Table celled striped>
+        return <Table celled striped compact color={color}>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell key='title' disabled={false}>{title}</Table.HeaderCell>
@@ -46,16 +57,16 @@ export const DobasMatrixDisplay: React.FC<{ matrix: DobasMatrix, keyMap: Record<
             </Table.Body>
             <Table.Footer>
                 <Table.HeaderCell title='sum'>Összeg</Table.HeaderCell>
-                {matrix.keys.map(key => <Table.HeaderCell key={key}>{matrix.sum[key]}</Table.HeaderCell>)}
+                {matrix.keys.map(key => <Table.HeaderCell key={key} collapsing>{matrix.sum[key]}</Table.HeaderCell>)}
             </Table.Footer>
         </Table>
     } else {
-        return <Table celled striped definition>
+        return <Table celled striped definition compact color={color}>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell key='title'>{title}</Table.HeaderCell>
                     {Object.keys(matrix.values).map(name => <Table.HeaderCell key={name}>{name}</Table.HeaderCell>)}
-                    <Table.HeaderCell key='sum'>Összeg</Table.HeaderCell>
+                    <Table.HeaderCell key='sum' collapsing>Összeg</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
