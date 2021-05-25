@@ -296,6 +296,134 @@ Mesterfokú alkalmazás esetén nem csak saját ma­gunkban idézhetünk fel eml
         Statikus Ψ-pajzs, mesterfokú alkalmazással bárki el­méje köré  (nemcsak ember, de lélekkel rendelkező állat) építhető, ám a  más elme köré épített pajzs, akárki építette is (harcművész,  kardművész vagy varázsló), bárki által alkal­mazott Ψ-ostrommal  lerombolható.
 `
     },
+    {
+        name: 'Membrán',
+        pont: '10',
+        misc: {
+            idotartam: 'végleges'
+        },
+        varazslasIdeje: '5 perc',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A membrán a Statikus Ψ-pajzs egy változata. Éppúgy körbevehető vele az elme, működtetésére többé nem kell Ψ-pontot áldozni, s lerombolni is csak ahhoz hasonlóan, Ψ-ostrommal lehet.
+
+        A Membrán nem védi az elmét, hanem figyelmezteti a rá irányuló passzív Ψ-tevékenységre. A membrán felépítője megérzi, ha huzamosabb ideig figyelik, s azt is meg tudja határozni, merről. Azonnal tudomására jut, ha Asztrál vagy Mentál Szemmel rápillantanak. Természetesen akkor is nyomban riaszt, ha asztrál vagy mentál varázslattal próbálnak hatni a viselőjére. Ha a Ψ-használó nem a saját, hanem más elméjét övezi Membránnal, bármilyen távol tartózkodjék is, tudomására jut, ha a viselőre a fent említett mágikus módszerekkel hatnak.
+
+        A membrán magától soha nem vész el, csak felépítője képes lebontani, vagy 10 E erősségű Ψ-ostrom.
+`
+    },
+    {
+        name: 'Csettintés',
+        pont: 'lásd a leírásban',
+        misc: {
+            idotartam: 'egyszeri'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A diszciplina alapvető képessége minden Ψ-használónak. Oly kevés mentális energia használódik el alkalmazásakor, hogy Ψ-pontban nem mérhető, ezért a Csettintésre nem kell Ψ-pontot áldozni. Egyszerre egyvalakivel szemben használható, mindössze annyi történik, hogy az illető tudomást szerez a diszciplina alkalmazójáról. A hatás hasonló ahhoz, mint amikor egy csendes teremben valaki csettint. A "csettintést" csak a kiszemelt "áldozat" hallja, nem tudja, kitől származik, de tudja, milyen irányban keresse őt. Tapasztalatlan emberek első reakciója feltétlenül az, hogy az alkalmazó irányába, netán rápillantanak.
+        A Csettintés csak azzal szemben használható, akit az alkalmazó lát.
+`
+    },
+    {
+        name: 'Összpontosítás',
+        pont: '1/Ψ-használati szint',
+        misc: {
+            idotartam: '1 kör'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A diszciplina legtöbb 1 kör időtartamig egyetlen adott feladat megoldására elegendő misztikus, belső erővel ruházza fel alkalmazóját. Az illető ezáltal képes lesz olyan próbatételek sikeres végrehajtására, melyekre egyébként álmában sem lenne alkalmas. 1 Ψ-pont felhasználásával +1-gyel, százalékos próba esetén +5%-kal növelheti az esélyeit. Egyszerre legtöbb annyi Ψ-pontot képes felhasználni ilyen célra, amennyi a Ψ-használati Szintje.
+
+        Mivel az 1 teljes körig tartó összpontosítás után az első tevékenység maga a próbatétel kell legyen, a diszciplina aligha használható közelharcban. Annál inkább lesből leadott, célzott lövésben (+5 CÉ/Ψ-pont azaz Ψ-használati Szint).
+
+        A diszciplina különlegessége, hogy egyes Ψ-t nem ismerő íjászok is alkalmazzák, esetükben Ψ-pont felhasználása nélkül, +5 CÉ/Tapasztalati Szint mértékben.
+`
+    },
+    {
+        name: 'Abszolút Látás',
+        pont: '8',
+        misc: {
+            idotartam: 'végleges'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A diszciplina alkalmazója nem anyagi testének tökéletlen látószervén, a szemen keresztül lát, hanem sokkal kifinomultabb lelki szemét használja. Ezáltal egyszerre nem csak egy irányba nézhet, hanem teljes körben - jobbra, balra, előre, hátra, fel és le - lát egyidejűleg; mi több, mindent élesen, hisz nem szükséges szemét a kérdéses távolságra fókuszálnia.
+
+        Az Abszolút látás egyetlen hátránya a rövid látótávolság: csak 20 méter sugarú körön belül használható, azon túl minden teljes sötétbe borul. Az érintett területen azonban tökéletesek a látási viszonyok, függetlenül a fényviszonyoktól - azaz teljes sötétségben is minden látható. Az Abszolút látással sem pillanthatóak meg ellenben a láthatatlan tárgyak, a rejtőző emberek vagy takarásban lévő dolgok; ahogyan a mágikus sötétség is gátat szab használatának.
+
+        Hátulütője is akad: az érintett területen belül a Szimbólumok, a Mágikus tekintet - és az összes látáson alapuló mágikus befolyás - azonnal kifejti hatását az alkalmazóra.
+
+        Az Abszolút látás megértéséhez elvont gondolkodás szükséges, hiszen nehéz felfogni a fókuszálás nélküli teljes körívű látást a százhúsz fokos látótérhez szokott emberi elmének. Éppen ezért - az átállás miatt- igényel sok mentális energiát (Pszi-pontot) a diszciplina alkalmazása.
+
+        Maga az Abszolút látás - a normál látáshoz hasonlóan - nem igényel Pszi-pontot, csak az átállás: a lelki szemre való átkapcsolás. Azaz az Abszolút látás bármeddig használható, míg csak alkalmazója vissza nem kíván térni a szokványos módszerhez; ekkor újra a diszciplinához kénytelen fordulni, hogy normál látását visszanyerje.
+
+        Az Abszolút látás során a szem a semmibe réved, a szembéjak gyakorta le is csukódnak, így a hirtelen felvillanó éles fény - legyen bár mágikus - sem tehet kárt az alkalmazó látásában.
+
+        Az Abszolút látás diszciplina magas mentális felkészültéset igényel, ezért - dacára annak, hogy az alkalmazó önmagára vonatkoztatva használja - alkalmazása Mesterfokú Pszi képzettséget igényel. Mivel az Abszolút látásban a szem nem játszik szerepet, a diszciplinát vakok és bekötött szeműek is alkalmazhatják. Harcban megszünteti a hátulról vagy félhátulról támadók előnyeit, s így kizárólag a "Harc több ellenfél ellen" módosítói érvényesülnek.
+`
+    },
+    {
+        name: 'Szinesztézia',
+        pont: 'lásd a leírásban',
+        misc: {
+            idotartam: 'egyszeri'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A diszciplina alkalmazója képes Érzékközpontjában a látáshoz kapcsolni a más érzékszervein keresztül észlelt ingereket. Ily módon színes fénynyalábok formájában megpillanthatja a hangokat és a szagokat, s könnyűszerrel felismerheti forrásukat. Varázslók a Szinesztézia által a leplezetlen mágiát is megpillantják, mivel az derengő auraként világít a mágikus tárgy, személy, hely körül. Hatodik érzékkel együtt alkalmazva a diszciplina hasonló aurával leplezi le az alkalmazóját veszélyeztető tárgyat, ill. személyt.
+
+        Nem szükségszerű, hogy éppen a látás legyen a kedvezményezett érzékszerv, ez csak az emberi és hozzá hasonló fajok esetében természetes, mivel ők leginkább a látásukra hagyatkoznak. Elviekben más érzékszerv használata is elképzelhető, bár ezt - úgy tudni - egyetlen pszi-mester sem oktatja és ismeri.
+
+        A Szinesztézia alkalmazásakor minden érzékszerv ingerei más színben és erősségüktől függően egyre világosabb árnyalatban (egyre nagyobb fényerővel) jelennek meg. Általánosan a következő színek használatosak.
+
+        <table>
+            <tr>
+                <td>Érzékszerv</td>
+                <td>Szín</td>
+                <td>Ψ-pont</td>
+            </tr>
+            <tr>
+                <td>hallás</td>
+                <td>sárga</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>szaglás</td>
+                <td>zöld</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>mágia</td>
+                <td>kék</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>hatodik érzék</td>
+                <td>vörös</td>
+                <td>3</td>
+            </tr>
+        </table>
+
+        A Ψ-pont rovat megmutatja, mennyi Pszi energiát emészt fel az adott érzékszerv látáshoz kapcsolása 1 körre. Több érzék együttes átkapcsolásakor az értékek összeadódnak, az időtartam növelésekor pedig körönként többszöröződnek.
+`
+    },
+    {
+        name: 'Érzék-tisztítás',
+        pont: '1/érzékszerv',
+        misc: {
+            idotartam: 'végleges'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['pszi', 'pszi-pyarroni'],
+        description: `
+        A diszciplina alkalmazója 1 Ψ-pontért megtisztíthatja egyik érzékszervét, melyet a korábbi nagy erejű ingerek eltompítottak. Verőfényről a barlang sötétjébe lépve azonnal "hozzászoktatja" szemét a megváltozott fényviszonyokhoz; a fülsértő ricsajt követő csendben is kifinomultan hallgatózhat; egyetlen röpke pillanat alatt száműzheti orrából a korábbi bűz vagy illatfelhő szaglást bénító utóhatásait.
+`
+    },
+
 ]
 
 export const PSZI_SLAN: Array<Varazslat> = [
@@ -542,6 +670,34 @@ export const PSZI_SLAN: Array<Varazslat> = [
         A Tetszhalál felfedezésére csak a Kyr Metódus Auraérzékelésével  lehetséges.
 
         A Ψp-ok megduplázásával az időtartam megkétszereződik,  triplázásával megháromszorozódik, stb.
+        `
+    },
+    {
+        name: 'Kiáltás',
+        pont: '5/támadás',
+        misc: {
+            idotartam: 'egysszeri'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['pszi', 'pszi-slan'],
+        description: `
+        A diszciplina segítségével a harcművész szellemi energiájával támadásának erejét fokozhatja. A Kiáltás kíséretében végrehajtott támadás rombolóerejét tekintve tökéletes, Sebzésének meghatározásakor nincs szükség kockadobásra, minden esetben a lehetséges maximumot sebzi. Ez persze függ a támadó fegyvertől, az alkalmazó Tapasztalati Szintjétől és még sok egyébtől.
+
+        A belső energiákat elnyújtott kiáltás szabadítja fel - innen kapta nevét a diszciplina. Kiáltás híján a várt hatás is elmarad. Mindig egyetlen támadást befolyásol, csak annak sebzését növeli. A felhasznált Ψ-pont akkor is elveszik, ha a támadás sikertelen. A diszciplinát a harcművész egy kör alatt legtöbb annyiszor használhatja, ahányadik Tapasztalai Szintű - természetesen minden újabb "megerősített" támadás további 5 Ψ-pontba kerül.
+
+        A Kiáltás Chi-harcban is alkalmazható.
+    `
+    },
+    {
+        name: 'Kitérés',
+        pont: '4/kör',
+        misc: {
+            idotartam: '1 kör'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['pszi', 'pszi-slan'],
+        description: `
+        A diszciplina alkalmazásakor a slan belső ritmus diktálta táncba kezd. Egyfajta intuitív révület ez, mely alatt előre látja a ráváró veszedelmeket, ezért nagy biztonsággal képes kitérni előlük. A Kitérés időtartama alatt a hajított fegyverek és célzott lövedékek elméletileg nem találhatják el, a gyakorlatban a véletlen néha mást eredményez: a 00-ás dobások eredményesek ellene is. A diszciplinát 2 Ψ-pontért 1 körig képes alkalmazni, s ez idő alatt nem támadhat, nem végezhet más Ψ-tevékenységet. Egy adott körben minden slan legtöbb annyi lövedék elől képes kitérni, amennyi a Ψ-használati Szintje.
         `
     },
 
@@ -814,14 +970,484 @@ export const PSZI_KYR: Array<Varazslat> = [
         Mindenben azonos az Általános Diszciplínáknál leírt Ψ-ostromhoz,  ám ezzel 1 Ψ-pontért 2Ψ-pont bontható le a dinamikus, és 2 E  rombolható le a statikus pajzsokból.        
         `
     },
-
+    {
+        name: 'Pszeudó',
+        pont: '5 + a Pszeudó',
+        misc: {
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['pszi', 'pszi-kyr'],
+        description: `
+        Baromi hosszú leírás egy olyan diszciplinához, amit amúgy se használ soha senki.
+        `
+    },
 ]
+
+export const BARD_VARAZSLATOK: Array<Varazslat> = [
+    {
+        name: 'Álom dala',
+        pont: '12/célpont',
+        misc: {
+            erosseg: '6',
+            idotartam: 'lásd leírás',
+            hatotav: '10 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Bájolás dala',
+        pont: '5/lény',
+        misc: {
+            erosseg: '6',
+            idotartam: '2 óra',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Bátorság dala',
+        pont: '7',
+        misc: {
+            erosseg: '5',
+            idotartam: 'dal hossza',
+            hatotav: 'lásd leírás',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Bénítás dala',
+        pont: '8/célpont',
+        misc: {
+            erosseg: '7',
+            idotartam: 'k6 kör',
+            hatotav: '10 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '2+k6 kör',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Ellentétek dala',
+        pont: '35',
+        misc: {
+            erosseg: '25',
+            idotartam: 'végleges',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Emlékek dala',
+        pont: '25',
+        misc: {
+            erosseg: '12',
+            idotartam: 'végleges',
+            hatotav: '10 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '3 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Feledés dala',
+        pont: '20',
+        misc: {
+            erosseg: '12',
+            idotartam: 'egyszeri',
+            hatotav: '10 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '3 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Félelem dala',
+        pont: '4/lény',
+        misc: {
+            erosseg: '6',
+            idotartam: 'dal hossza',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Halál dala',
+        pont: '45/lény',
+        misc: {
+            erosseg: '15',
+            idotartam: 'végleges',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Kínok dala',
+        pont: '4/kör',
+        misc: {
+            erosseg: '25',
+            idotartam: 'dal hossza',
+            hatotav: 'hallótáv',
+            me: 'M'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Nyugalom dala',
+        pont: '1/célpont',
+        misc: {
+            erosseg: '5',
+            idotartam: 'k6 kör',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Zavarodottság dala',
+        pont: '6/célpont',
+        misc: {
+            erosseg: '4',
+            idotartam: 'k6 kör',
+            hatotav: '10 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-dalmágia'],
+        description: ``
+    },
+    {
+        name: 'Beszélő múlt',
+        pont: '19',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 perc',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Bűvhangszer',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '10 perc/szint',
+            hatotav: 'bárd hangszere',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Csend',
+        pont: '10',
+        misc: {
+            erosseg: '8',
+            idotartam: '1 kör/szint',
+            hatotav: '8 láb',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Dalegyesítés',
+        pont: '18',
+        misc: {
+            erosseg: '5',
+            idotartam: 'lásd leírás',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hamis beszéd',
+        pont: '7',
+        misc: {
+            erosseg: '2',
+            idotartam: 'perc/szint',
+            hatotav: '15 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangcsapás',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 szegmens',
+            hatotav: '50 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangidézés',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            idotartam: '2 perc/szint',
+            hatotav: '10 láb',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangkivetítés',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 óra',
+            hatotav: '50 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangorkán',
+        pont: '22',
+        misc: {
+            erosseg: '4',
+            idotartam: '1 szegmens',
+            me: 'állóképesség',
+            hatotav: '12 láb',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangtanulmány',
+        pont: '2',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: '5 láb',
+        },
+        varazslasIdeje: '3 perc',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangteremtés',
+        pont: '2',
+        misc: {
+            erosseg: '1',
+            idotartam: '5 perc/szint',
+            hatotav: '12 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Hangutánzás',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 perc/szomt',
+            hatotav: '35 láb',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Mágia dala',
+        pont: '10',
+        misc: {
+            erosseg: '5',
+            idotartam: 'lásd leírás',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Mágikus hang',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Nyelvzagyválás',
+        pont: '6',
+        misc: {
+            erosseg: '5',
+            idotartam: 'perc/szint',
+            hatotav: '15 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Rejtett üzenet',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: 'hallótáv',
+        },
+        varazslasIdeje: 'lásd leírás',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Távoli üzenet',
+        pont: '25',
+        misc: {
+            erosseg: '25',
+            idotartam: 'egyszeri',
+            hatotav: 'korlátlan',
+        },
+        varazslasIdeje: '2 perc',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Távolság dala',
+        pont: '10/szorzó',
+        misc: {
+            erosseg: '5',
+            idotartam: 'lásd leírás',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Zajkeltés',
+        pont: '1',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 kör',
+            hatotav: '15 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-hangmágia'],
+        description: ``
+    },
+    {
+        name: 'Alakváltás',
+        pont: '15',
+        misc: {
+            erosseg: '1',
+            idotartam: '2 perc/szint',
+            me: 'lásd leírás'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Aura',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: '10 kör',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Bűvharc',
+        pont: '16',
+        misc: {
+            erosseg: '1',
+            idotartam: 'kör/szint',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Délibáb',
+        pont: '12',
+        misc: {
+            erosseg: '3',
+            idotartam: '1 óra',
+            hatotav: '5 mérföld'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Éjszakai látás',
+        pont: '9',
+        misc: {
+            erosseg: '5',
+            idotartam: '10 perc/szint',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Élő történelem',
+        pont: '21',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 perc/szint',
+            hatotav: '15 láb'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+
+
+];
 
 export const VARAZSLAT_LABELS: Record<string, string> = {
     name: 'Varázslatok',
     pont: 'MP',
     me: 'ME',
     idotartam: 'Időtartam',
+    erosseg: 'E',
+    hatotav: 'Hatótáv',
     varazslasIdeje: 'Varázslás ideje'
 }
 
