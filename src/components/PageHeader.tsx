@@ -7,6 +7,7 @@ import { KockaModal } from './KockaModal';
 
 import logo from '../static/magus.png';
 import { PageSelection } from '../App';
+import { VarazslatokModal } from './VarazslatokModal';
 
 
 interface PageHeaderProps {
@@ -68,6 +69,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
         }
         <Menu.Item key='floated' position='right'>
             <KarakterImport save={save} saveMese={saveMese} />
+            <VarazslatokModal />
             <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />
         </Menu.Item>
