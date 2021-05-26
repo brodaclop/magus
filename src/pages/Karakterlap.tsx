@@ -33,9 +33,10 @@ interface KarakterlapProps {
 
 export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove, categories, fegyverek, saveFegyverek, pancelok, savePancelok, clone }) => {
 
-    const points = [
+    const eletero = [
         { name: 'ep', label: 'ÉP', ...karakter.ep },
         { name: 'fp', label: 'FP', ...karakter.fp }];
+    const points = [];
     if (karakter.pszi) {
         points.push({ name: 'pszi', label: 'ΨP', ...karakter.pszi })
     }
@@ -61,12 +62,22 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 save(karakter);
             }} /> </div>}
             <PointsTable color='olive'
-                points={points}
+                points={eletero}
                 onChange={(name, max, value) => {
                     (karakter as any)[name][max ? 'max' : 'akt'] = value;
                     save(karakter);
                 }}
+                title='Életerő'
             />
+            {points.length &&
+                <PointsTable color='olive'
+                    points={points}
+                    onChange={(name, max, value) => {
+                        (karakter as any)[name][max ? 'max' : 'akt'] = value;
+                        save(karakter);
+                    }}
+                    title='Mágia'
+                />}
             <Pajzsok
                 pajzs={karakter.pajzs ?? {
                     asztral: { termeszetes: folottiResz(karakter.kepessegek.asz, 10), statikus: 0, dinamikus: 0 },

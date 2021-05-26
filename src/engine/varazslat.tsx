@@ -1437,6 +1437,524 @@ export const BARD_VARAZSLATOK: Array<Varazslat> = [
         labels: ['magia', 'bárd', 'bárd-fénymágia'],
         description: ``
     },
+    {
+        name: 'Fantom',
+        pont: '23',
+        misc: {
+            erosseg: '3',
+            idotartam: '1 óra',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fantomsereg',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 kör',
+            hatotav: '50 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fegyver',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '2 kör/szint',
+            hatotav: 'bárd fegyvere'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Félelmetes fegyver',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: '8 kör',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fénysugár',
+        pont: '9',
+        misc: {
+            erosseg: '3',
+            idotartam: '3 kör/szint',
+        },
+        varazslasIdeje: '2 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fénytánc',
+        pont: '5',
+        misc: {
+            erosseg: '6',
+            idotartam: '2 kör/szint',
+            hatotav: '7 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fényvarázs',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: 'perc/szint',
+            hatotav: '15 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fényvért',
+        pont: '9',
+        misc: {
+            erosseg: '2',
+            idotartam: '2 perc/szint',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Fókuszált fény',
+        pont: '15',
+        misc: {
+            erosseg: '3',
+            idotartam: 'kör/3 szint',
+            hatotav: '6 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Hamis teleport',
+        pont: '25',
+        misc: {
+            erosseg: '15',
+            idotartam: '6 kör/szint',
+            hatotav: '16 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Hasonmás',
+        pont: '6/hasonmás',
+        misc: {
+            erosseg: '2',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Illúzió',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 perc/szint',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Illúzióírás',
+        pont: '15',
+        misc: {
+            erosseg: '2',
+            idotartam: 'végleges',
+        },
+        varazslasIdeje: '5 perc',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Illúziótalaj',
+        pont: '6',
+        misc: {
+            erosseg: '2',
+            idotartam: '10 perc/szint',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Irányvesztés',
+        pont: '12',
+        misc: {
+            erosseg: '2',
+            idotartam: '15 perc/szint',
+            hatotav: '15 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Káosz',
+        pont: '35',
+        misc: {
+            erosseg: '25',
+            idotartam: 'perc/szint',
+            hatotav: '20 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Kép',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: 'lásd leírás',
+            hatotav: '5 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Képidézés',
+        pont: '9',
+        misc: {
+            erosseg: '1',
+            idotartam: 'perc/szint',
+            hatotav: '12 láb'
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Ködalak',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 kör/szint',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Láthatatlanság',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 óra',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Lényalkotás',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 perc/szint',
+            hatotav: '12 láb'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Maszk',
+        pont: '2',
+        misc: {
+            erosseg: '1',
+            idotartam: 'lásd leírás',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Mágiamegj',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 perc/szint',
+            hatotav: '3 láb/szint'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Nyílzápor',
+        pont: '7',
+        misc: {
+            erosseg: '1',
+            idotartam: 'kör/szint',
+            hatotav: '50 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Rejtjel',
+        pont: '10',
+        misc: {
+            erosseg: '2',
+            idotartam: '1 év',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Rémítés',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '5 kör',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Személyes varázs',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '15 perc/szint',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Szépségvarázs',
+        pont: '12',
+        misc: {
+            erosseg: '2',
+            idotartam: '6 óra',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Színvarázs',
+        pont: '1',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 nap/szint',
+            hatotav: '5 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Szivárvány',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '2 perc/szint',
+            hatotav: '20 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Tanulmány',
+        pont: '2',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: '8 láb'
+        },
+        varazslasIdeje: '3 perc',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Tárgyalkotás',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 perc/szint',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Tárgyátváltoztatás',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 nap/szint',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Tárgyláthatatlanság',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 kör/szint',
+            hatotav: '12 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Távolságtorzítás',
+        pont: '9',
+        misc: {
+            erosseg: '2',
+            idotartam: '15 perc',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Teljes álca',
+        pont: '35',
+        misc: {
+            erosseg: '12',
+            idotartam: '10 kör/szint',
+            hatotav: '20 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Tükör',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 kör/szint',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Üresség',
+        pont: '18',
+        misc: {
+            erosseg: '2',
+            idotartam: '5 perc/szint',
+            hatotav: '20 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Vakon látás',
+        pont: '35',
+        misc: {
+            erosseg: '15',
+            idotartam: '5 perc/szint',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Vakság',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 kör',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-fénymágia'],
+        description: ``
+    },
+    {
+        name: 'Figyelem elterelése',
+        pont: '2',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 szegmens',
+            hatotav: '5 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bárd', 'bárd-egyéb'],
+        description: ``
+    },
+    {
+        name: 'Hipnózis',
+        pont: '20',
+        misc: {
+            erosseg: '6',
+            idotartam: 'perc/szint',
+            me: 'A',
+            hatotav: '3 láb'
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bárd', 'bárd-egyéb'],
+        description: ``
+    },
+    {
+        name: 'Rohanó idő',
+        pont: '34',
+        misc: {
+            erosseg: '15',
+            idotartam: 'perc/szint',
+            hatotav: '15 láb'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bárd', 'bárd-egyéb'],
+        description: ``
+    },
+    {
+        name: 'Tanulás',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: 'lásd leírás',
+        labels: ['magia', 'bárd', 'bárd-egyéb'],
+        description: ``
+    },
 
 
 ];

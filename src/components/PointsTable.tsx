@@ -15,7 +15,7 @@ interface PointsTableProps {
     points: Array<Point>,
     onChange: (name: string, max: boolean, newValue: number) => unknown,
     title?: string,
-    color?: SemanticCOLORS
+    color?: SemanticCOLORS;
 }
 
 export const PointsTable: React.FC<PointsTableProps> = ({ points, onChange, title, color }) => {
