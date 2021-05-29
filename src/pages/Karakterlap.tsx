@@ -69,7 +69,7 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
                 }}
                 title='Életerő'
             />
-            {points.length &&
+            {points.length > 0 &&
                 <PointsTable color='olive'
                     points={points}
                     onChange={(name, max, value) => {
