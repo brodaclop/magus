@@ -199,6 +199,11 @@ const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver) =
     } else if (tipus !== 'ököl') { // ökölharcnál nincs bónusz
         ret.add('Képzettség ' + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
     }
+
+    const ugras = findKepzettseg(karakter, 'Ugrás');
+    if (ugras && typeof ugras.szint === 'number') {
+        ret.add('ugrás', { ve: Math.floor(ugras.szint / 5) })
+    }
 }
 
 const addKetkezes = (ret: DobasMatrix, karakter: Karakter, masodlagos?: boolean) => {

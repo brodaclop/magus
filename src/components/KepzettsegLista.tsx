@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Table } from 'semantic-ui-react';
+import { Button, Icon, Table } from 'semantic-ui-react';
 import { Karakter, Kepzettseg } from '../engine/karakter';
 import { KepzettsegModal } from './KepzettsegModal';
 
@@ -18,6 +18,7 @@ export const KepzettsegLista: React.FC<{ karakter: Karakter, save: () => unknown
     return <Table striped celled compact color='pink'>
         <Table.Header>
             <Table.Row>
+                <Table.HeaderCell collapsing></Table.HeaderCell>
                 <Table.HeaderCell>Képzettség</Table.HeaderCell>
                 <Table.HeaderCell collapsing>Szint</Table.HeaderCell>
                 <Table.HeaderCell collapsing>KP</Table.HeaderCell>
@@ -26,6 +27,7 @@ export const KepzettsegLista: React.FC<{ karakter: Karakter, save: () => unknown
         </Table.Header>
         <Table.Body>
             {karakter.kepzettsegek?.sort(compare).map((r, i) => <Table.Row>
+                <Table.Cell collapsing><KepzettsegModal karakter={karakter} editedKepzettseg={r} save={save} trigger={<Icon name='edit' />} /></Table.Cell>
                 <Table.Cell>{r.name}</Table.Cell>
                 <Table.Cell collapsing>{r.szint}</Table.Cell>
                 <Table.Cell collapsing>{r.kp ? r.kp : '-'}</Table.Cell>
@@ -33,7 +35,7 @@ export const KepzettsegLista: React.FC<{ karakter: Karakter, save: () => unknown
             </Table.Row>
             )}
             <Table.Row key='__new'>
-                <Table.Cell colspan={4}><KepzettsegModal karakter={karakter} save={save} /></Table.Cell>
+                <Table.Cell colspan={5}><KepzettsegModal karakter={karakter} save={save} trigger={<Button fluid circular icon='plus' content='Új képzettség' />} /></Table.Cell>
             </Table.Row>
         </Table.Body>
     </Table>
