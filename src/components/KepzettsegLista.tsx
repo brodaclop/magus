@@ -14,19 +14,23 @@ const compare = (a: Kepzettseg, b: Kepzettseg): number => {
     return a.name.localeCompare(b.name);
 }
 
+const normalKepzettseg = (kepzettseg: Kepzettseg): boolean => {
+    return !kepzettseg.name.startsWith('Fegyverhasználat - ') && !kepzettseg.name.startsWith('Fegyverdobás - ') && typeof kepzettseg.szint !== 'number';
+}
+
 export const KepzettsegLista: React.FC<{ karakter: Karakter, save: () => unknown }> = ({ karakter, save }) => {
     return <Table striped celled compact color='pink'>
         <Table.Header>
             <Table.Row>
                 <Table.HeaderCell collapsing></Table.HeaderCell>
-                <Table.HeaderCell>Képzettség</Table.HeaderCell>
+                <Table.HeaderCell>Egyéb képzettségek</Table.HeaderCell>
                 <Table.HeaderCell collapsing>Szint</Table.HeaderCell>
                 <Table.HeaderCell collapsing>KP</Table.HeaderCell>
                 <Table.HeaderCell collapsing></Table.HeaderCell>
             </Table.Row>
         </Table.Header>
         <Table.Body>
-            {karakter.kepzettsegek?.sort(compare).map((r, i) => <Table.Row>
+            {karakter.kepzettsegek?.sort(compare).map((r, i) => normalKepzettseg(r) && <Table.Row>
                 <Table.Cell collapsing><KepzettsegModal karakter={karakter} editedKepzettseg={r} save={save} trigger={<Icon name='edit' />} /></Table.Cell>
                 <Table.Cell>{r.name}</Table.Cell>
                 <Table.Cell collapsing>{r.szint}</Table.Cell>

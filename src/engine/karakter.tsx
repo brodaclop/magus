@@ -1,5 +1,5 @@
 import { DobasMatrix } from "./dobasmatrix";
-import { FEGYVERTELEN, FegyverUtils, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
+import { FEGYVERTELEN, fegyverTipus, FegyverUtils, FEGYVER_KEPZETTSEG, Harcertek } from "./harc";
 import { Kaszt, osszead } from "./kasztok";
 import { Pancel } from "./pancel";
 import { roll } from "./roll";
@@ -179,10 +179,10 @@ export const calculateMGT = (karakter: Karakter): [number, boolean?] => {
     }
 }
 
-const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver) => {
+const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver, dobas?: boolean) => {
     const tipus = FegyverUtils.tipus(fegyver);
     const fejvadasz = karakter.kaszt?.name === 'fejvadász';
-    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => k.name === FegyverUtils.kepzettseg(fegyver));
+    const kepzettseg: Kepzettseg | undefined = karakter.kepzettsegek?.find(k => k.name === FegyverUtils.kepzettseg(fegyver, dobas));
     const pajzsHasznalat = findKepzettseg(karakter, 'Pajzshasználat');
 
     const mgt = calculateMGT(karakter);
@@ -197,7 +197,7 @@ const addKepzettseg = (ret: DobasMatrix, karakter: Karakter, fegyver: Fegyver) =
             }
         }
     } else if (tipus !== 'ököl') { // ökölharcnál nincs bónusz
-        ret.add('Képzettség ' + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
+        ret.add((dobas ? 'Fegyverdobás ' : 'Fegyverhasználat ') + kepzettseg.szint, { ...FEGYVER_KEPZETTSEG[kepzettseg.szint] });
     }
 
     const ugras = findKepzettseg(karakter, 'Ugrás');
@@ -246,10 +246,16 @@ const findFegyver = (karakter: Karakter, masodlagos?: boolean): Fegyver => {
     return karakter.fegyverek[index] ?? FEGYVERTELEN;
 }
 
-export const calculateHarcertek = (karakter: Karakter, szituaciok?: Array<Harcertek & { name: string }>, masodlagos?: boolean): DobasMatrix => {
+const MATRIX_FIELDS: Map<fegyverTipus | undefined, Array<string>> = new Map();
+MATRIX_FIELDS.set('lofegyver', ['ke', 'ce', 've', 'sebzes']);
+MATRIX_FIELDS.set(undefined, ['ke', 'te', 've', 'ce', 'sebzes']);
+MATRIX_FIELDS.set('kozelharc', ['ke', 'te', 've', 'sebzes']);
+MATRIX_FIELDS.set('ököl', ['ke', 'te', 've', 'sebzes']);
+MATRIX_FIELDS.set('pajzs', ['ke', 'te', 've', 'sebzes']);
+export const calculateHarcertek = (karakter: Karakter, szituaciok?: Array<Harcertek & { name: string }>, masodlagos?: boolean, dobas?: boolean): DobasMatrix => {
     const fegyver = findFegyver(karakter, masodlagos);
-    const tipus = FegyverUtils.tipus(fegyver);
-    const ret: DobasMatrix = new DobasMatrix(!tipus ? ['ke', 'te', 've', 'ce', 'sebzes'] : (tipus === 'lofegyver' ? ['ke', 'ce', 've', 'sebzes'] : ['ke', 'te', 've', 'sebzes']));
+    const tipus = dobas ? 'kozelharc' : FegyverUtils.tipus(fegyver);
+    const ret: DobasMatrix = new DobasMatrix(MATRIX_FIELDS.get(tipus) ?? []);
 
     ret.add('alap', karakter.alapHarcertek as unknown as Record<string, number>);
 
@@ -266,7 +272,7 @@ export const calculateHarcertek = (karakter: Karakter, szituaciok?: Array<Harcer
 
     ret.add('kepessegek', calculateKepessegHarcertek(karakter, fegyver));
 
-    addKepzettseg(ret, karakter, fegyver);
+    addKepzettseg(ret, karakter, fegyver, dobas);
 
     addKetkezes(ret, karakter, masodlagos);
 
