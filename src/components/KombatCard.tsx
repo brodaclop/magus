@@ -17,10 +17,12 @@ export interface KombatCardProps {
 
 export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React.RefAttributes<unknown>> = forwardRef(({ karakter, save, dobasEredmeny, setDobasEredmeny }, ref) => {
     const [szituaciok, setSzituaciok] = useState<Array<string>>([]);
+    const [dobas, setDobas] = useState<boolean>(false);
 
     const fegyver = karakter.valasztottFegyver !== undefined ? karakter.fegyverek[karakter.valasztottFegyver] : FEGYVERTELEN;
-    const harcertekMatrix = calculateHarcertek(karakter, szituaciok.map(sz => ({ ...SZITUACIOK[sz], name: sz }))).roll(['ke', 'te', 'ce', 've']);
+    const harcertekMatrix = calculateHarcertek(karakter, szituaciok.map(sz => ({ ...SZITUACIOK[sz], name: sz })), undefined, dobas).roll(['ke', 'te', 'ce', 've']);
     const sebzesRoll = sumRolls(harcertekMatrix.getRolls('sebzes')) ?? parseDiceRoll();
+
 
     useImperativeHandle(ref, () => ({
         rollKe: () => {
@@ -115,6 +117,7 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
                                 options={options}
                                 value={karakter.valasztottFegyver}>
                             </Dropdown>
+                            <Button compact circular floated='right' content={dobas ? 'Dobás' : 'Normál'} icon={dobas ? 'hand lizard outline' : 'hand rock outline'} onClick={() => setDobas(!dobas)} />
                         </Table.HeaderCell>
                     </Table.Header>
                     {harcertekMatrix.keys.map(m => <Table.Row>

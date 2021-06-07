@@ -7,6 +7,9 @@ export interface Varazslat {
         idotartam?: string;
         me?: string;
         hatotav?: string;
+        hatoido?: string;
+        hatas?: string;
+        szint?: string;
     };
     varazslasIdeje: string;
     labels: Array<string>;
@@ -1955,9 +1958,1179 @@ export const BARD_VARAZSLATOK: Array<Varazslat> = [
         labels: ['magia', 'bárd', 'bárd-egyéb'],
         description: ``
     },
-
-
 ];
+
+export const BM_VARAZSLATOK: Array<Varazslat> = [
+    {
+        name: 'Bagolyszem',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '4 óra',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bm', 'bm-alapvarázslat'],
+        description: ``
+    },
+    {
+        name: 'Mágia felfedezés',
+        pont: '1',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 kör/szint',
+            hatotav: '20 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-alapvarázslat'],
+        description: ``
+    },
+    {
+        name: 'Varázstárgy készítés',
+        pont: 'lásd leírás',
+        misc: {
+            erosseg: '-',
+            idotartam: 'lásd leírás',
+            hatotav: 'lásd leírás'
+        },
+        varazslasIdeje: '1-3 óra',
+        labels: ['magia', 'bm', 'bm-alapvarázslat'],
+        description: ``
+    },
+    {
+        name: 'Tűzalak',
+        pont: '27',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 kör/szint',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-általános'],
+        description: ``
+    },
+    {
+        name: 'Tűzvihar',
+        pont: '25',
+        misc: {
+            erosseg: '2',
+            idotartam: '3 kör',
+            hatotav: '10 láb sugarú kör'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-általános'],
+        description: ``
+    },
+    {
+        name: 'Bebörtönzés',
+        pont: '45',
+        misc: {
+            erosseg: '15',
+            idotartam: '1 óra/szint',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Forduló villám',
+        pont: '13',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör'
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Kisülés',
+        pont: '5',
+        misc: {
+            erosseg: 'lásd leírás',
+            idotartam: '8 kör',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Kombináció',
+        pont: '10',
+        misc: {
+            erosseg: '-',
+            idotartam: '-',
+            hatotav: '-'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámkeltés',
+        pont: '3',
+        misc: {
+            erosseg: '-',
+            idotartam: 'kör/szint',
+            hatotav: '-'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámlánc',
+        pont: '25',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör'
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámpenge',
+        pont: '7',
+        misc: {
+            erosseg: '1',
+            idotartam: '5 kör',
+            hatotav: 'érintés'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámtagadás',
+        pont: '15',
+        misc: {
+            erosseg: '6',
+            idotartam: 'kör/szint',
+            hatotav: '10 láb'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámtűk',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: 'kör/szint',
+            hatotav: '15 láb',
+            me: "lásd leírás"
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámvarázs I.',
+        pont: '7',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámvarázs II.',
+        pont: '20',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámvarázs III.',
+        pont: '31',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Villámvért',
+        pont: '7',
+        misc: {
+            erosseg: '1',
+            idotartam: '3 kör',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Visszaverődő villám',
+        pont: '10',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '20 láb sugarú kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-villám'],
+        description: ``
+    },
+    {
+        name: 'Folyadék pusztítás',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '10 láb',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-anyag'],
+        description: ``
+    },
+    {
+        name: 'Savfelhő',
+        pont: '13',
+        misc: {
+            erosseg: '1',
+            idotartam: 'kör/szint',
+            hatotav: '2 láb sugarú kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-anyag'],
+        description: ``
+    },
+    {
+        name: 'Savteremtés',
+        pont: '9',
+        misc: {
+            erosseg: '1',
+            idotartam: 'kör/szint',
+            hatotav: '10 láb',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-anyag'],
+        description: ``
+    },
+    {
+        name: 'Szilánkokra robbantás',
+        pont: '12',
+        misc: {
+            erosseg: '6',
+            idotartam: 'egyszeri',
+            hatotav: '10 láb',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-anyag'],
+        description: ``
+    },
+    {
+        name: 'Szilárd anyag pusztítása',
+        pont: '7',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '10 láb',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-anyag'],
+        description: ``
+    },
+    {
+        name: 'Agyhalál',
+        pont: '38',
+        misc: {
+            szint: '4',
+            hatoido: 'azonnali',
+            hatas: 'Int vesztés',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Álomkór',
+        pont: '9',
+        misc: {
+            szint: '3',
+            hatoido: 'k10 óra',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Bélsorvadás',
+        pont: '26',
+        misc: {
+            szint: '7',
+            hatoido: 'azonnali',
+            hatas: 'Fp-, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Bűvragály',
+        pont: '20+a rontás',
+        misc: {
+            hatoido: 'lásd leírás',
+            hatotav: 'lásd leírás',
+        },
+        varazslasIdeje: '+5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Fájdalom',
+        pont: '7',
+        misc: {
+            szint: '1',
+            hatoido: 'azonnali',
+            hatas: 'k6 fp/kör, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Fekete halál',
+        pont: '35',
+        misc: {
+            szint: '4',
+            hatoido: '10 perc',
+            hatas: 'Fp-, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Idegroncsolás',
+        pont: '25',
+        misc: {
+            szint: '4',
+            hatoido: 'lásd leírás',
+            hatas: 'bénulás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Izomsorvadás',
+        pont: '35',
+        misc: {
+            szint: '4',
+            hatoido: 'k10 óra',
+            hatas: 'gyengeség',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Izzó idegek',
+        pont: '9',
+        misc: {
+            szint: '4',
+            hatoido: 'azonnali',
+            hatas: 'bénulás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Lepra',
+        pont: '40',
+        misc: {
+            szint: '6',
+            hatoido: 'gyors',
+            hatas: 'lepra',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Nyelvrothadás',
+        pont: '35',
+        misc: {
+            szint: '4',
+            hatoido: 'k6+3 nap',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Rútság',
+        pont: '21',
+        misc: {
+            szint: '8',
+            hatoido: 'gyors',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Szívbénítás',
+        pont: '70',
+        misc: {
+            szint: '5',
+            hatoido: 'azonnali',
+            hatas: 'ájulás, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Tüdősorvadás',
+        pont: '12',
+        misc: {
+            szint: '6',
+            hatoido: '4 hét+k6 nap',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Vakság okozás',
+        pont: '7',
+        misc: {
+            szint: '4',
+            hatoido: 'lásd leírás',
+            hatas: 'vakság',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Végtagsorvasztás',
+        pont: '14',
+        misc: {
+            szint: '5',
+            hatoido: 'azonnali',
+            hatas: 'részleges bénulás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Vérdermesztés',
+        pont: '32',
+        misc: {
+            szint: '7',
+            hatoido: '19 kör',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Vérzékenység',
+        pont: '43',
+        misc: {
+            szint: '6',
+            hatoido: 'azonnali',
+            hatas: 'Fp-, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Veszettség',
+        pont: '14',
+        misc: {
+            szint: '2',
+            hatoido: 'őrjöngés',
+            hatas: 'lásd leírás',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Vörös halál',
+        pont: '45',
+        misc: {
+            szint: '3',
+            hatoido: 'azonnali',
+            hatas: 'k6Fp/kör, halál',
+            hatotav: '20 láb',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'bm', 'bm-rontás'],
+        description: ``
+    },
+    {
+        name: 'Átokfejtés',
+        pont: '10',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egy személyre',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-átok'],
+        description: ``
+    },
+    {
+        name: 'Átokűzés',
+        pont: '10',
+        misc: {
+            erosseg: '1',
+            idotartam: 'maradandó',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-átok'],
+        description: ``
+    },
+    {
+        name: 'Átokvarázs',
+        pont: 'lásd leírás',
+        misc: {
+            erosseg: '4',
+            idotartam: '1 hó+leírás',
+            hatotav: 'hallótáv',
+            me: 'Egs-próba'
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-átok'],
+        description: ``
+    },
+    {
+        name: 'Démoni birtok',
+        pont: '65',
+        misc: {
+            erosseg: '40',
+            idotartam: 'maradandó',
+            hatotav: 'lásd leírás',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-átok'],
+        description: ``
+    },
+    {
+        name: 'Enyészet posványa',
+        pont: '45',
+        misc: {
+            erosseg: '40',
+            idotartam: 'maradandó',
+            hatotav: 'lásd leírás',
+            me: 'Egs-próba'
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'bm', 'bm-átok'],
+        description: ``
+    },
+    {
+        name: 'Méregismeret',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '1 láb',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-méreg'],
+        description: ``
+    },
+    {
+        name: 'Méreg semlegesítése',
+        pont: '18',
+        misc: {
+            erosseg: 'méreg szintje',
+            idotartam: 'maradandó',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-méreg'],
+        description: ``
+    },
+    {
+        name: 'Méregvarázs',
+        pont: '12',
+        misc: {
+            erosseg: 'méreg szintje',
+            idotartam: 'egyszeri',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: 'kör/méreg szint',
+        labels: ['magia', 'bm', 'bm-méreg'],
+        description: ``
+    },
+    {
+        name: 'Méreg átadása',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+            me: 'Egs-próba'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-méreg'],
+        description: ``
+    },
+    {
+        name: 'Földmozgás',
+        pont: '55',
+        misc: {
+            erosseg: '55',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Homokvihar',
+        pont: '45',
+        misc: {
+            erosseg: '45',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Jégverés',
+        pont: '45',
+        misc: {
+            erosseg: '45',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Lavina',
+        pont: '50',
+        misc: {
+            erosseg: '50',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Lávafolyam',
+        pont: '95',
+        misc: {
+            erosseg: '95',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Szél irányítás',
+        pont: '20',
+        misc: {
+            erosseg: '9',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Szökőár',
+        pont: '90',
+        misc: {
+            erosseg: '75',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Tornádó',
+        pont: '65',
+        misc: {
+            erosseg: '65',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Tenger felkorbácsolása',
+        pont: '40',
+        misc: {
+            erosseg: '25',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Örvény',
+        pont: '50',
+        misc: {
+            erosseg: '25',
+            idotartam: '45 perc',
+            hatotav: '1 mérföld',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-természet'],
+        description: ``
+    },
+    {
+        name: 'Haláltánc',
+        pont: '15',
+        misc: {
+            erosseg: '5',
+            idotartam: '15 perc',
+            hatotav: '10 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bm', 'bm-mentálasztrál'],
+        description: ``
+    },
+    {
+        name: 'Láthatatlanság felfedezése',
+        pont: '8',
+        misc: {
+            erosseg: '3',
+            idotartam: '12 perc',
+            hatotav: '10 láb sugarú kör',
+            me: 'M'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-mentálasztrál'],
+        description: ``
+    },
+    {
+        name: 'Orgyilkosság',
+        pont: '23',
+        misc: {
+            erosseg: '10',
+            idotartam: 'lásd leírás',
+            hatotav: '20 láb',
+            me: 'M'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-mentálasztrál'],
+        description: ``
+    },
+    {
+        name: 'Sötétté gyalázás',
+        pont: '30',
+        misc: {
+            erosseg: '10',
+            idotartam: '1 nap',
+            hatotav: 'érintés',
+            me: 'lásd leírást'
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bm', 'bm-mentálasztrál'],
+        description: ``
+    },
+    {
+        name: 'Gyilokvágy',
+        pont: '18',
+        misc: {
+            erosseg: '6',
+            idotartam: '1 kör/szint',
+            hatotav: '20 láb',
+            me: 'A'
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-mentálasztrál'],
+        description: ``
+    },
+    {
+        name: 'Betegség gyógyítása',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2 perc',
+        labels: ['magia', 'bm', 'bm-betegség'],
+        description: ``
+    },
+    {
+        name: 'Betegség befolyásolása',
+        pont: 'lásd leírás',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+            me: 'Egs-próba'
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-betegség'],
+        description: ``
+    },
+    {
+        name: 'Betegség azonosítása',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '1 perc',
+        labels: ['magia', 'bm', 'bm-betegség'],
+        description: ``
+    },
+    {
+        name: 'Betegség átadása',
+        pont: '18',
+        misc: {
+            erosseg: '1',
+            idotartam: 'végleges',
+            hatotav: 'érintés',
+            me: 'Egs-próba'
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'bm', 'bm-betegség'],
+        description: ``
+    },
+    {
+        name: 'Azonosítás',
+        pont: '44',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2k10 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Csontészlelés',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '10 perc',
+            hatotav: '150 láb sugarú kör',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerő-begyűjtés',
+        pont: '16',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerő rablás',
+        pont: '16',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerőszívás',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerővel felruházás',
+        pont: '25',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '15 láb',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Élőholt idézés',
+        pont: '18',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+            hatotav: '150 láb sugarú gömb',
+        },
+        varazslasIdeje: '2 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Élőholt parancsnoklás',
+        pont: '12',
+        misc: {
+            erosseg: '5',
+            idotartam: 'egyszeri',
+            hatotav: '15 láb',
+            me: 'lásd leírás'
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Élőholt teremtés',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            idotartam: 'maradandó',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Értelemmel felruházás',
+        pont: '45',
+        misc: {
+            erosseg: '1',
+            idotartam: 'k6+1 nap/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Halottak nyelve',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '6+1 kör/szint',
+            hatotav: 'önmaga',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Öregedés',
+        pont: 'lásd leírás',
+        misc: {
+            erosseg: '1',
+            idotartam: 'lásd leírás',
+            hatotav: '15 láb',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Személyiséggel felruházás',
+        pont: '100',
+        misc: {
+            erosseg: '1',
+            idotartam: 'k6+1 nap/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '10 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Szentségtelen kapu',
+        pont: '110',
+        misc: {
+            erosseg: '35',
+            idotartam: 'lásd leírás',
+            hatotav: '3 láb',
+        },
+        varazslasIdeje: '5 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Tudattal felruházás',
+        pont: '55',
+        misc: {
+            erosseg: '1',
+            idotartam: 'k6+1 nap/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Magzat megrontása',
+        pont: '90',
+        misc: {
+            erosseg: '1',
+            idotartam: 'maradandó',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '60 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Szépség elorzása',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            idotartam: 'óra/szint',
+        },
+        varazslasIdeje: '1 óra',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerő átadása',
+        pont: '16',
+        misc: {
+            erosseg: '1',
+            idotartam: 'lásd leírás',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Életerő raktározása',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            idotartam: 'maradandó',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Húsmaszk',
+        pont: '31',
+        misc: {
+            erosseg: '5',
+            idotartam: 'k6+1 óra/szint',
+        },
+        varazslasIdeje: '1 óra',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Érzékelés holtakon keresztül',
+        pont: '26',
+        misc: {
+            erosseg: '1',
+            idotartam: 'k6+1 óra/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Beszéd holtakon keresztül',
+        pont: '29',
+        misc: {
+            erosseg: '1',
+            idotartam: 'k6+1 óra/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+    {
+        name: 'Bomlás megfékezése',
+        pont: '10',
+        misc: {
+            erosseg: '5',
+            idotartam: 'k6+1 nap/szint',
+            hatotav: 'érintés',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'bm', 'bm-nekromancia'],
+        description: ``
+    },
+
+]
 
 export const VARAZSLAT_LABELS: Record<string, string> = {
     name: 'Varázslatok',
@@ -1966,7 +3139,10 @@ export const VARAZSLAT_LABELS: Record<string, string> = {
     idotartam: 'Időtartam',
     erosseg: 'E',
     hatotav: 'Hatótáv',
-    varazslasIdeje: 'Varázslás ideje'
+    varazslasIdeje: 'Varázslás ideje',
+    hatoido: 'Hatóidő',
+    hatas: 'Hatás',
+    szint: 'Betegség szintje'
 }
 
 export const PSZI_LABELS: Record<string, string> = {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup } from 'semantic-ui-react';
 import { VarazslatLista } from '../components/VarazslatLista';
-import { PSZI_PYARRONI, PSZI_SLAN, PSZI_KYR, PSZI_LABELS, VARAZSLAT_LABELS, BARD_VARAZSLATOK } from '../engine/varazslat';
+import { PSZI_PYARRONI, PSZI_SLAN, PSZI_KYR, PSZI_LABELS, VARAZSLAT_LABELS, BARD_VARAZSLATOK, BM_VARAZSLATOK } from '../engine/varazslat';
 
-const ALL_SPELLS = [...PSZI_PYARRONI, ...PSZI_SLAN, ...PSZI_KYR, ...BARD_VARAZSLATOK];
+const ALL_SPELLS = [...PSZI_PYARRONI, ...PSZI_SLAN, ...PSZI_KYR, ...BARD_VARAZSLATOK, ...BM_VARAZSLATOK];
 
 export const Varazslatok: React.FC<{}> = () => {
     const [tipus, setTipus] = useState<'pszi' | 'magia'>('pszi');
@@ -27,7 +27,7 @@ export const Varazslatok: React.FC<{}> = () => {
 
     return <>
 
-        <ButtonGroup compact>
+        <ButtonGroup compact style={{ flexWrap: 'wrap' }}>
             <Button compact content='Pszi' primary={tipus === 'pszi'} onClick={() => {
                 if (tipus !== 'pszi') {
                     setTipus('pszi');
