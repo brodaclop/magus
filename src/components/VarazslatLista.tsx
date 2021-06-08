@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Label, Table } from 'semantic-ui-react';
 import { Varazslat } from '../engine/varazslat';
 
 interface VarazslatListaProps {
@@ -47,7 +47,10 @@ export const VarazslatLista: React.FC<VarazslatListaProps> = ({ varazslatok, fie
             </Table.Row>
                 {open[v.name] && <Table.Row>
                     <Table.Cell colspan={3 + miscFields.size + (selectionRenderer ? 1 : 0)}>
-                        <div style={{ backgroundColor: 'burlywood', borderRadius: '0.5em', padding: '0.5em', width: '100%', border: '1px solid black' }} dangerouslySetInnerHTML={{ __html: cleanupDescription(v.description) }} />
+                        <div style={{ backgroundColor: 'burlywood', borderRadius: '0.5em', padding: '0.5em', width: '100%', border: '1px solid black' }} >
+                            <div><Label.Group circular color='orange'>{v.labels.map(l => <Label content={l} />)}</Label.Group></div>
+                            <div dangerouslySetInnerHTML={{ __html: cleanupDescription(v.description) }} />
+                        </div>
                     </Table.Cell>
                 </Table.Row>}
             </>
