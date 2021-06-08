@@ -18,13 +18,14 @@ interface PageHeaderProps {
     karakterek: Array<KarakterInfo>;
     page: PageSelection;
     setPage: (pageSelection: PageSelection) => unknown;
+    load: (karakter: KarakterInfo) => Karakter;
     save: (karakter: Karakter) => unknown;
     saveMese: (story: string) => unknown;
 }
 
 const MAX_KARAKTERS_PER_PAGE = 10;
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCategory, setCurrentCategory, karakter, karakterek, page, setPage, save, saveMese }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCategory, setCurrentCategory, karakter, karakterek, page, setPage, save, saveMese, load }) => {
     const [karakterStart, setKarakterStart] = useState(0);
 
     const karakterPos = karakterek.findIndex(k => k.id === karakter?.id);
@@ -69,7 +70,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
         }
         <Menu.Item key='floated' position='right'>
             <KarakterImport save={save} saveMese={saveMese} />
-            <VarazslatokModal />
+            <VarazslatokModal karakter={karakter ? load(karakter) : undefined} save={save} />
             <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />
         </Menu.Item>

@@ -3,6 +3,7 @@ import { FEGYVERTELEN, fegyverTipus, FegyverUtils, FEGYVER_KEPZETTSEG, Harcertek
 import { Kaszt, osszead } from "./kasztok";
 import { Pancel } from "./pancel";
 import { roll } from "./roll";
+import { Varazslat } from "./varazslat";
 
 
 export interface KarakterKepesseg {
@@ -89,6 +90,7 @@ export interface Karakter extends KarakterInfo {
     jegyzetek?: string;
     felszereles?: Array<FelszerelesItem>;
     masodlagosFegyverMutat?: boolean;
+    varazslatok?: Array<Varazslat>;
 }
 
 export interface FelszerelesItem {

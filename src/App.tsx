@@ -56,6 +56,7 @@ function App() {
           }
         }}
         save={saveKarakter}
+        load={load}
         karakterek={list(currentCategory)}
         saveMese={saveStory}
       />
