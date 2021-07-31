@@ -91,7 +91,7 @@ export const Varazslatok: React.FC<{ karakter?: Karakter, save?: (karakter: Kara
             <Button compact primary={labels.has(node.label)} onClick={() => { labels.has(node.label) ? labels.delete(node.label) : labels.add(node.label); setLabels(new Set(labels)); }} content={node.label} />
             {node.children.map(n => <Button compact primary={labels.has(n.label)} onClick={() => { labels.has(n.label) ? labels.delete(n.label) : labels.add(n.label); setLabels(new Set(labels)); }} content={n.label} />)}
         </ButtonGroup>)}
-        <VarazslatLista varazslatok={spells} fieldLabels={tipus === 'pszi' ? PSZI_LABELS : VARAZSLAT_LABELS} selectionRenderer={karakter && selectionRenderer} />
+        <VarazslatLista save={karakterSpells ? () => save?.(karakter as Karakter) : undefined} varazslatok={spells} fieldLabels={tipus === 'pszi' ? PSZI_LABELS : VARAZSLAT_LABELS} selectionRenderer={karakter && selectionRenderer} />
     </>
 
 }

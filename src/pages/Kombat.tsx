@@ -30,7 +30,10 @@ export const Kombat: React.FC<{ karakterek: Array<Karakter>; save: (karakter: Ka
 
         const oneKe = dobasEredmenyek[one.id].ke?.value ?? 0;
         const twoKe = dobasEredmenyek[two.id].ke?.value ?? 0;
-        return twoKe - oneKe;
+        if (oneKe !== twoKe) {
+            return twoKe - oneKe;
+        }
+        return one.name.localeCompare(two.name);
     }
 
     return <>

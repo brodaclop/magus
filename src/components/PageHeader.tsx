@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Icon, Menu, Image, Button } from 'semantic-ui-react';
 import { Karakter, KarakterInfo } from '../engine/karakter';
 import { CategoriesDropdown } from './CategoriesDropdown';
@@ -8,6 +8,7 @@ import { KockaModal } from './KockaModal';
 import logo from '../static/magus.png';
 import { PageSelection } from '../App';
 import { VarazslatokModal } from './VarazslatokModal';
+import { MeregModal } from './MeregModal';
 
 
 interface PageHeaderProps {
@@ -30,17 +31,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
 
     const karakterPos = karakterek.findIndex(k => k.id === karakter?.id);
 
-    //adjust scrolling
-    useEffect(() => {
-        if (karakterPos > -1) {
-            if (karakterPos < karakterStart) {
-                setKarakterStart(karakterPos);
-            }
-            if (karakterPos >= karakterStart + MAX_KARAKTERS_PER_PAGE) {
-                setKarakterStart(karakterPos - MAX_KARAKTERS_PER_PAGE + 1);
-            }
-        }
-    }, [karakterPos, karakterStart, setKarakterStart]);
+    const changeCategory = (newCat: string) => {
+        setKarakterStart(0);
+        setCurrentCategory(newCat);
+    }
 
     const scrolled = karakterek.length > MAX_KARAKTERS_PER_PAGE;
     const canScrollLeft = karakterStart > 0 && (karakterPos === -1 || karakterPos < karakterStart + MAX_KARAKTERS_PER_PAGE - 1);
@@ -51,7 +45,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
         <Menu.Item key='header' header>
             <Image src={logo} size='mini' onClick={() => setPage({ page: page.page === 'story' ? 'home' : 'story' })} />
         </Menu.Item>
-        <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={setCurrentCategory} />
+        <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={changeCategory} />
         {scrolled &&
             <Menu.Item key='scroll_left' disabled={!canScrollLeft} onClick={() => setKarakterStart(karakterStart - 1)}>
                 <Icon name='triangle left' />
@@ -71,6 +65,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
         <Menu.Item key='floated' position='right'>
             <KarakterImport save={save} saveMese={saveMese} />
             <VarazslatokModal karakter={karakter ? load(karakter) : undefined} save={save} />
+            <MeregModal />
             <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
             <KockaModal />
         </Menu.Item>

@@ -1,14 +1,15 @@
 import React, { useReducer } from 'react';
-import { Label, Table } from 'semantic-ui-react';
+import { Icon, Label, Table } from 'semantic-ui-react';
 import { Varazslat } from '../engine/varazslat';
 
 interface VarazslatListaProps {
     varazslatok: Array<Varazslat>;
     fieldLabels: Record<string, string>;
     selectionRenderer?: (varazslat: Varazslat) => JSX.Element;
+    save?: () => unknown;
 }
 
-export const VarazslatLista: React.FC<VarazslatListaProps> = ({ varazslatok, fieldLabels, selectionRenderer }) => {
+export const VarazslatLista: React.FC<VarazslatListaProps> = ({ varazslatok, fieldLabels, selectionRenderer, save }) => {
 
     const [open, toggleOpen] = useReducer((prev: Record<string, boolean>, action: string) => ({ ...prev, [action]: !prev[action] }), {})
 
@@ -48,7 +49,8 @@ export const VarazslatLista: React.FC<VarazslatListaProps> = ({ varazslatok, fie
                 {open[v.name] && <Table.Row>
                     <Table.Cell colspan={3 + miscFields.size + (selectionRenderer ? 1 : 0)}>
                         <div style={{ backgroundColor: 'burlywood', borderRadius: '0.5em', padding: '0.5em', width: '100%', border: '1px solid black' }} >
-                            <div><Label.Group circular color='orange'>{v.labels.map(l => <Label content={l} />)}</Label.Group></div>
+                            <div>
+                                <Label.Group circular color='orange'>{v.labels.map((l, i) => <Label as='a'>{l}{save && l !== 'pszi' && l !== 'magia' && <Icon name='delete' onClick={() => { v.labels.splice(i, 1); save?.() }} />}</Label>)}</Label.Group></div>
                             <div dangerouslySetInnerHTML={{ __html: cleanupDescription(v.description) }} />
                         </div>
                     </Table.Cell>
