@@ -63,7 +63,7 @@ export const StoryEvent: React.FC<StoryEventProps> = ({ event, renderer, onClick
                 {active && <li style={{ cursor: 'pointer' }}><Icon name='edit' onClick={onEdit} /></li>}
             </ul>
         </div>
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1, fontSize: 'larger' }}>
 
             {renderer.renderElement(event)}
         </div>

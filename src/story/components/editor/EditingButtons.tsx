@@ -41,7 +41,7 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
                     }
                     }>OK</Button>
                 </>}
-                {(editorPopup === 'character' || editorPopup === 'item') && <>
+                {(editorPopup === 'character' || editorPopup === 'item' || editorPopup === 'location') && <>
                     <Dropdown
                         fluid
                         search
@@ -98,6 +98,7 @@ export const EditingButtons: React.FC<{ editorState: EditorState; setEditorState
         <Button onClick={() => setEditorPopup('setting')} icon='map marker alternate'></Button>
         <Button onClick={() => setEditorPopup('character')} icon='user outline'></Button>
         <Button onClick={() => setEditorPopup('item')} icon='gift'></Button>
+        <Button onClick={() => setEditorPopup('location')} icon='home'></Button>
         <Button onClick={() => setEditorPopup('jump')} icon='paper plane outline'></Button>
         <Button floated='right' onClick={() => {
             const newContent = Modifier.applyEntity(editorState.getCurrentContent(), editorState.getSelection(), null);

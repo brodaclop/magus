@@ -51,7 +51,7 @@ export const EventEditor: React.FC<EventEditorProps> = ({ elem, onFinished, root
         </div>
         }
         <EditingButtons editorState={editorState} setEditorState={setEditorState} root={root} />
-        <Segment>
+        <Segment style={{ fontSize: 'larger' }}>
             <Editor editorState={editorState} onChange={setEditorState} keyBindingFn={e => {
                 if (e.key === 'Escape') {
                     return 'my-escape';

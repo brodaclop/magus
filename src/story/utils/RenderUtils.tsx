@@ -17,6 +17,7 @@ export const STORY_TAG_ICONS: Record<string, SemanticICONS> = {
     character: 'user outline',
     item: 'gift',
     jump: 'paper plane outline',
+    location: 'home',
     '': 'question'
 }
 
@@ -43,12 +44,13 @@ const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switch
         case 'langauge': return <LanguageRenderer switchToScene={switchToScene} elem={elem}>{contents}</LanguageRenderer>
         case 'event': return <EventRenderer switchToScene={switchToScene} elem={elem}>{contents}</EventRenderer>
         case 'character':
+        case 'location':
         case 'item':
             {
                 const target = DomUtils.attr(elem, 'ref').toString();
                 const targetElem = DomUtils.findById(root, elem.name, target);
                 if (targetElem) {
-                    const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : 'gift';
+                    const targetIcon: SemanticICONS = targetElem.name === 'character' ? 'user outline' : targetElem.name === 'location' ? 'home' : 'gift';
                     return <Popup hoverable trigger={<span><Icon name={targetIcon} fitted /> <strong>{contents}</strong></span>} wide>
                         <Popup.Content>
                             <StoryCard tag={targetElem} root={root} switchToScene={switchToScene} readOnly={true} save={() => { throw new Error('edit not implemented') }} />
@@ -58,7 +60,7 @@ const StoryElement: React.FC<{ elem: DOMElement | null, root: DOMElement, switch
                 return contents;
             } case 'language': {
                 const level = DomUtils.attr(elem, 'level');
-                return <>{contents} { level ? <em>({level})</em> : ''}</>;
+                return <>{contents} {level ? <em>({level})</em> : ''}</>;
             }
         default: {
             return contents;
@@ -72,6 +74,9 @@ const StoryCard: React.FC<{ tag: DOMElement, root: DOMElement, switchToScene: (i
     }
     if (tag.name === 'item') {
         return <ItemCard save={save} elem={tag} root={root} switchToScene={switchToScene} readOnly={readOnly} />
+    }
+    if (tag.name === 'location') {
+        return <LocationCard save={save} elem={tag} root={root} switchToScene={switchToScene} readOnly={readOnly} />
     }
     return null;
 }
@@ -170,9 +175,43 @@ const ItemCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (i
     </Table>;
 }
 
+const LocationCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene: (id: string) => unknown, save: () => unknown, readOnly: boolean }> = ({ elem, root, switchToScene, save, readOnly }) => {
+
+    const Row: React.FC<{ label: string, name: string }> = ({ label, name }) => <TableRow
+        key={name}
+        save={save}
+        label={label}
+        readOnly={readOnly}
+        elem={DomUtils.child(elem, name)}
+        create={() => { DomUtils.addChild(elem, name); save() }}
+        root={root}
+        switchToScene={switchToScene} />
+
+
+    return <Table definition striped columns={2}>
+        <Table.Body>
+            <Row label='Név' name='name' />
+            <Row label='Koordináták' name='coords' />
+            <Table.Row>
+                <Table.Cell colSpan={2}>
+                    <EditableNode
+                        readOnly={readOnly}
+                        elem={DomUtils.child(elem, 'description')}
+                        root={root}
+                        onChange={save}
+                        create={() => { DomUtils.addChild(elem, 'description'); save() }}>
+                        <StoryElement elem={DomUtils.child(elem, 'description')} root={root} switchToScene={switchToScene} />
+                    </EditableNode>
+                </Table.Cell>
+            </Table.Row>
+        </Table.Body>
+    </Table>;
+}
+
+
 const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id: string) => unknown, save: () => unknown }> = ({ root, name, switchToScene, save }) => {
     const cards = DomUtils.findElementsByName(root, name).filter(e => !e.attributes?.ref);
-    return <CardGroup itemsPerRow={5}>
+    return <CardGroup itemsPerRow={4}>
         {cards.map(c => <Card raised key={DomUtils.attr(c, 'id')}>
             <Card.Content>
                 <Card.Header>{DomUtils.childText(c, 'name')}

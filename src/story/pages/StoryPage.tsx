@@ -102,6 +102,17 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
                 save();
 
             }} color='green' circular>Új tárgy</Button>
+            <Button onClick={() => {
+                const locations = DomUtils.findElementsByName(storyOb, 'locations')[0];
+                const location = DomUtils.addChild(locations, 'location');
+                DomUtils.attr(location, 'id', v4());
+                DomUtils.addChild(location, 'name');
+                DomUtils.addChild(location, 'coords');
+                DomUtils.addChild(location, 'description');
+
+                save();
+
+            }} color='green' circular>Új helyszín</Button>
         </ButtonRow>
 
         <Menu fluid compact color='blue' inverted style={{ flexWrap: 'wrap', marginBottom: '0.5em' }}>
@@ -150,6 +161,10 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
         <>
             <Header as='h1'>Szereplők</Header>
             {renderer.renderCards('character', save)}
+        </>
+        <>
+            <Header as='h1'>Helyszínek</Header>
+            {renderer.renderCards('location', save)}
         </>
         <>
             <Header as='h1'>Tárgyak</Header>
