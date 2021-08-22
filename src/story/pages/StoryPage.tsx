@@ -1,7 +1,8 @@
 import fileDownload from 'js-file-download';
 import React, { useState } from 'react';
-import { Button, Header, Icon, Menu, Tab } from 'semantic-ui-react';
+import { Button, ButtonGroup, Header, Icon, Menu, Segment, Tab } from 'semantic-ui-react';
 import { v4 } from 'uuid';
+import { ButtonRow } from '../../components/ButtonRow';
 import { EditableText } from '../components/EditableText';
 import { SceneListContextMenu } from '../components/SceneListContextMenu';
 import { StoryScene } from '../components/StoryScene';
@@ -68,37 +69,83 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
         }
     })
 
+    const activeIdx = findSceneById(activeScene);
+
     return <>
-        <Button onClick={() => fileDownload(story, 'mese.xml', 'application/xml')} color='green' circular>Export</Button>
-        <Button onClick={() => {
-            const characters = DomUtils.findElementsByName(storyOb, 'characters')[0];
-            const character = DomUtils.addChild(characters, 'character');
-            DomUtils.attr(character, 'id', v4());
-            DomUtils.addChild(character, 'name');
-            DomUtils.addChild(character, 'race');
-            DomUtils.addChild(character, 'alignment');
-            DomUtils.addChild(character, 'class');
-            DomUtils.addChild(character, 'origin');
-            DomUtils.addChild(character, 'language');
-            DomUtils.addChild(character, 'looks');
-            DomUtils.addChild(character, 'behaviour');
-            DomUtils.addChild(character, 'loot');
+        <ButtonRow>
+            <Button onClick={() => fileDownload(story, 'mese.xml', 'application/xml')} color='green' circular>Export</Button>
+            <Button onClick={() => {
+                const characters = DomUtils.findElementsByName(storyOb, 'characters')[0];
+                const character = DomUtils.addChild(characters, 'character');
+                DomUtils.attr(character, 'id', v4());
+                DomUtils.addChild(character, 'name');
+                DomUtils.addChild(character, 'race');
+                DomUtils.addChild(character, 'alignment');
+                DomUtils.addChild(character, 'class');
+                DomUtils.addChild(character, 'origin');
+                DomUtils.addChild(character, 'language');
+                DomUtils.addChild(character, 'looks');
+                DomUtils.addChild(character, 'behaviour');
+                DomUtils.addChild(character, 'loot');
 
-            save();
+                save();
 
-        }} color='green' circular>Új szereplő</Button>
-        <Button onClick={() => {
-            const items = DomUtils.findElementsByName(storyOb, 'items')[0];
-            const item = DomUtils.addChild(items, 'item');
-            DomUtils.attr(item, 'id', v4());
-            DomUtils.addChild(item, 'name');
-            DomUtils.addChild(item, 'value');
-            DomUtils.addChild(item, 'description');
+            }} color='green' circular>Új szereplő</Button>
+            <Button onClick={() => {
+                const items = DomUtils.findElementsByName(storyOb, 'items')[0];
+                const item = DomUtils.addChild(items, 'item');
+                DomUtils.attr(item, 'id', v4());
+                DomUtils.addChild(item, 'name');
+                DomUtils.addChild(item, 'value');
+                DomUtils.addChild(item, 'description');
 
-            save();
+                save();
 
-        }} color='green' circular>Új tárgy</Button>
-        <Tab activeIndex={findSceneById(activeScene)} onTabChange={(e, { activeIndex }) => activeIndex as number < scenes.length && setActiveScene(DomUtils.attr(scenes[activeIndex as number], 'id'))} panes={sceneTabs} />
+            }} color='green' circular>Új tárgy</Button>
+        </ButtonRow>
+
+        <Menu fluid compact color='blue' inverted style={{ flexWrap: 'wrap', marginBottom: '0.5em' }}>
+            {scenes.map((s, i) => <Menu.Item active={i === activeIdx} key={attr(s, 'id')} onClick={() => setActiveScene(DomUtils.attr(scenes[i], 'id'))}>
+                <SceneListContextMenu onSelected={item => {
+                    if (item === 'delete') {
+                        DomUtils.deleteChild(s.$parent, s);
+                    } else {
+                        const scene = DomUtils.addChild(s.$parent, 'scene', s, item === 'insertAfter' ? 'after' : 'before');
+                        DomUtils.attr(scene, 'id', v4());
+                        DomUtils.attr(scene, 'title', 'Új jelenet');
+                        DomUtils.addChild(scene, 'events');
+                        setTimeout(() => setActiveScene(DomUtils.attr(scene, 'id')), 0); //workaround for Tab overwriting activeIndex straight away
+                    }
+                    save();
+                }}>
+                    {activeScene === DomUtils.attr(s, 'id') ? <EditableText text={attr(s, 'title')} onChange={title => {
+                        DomUtils.attr(s, 'title', title);
+                        save();
+                    }} /> : attr(s, 'title')}
+                </SceneListContextMenu>
+            </Menu.Item>)}
+            <Menu.Item key='__add'><Icon name='plus' onClick={() => {
+                const story: DOMElement = DomUtils.child(storyOb, 'story') as DOMElement;
+                const scene = DomUtils.addChild(story, 'scene', undefined, 'after');
+                DomUtils.attr(scene, 'id', v4());
+                DomUtils.attr(scene, 'title', 'Új jelenet');
+                DomUtils.addChild(scene, 'events');
+                setTimeout(() => setActiveScene(DomUtils.attr(scene, 'id')), 0); //workaround for Tab overwriting activeIndex straight away
+                save();
+
+            }} />
+            </Menu.Item>
+        </Menu>
+
+        {activeIdx !== -1 &&
+            <Segment raised>
+                <StoryScene
+                    scene={scenes[activeIdx]}
+                    renderer={renderer}
+                    onChange={save}
+                    root={storyOb} />
+            </Segment>
+        }
 
         <>
             <Header as='h1'>Szereplők</Header>

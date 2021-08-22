@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button, Confirm, Icon, Label, Table } from 'semantic-ui-react';
 import { Karakter, szintlepes } from '../engine/karakter';
 import { EditableText } from '../story/components/EditableText';
+import { ButtonRow } from './ButtonRow';
 import { KategoriaEditor } from './KategoriaEditor';
 
 interface KarakterTablaProps {
@@ -39,14 +40,14 @@ export const KarakterTabla: React.FC<KarakterTablaProps> = ({ karakter, save, ca
         </Table.Row>
         <Table.Row>
             <Table.Cell>Kategóriák
-        <       KategoriaEditor categories={categories} save={value => { karakter.categories = [...new Set([...karakter.categories, value])]; save(karakter) }} />
+                <       KategoriaEditor categories={categories} save={value => { karakter.categories = [...new Set([...karakter.categories, value])]; save(karakter) }} />
             </Table.Cell>
             <Table.Cell>
                 {karakter.categories.map(c => <Label tag>{c} <Icon name='delete' onClick={() => { karakter.categories = karakter.categories.filter(value => value !== c); save(karakter) }} /></Label>)}
             </Table.Cell>
         </Table.Row>
-        <Table.Row>
-            <Table.Cell colSpan={2}>
+        <ButtonRow>
+            <div style={{ width: '100%', textAlign: 'center' }}>
                 <Button onClick={() => setTorlesKerdes(true)} color='red' compact circular>Karakter törlése</Button>
                 <Confirm
                     open={torlesKerdes}
@@ -58,7 +59,7 @@ export const KarakterTabla: React.FC<KarakterTablaProps> = ({ karakter, save, ca
                     confirmButton='De' />
                 <Button onClick={exportKarakter} color='green' circular compact>Export</Button>
                 <Button onClick={() => clone(karakter)} color='green' circular compact>Klón</Button>
-            </Table.Cell>
-        </Table.Row>
-    </Table>;
+            </div>
+        </ButtonRow >
+    </Table >;
 }

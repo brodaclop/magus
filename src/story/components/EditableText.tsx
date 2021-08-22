@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { Input } from 'semantic-ui-react';
+import { Button, Icon, Input } from 'semantic-ui-react';
 
 export interface EditableTextProps {
     text?: string;
@@ -16,8 +16,14 @@ export const EditableText = forwardRef<any, EditableTextProps>(({ text, onChange
         setEditedText(text ?? '');
     }, [text]);
     if (edited) {
-        return <form onSubmit={() => { setEdited(false); onChange(editedText) }}><Input transparent autoFocus value={editedText} onChange={(e, { value }) => { setEditedText(value) }} onBlur={() => { setEdited(false); onChange(editedText) }} /></form>
+        return <form onSubmit={() => { setEdited(false); onChange(editedText) }}>
+            <Input size='mini' autoFocus value={editedText} onChange={(e, { value }) => { setEditedText(value) }} onBlur={() => { setEdited(false); onChange(editedText) }} />
+            <Icon name='arrow right' onClick={() => { setEdited(false); onChange(editedText) }} style={{ marginLeft: '0.3em' }} />
+        </form>
     } else {
-        return <span onClick={() => setEdited(true)}>{text ?? ''}</span>;
+        return <>
+            <span>{text ?? ''}</span>
+            <Icon name='pencil' onClick={() => setEdited(true)} style={{ marginLeft: '0.3em' }} />
+        </>;
     }
 });

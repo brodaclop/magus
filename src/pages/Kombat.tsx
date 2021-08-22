@@ -1,13 +1,29 @@
 import React, { useState } from 'react';
-import { Button, ButtonGroup } from 'semantic-ui-react';
+import { Button, ButtonGroup, Portal } from 'semantic-ui-react';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
+import { ButtonRow } from '../components/ButtonRow';
 import { KombatCard } from '../components/KombatCard';
-import { Karakter } from '../engine/karakter';
+import { Fegyver, Karakter } from '../engine/karakter';
+import { Pancel } from '../engine/pancel';
 import { DiceRollResult } from '../engine/roll';
 
 
+export interface KombatProps {
+    categories: Array<string>,
+    karakterek: Array<Karakter>,
+    fegyverek: Array<Fegyver>,
+    pancelok: Array<Pancel>,
+    savePancelok: (pancelok: Array<Pancel>) => unknown,
+    save: (karakter: Karakter) => unknown,
+    clone: (karakter: Karakter) => Karakter;
 
-export const Kombat: React.FC<{ karakterek: Array<Karakter>; save: (karakter: Karakter) => unknown }> = ({ karakterek, save }) => {
+    saveFegyverek: (fegyverek: Array<Fegyver>) => unknown,
+    remove: (karakter: Karakter) => unknown;
+    backToMain: () => unknown;
+
+}
+
+export const Kombat: React.FC<KombatProps> = ({ karakterek, save, fegyverek, pancelok, saveFegyverek, savePancelok, clone, remove, categories, backToMain }) => {
 
     const [dobasEredmenyek, setDobasEredmenyek] = useState<Record<string, Record<string, DiceRollResult>>>(karakterek.reduce((acc, curr) => { acc[curr.id] = {}; return acc; }, {} as Record<string, any>));
     const [refs] = useState<Record<string, { current: any }>>({});
@@ -36,9 +52,10 @@ export const Kombat: React.FC<{ karakterek: Array<Karakter>; save: (karakter: Ka
         return one.name.localeCompare(two.name);
     }
 
+
     return <>
-        <div style={{ textAlign: 'center' }}>
-            <ButtonGroup>
+        <ButtonRow>
+            <ButtonGroup fluid>
                 <DobasButton
                     color='olive'
                     label='Kezdemény'
@@ -62,9 +79,10 @@ export const Kombat: React.FC<{ karakterek: Array<Karakter>; save: (karakter: Ka
                 <Button color='red' onClick={() => {
                     setDobasEredmenyek(karakterek.reduce((acc, curr) => { acc[curr.id] = {}; return acc; }, {} as Record<string, any>));
                 }}>Dobások törlése
-            </Button>
+                </Button>
+                <Button basic style={{ marginLeft: '1em' }} color='red' onClick={backToMain}>&lt; Főoldalra</Button>
             </ButtonGroup>
-        </div>
+        </ButtonRow>
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'stretch' }}>
             {karakterek.sort(kezdemenySort).reverse().map((k, i) => <div style={{ order: karakterek.length - i, margin: '1em' }}>
                 <KombatCard
@@ -72,6 +90,13 @@ export const Kombat: React.FC<{ karakterek: Array<Karakter>; save: (karakter: Ka
                     key={k.id}
                     karakter={k}
                     save={save}
+                    fegyverek={fegyverek}
+                    pancelok={pancelok}
+                    saveFegyverek={saveFegyverek}
+                    savePancelok={savePancelok}
+                    clone={clone}
+                    remove={() => remove(k)}
+                    categories={categories}
                     dobasEredmeny={dobasEredmenyek[k.id]}
                     setDobasEredmeny={e => setDobasEredmenyek({ ...dobasEredmenyek, [k.id]: e })} />
             </div>

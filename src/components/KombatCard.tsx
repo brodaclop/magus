@@ -1,21 +1,31 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Button, Card, Dropdown, DropdownItemProps, Table } from 'semantic-ui-react';
+import { Button, Card, Dropdown, DropdownItemProps, Modal, Table } from 'semantic-ui-react';
 import { FEGYVERTELEN, FegyverUtils, HARCERTEK_DISPLAY_NAMES, SZITUACIOK } from '../engine/harc';
-import { calculateHarcertek, calculateSebesulesHatrany, Karakter } from '../engine/karakter';
+import { calculateHarcertek, calculateSebesulesHatrany, Fegyver, Karakter } from '../engine/karakter';
+import { Pancel } from '../engine/pancel';
 import { DiceRollResult, formatDiceRoll, parseDiceRoll, roll, sumRolls } from '../engine/roll';
+import { Karakterlap } from '../pages/Karakterlap';
 import { DobasEredmeny } from './DobasEredmeny';
 import { PointsTable } from './PointsTable';
 import { SzituacioSelector } from './SzituacioSelector';
 
 export interface KombatCardProps {
+    categories: Array<string>,
     karakter: Karakter,
+    fegyverek: Array<Fegyver>,
+    pancelok: Array<Pancel>,
+    savePancelok: (pancelok: Array<Pancel>) => unknown,
     save: (karakter: Karakter) => unknown,
+    clone: (karakter: Karakter) => Karakter;
+
+    saveFegyverek: (fegyverek: Array<Fegyver>) => unknown,
+    remove: () => unknown
     dobasEredmeny: Record<string, DiceRollResult>,
     setDobasEredmeny(value: Record<string, DiceRollResult>): unknown,
 }
 
 
-export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React.RefAttributes<unknown>> = forwardRef(({ karakter, save, dobasEredmeny, setDobasEredmeny }, ref) => {
+export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React.RefAttributes<unknown>> = forwardRef(({ karakter, save, dobasEredmeny, setDobasEredmeny, fegyverek, pancelok, clone, remove, saveFegyverek, savePancelok, categories }, ref) => {
     const [szituaciok, setSzituaciok] = useState<Array<string>>([]);
     const [dobas, setDobas] = useState<boolean>(false);
 
@@ -85,7 +95,24 @@ export const KombatCard: React.ForwardRefExoticComponent<KombatCardProps & React
 
     return <Card fluid style={{ backgroundColor: headerColour(), filter: 'drop-shadow(5px 5px 3px #333)' }}>
         <Card.Content>
-            <Card.Header >{karakter.name}</Card.Header>
+            <Card.Header >
+                <span>{karakter.name}</span>
+                <Modal trigger={<Button size='tiny' style={{ marginBottom: '1px' }} compact circular color='green' floated='right'>Karakterlap</Button>} size='fullscreen'>
+                    <Modal.Content>
+                        <Karakterlap
+                            karakter={karakter}
+                            save={save}
+                            fegyverek={fegyverek}
+                            pancelok={pancelok}
+                            saveFegyverek={saveFegyverek}
+                            savePancelok={savePancelok}
+                            clone={clone}
+                            remove={remove}
+                            categories={categories}
+                        />
+                    </Modal.Content>
+                </Modal>
+            </Card.Header>
             <Card.Description>
                 <PointsTable
                     points={[{ name: 'ep', label: 'ÉP', ...karakter.ep }, { name: 'fp', label: 'FP', ...karakter.fp }]}

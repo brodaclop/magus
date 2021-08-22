@@ -8,7 +8,7 @@ import { PageHeader } from './components/PageHeader';
 import { Kombat } from './pages/Kombat';
 import { StoryPage } from './story/pages/StoryPage';
 
-export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat', category: string } | { page: 'story' }
+export type PageSelection = { page: 'karakteralkoto' | 'home' } | { page: 'karakterlap', karakter: KarakterInfo } | { page: 'kombat' } | { page: 'story' }
 
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
   const renderPage = () => {
     switch (page.page) {
       case 'home': return <div>Óvakodj a rotoni lomhatasaktól</div>
-      case 'kombat': return <Kombat karakterek={list(page.category).map(i => load(i))} save={save} />
+      case 'kombat': return <Kombat backToMain={() => setPage({ page: 'home' })} karakterek={list(currentCategory).map(i => load(i))} clone={clone} pancelok={listPancelok()} savePancelok={savePancelok} saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} save={save} remove={karakter => removeKarakter(karakter)} />
       case 'karakteralkoto': return <KarakterAlkotas save={saveKarakter} fajok={listFajok()} />
       case 'story': return <StoryPage story={loadStory()} saveStory={saveStory} />;
       case 'karakterlap': return <Karakterlap clone={clone} pancelok={listPancelok()} savePancelok={savePancelok} saveFegyverek={saveFegyverek} fegyverek={listFegyverek()} categories={categories()} karakter={load(page.karakter)} save={saveKarakter} remove={() => removeKarakter(page.karakter as Karakter)} />
@@ -49,12 +49,7 @@ function App() {
         setCurrentCategory={setCurrentCategory}
         karakter={page.page === 'karakterlap' ? page.karakter : undefined}
         page={page}
-        setPage={ps => {
-          setPage(ps);
-          if (ps.page === 'kombat') {
-            setCurrentCategory(ps.category);
-          }
-        }}
+        setPage={setPage}
         save={saveKarakter}
         load={load}
         karakterek={list(currentCategory)}

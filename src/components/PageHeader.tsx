@@ -41,33 +41,28 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ categories, currentCateg
     const canScrollRight = (karakterStart + MAX_KARAKTERS_PER_PAGE < karakterek.length) && (karakterPos === -1 || karakterPos > karakterStart);
     const karaktersDisplayed = karakterek.slice(karakterStart, karakterStart + MAX_KARAKTERS_PER_PAGE);
 
-    return <Menu tabular>
-        <Menu.Item key='header' header>
-            <Image src={logo} size='mini' onClick={() => setPage({ page: page.page === 'story' ? 'home' : 'story' })} />
-        </Menu.Item>
-        <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={changeCategory} />
-        {scrolled &&
-            <Menu.Item key='scroll_left' disabled={!canScrollLeft} onClick={() => setKarakterStart(karakterStart - 1)}>
-                <Icon name='triangle left' />
+    return <>
+        <Menu>
+            <Menu.Item key='header' header>
+                <Image src={logo} size='mini' onClick={() => setPage({ page: page.page === 'story' ? 'home' : 'story' })} />
             </Menu.Item>
-        }
-        {karaktersDisplayed.map(k =>
-            <Menu.Item key={k.id} style={{ flexGrow: 1 }} active={k.id === karakter?.id} name={k.name} onClick={() => k.id === karakter?.id ? setPage({ page: 'home' }) : setPage({ page: 'karakterlap', karakter: k })} />
-        )}
-        <Menu.Item key='new' active={page.page === 'karakteralkoto'} onClick={() => setPage({ page: 'karakteralkoto' })}>
-            <Icon name='plus' />
-        </Menu.Item>
-        {scrolled &&
-            <Menu.Item key='scroll_right' disabled={!canScrollRight} onClick={() => setKarakterStart(karakterStart + 1)}>
-                <Icon name='triangle right' />
+            <CategoriesDropdown categories={categories} currentCategory={currentCategory} setCurrentCategory={changeCategory} />
+            <div id='buttonrow' style={{ flexGrow: 1, margin: 'auto 2em' }} />
+            <Menu.Item key='floated' position='right'>
+                <KarakterImport save={save} saveMese={saveMese} />
+                <VarazslatokModal karakter={karakter ? load(karakter) : undefined} save={save} />
+                <MeregModal />
+                <Button negative onClick={() => setPage({ page: 'kombat' })}>Kombat</Button>
+                <KockaModal />
             </Menu.Item>
+        </Menu>
+        {page.page !== 'kombat' && page.page !== 'story' &&
+            <Menu fluid compact inverted style={{ flexWrap: 'wrap', marginBottom: '0.5em' }}>
+                {karakterek.map(k =>
+                    <Menu.Item key={k.id} style={{ flexGrow: 1 }} active={k.id === karakter?.id} name={k.name} onClick={() => k.id === karakter?.id ? setPage({ page: 'home' }) : setPage({ page: 'karakterlap', karakter: k })} />
+                )}
+
+            </Menu>
         }
-        <Menu.Item key='floated' position='right'>
-            <KarakterImport save={save} saveMese={saveMese} />
-            <VarazslatokModal karakter={karakter ? load(karakter) : undefined} save={save} />
-            <MeregModal />
-            <Button negative onClick={() => setPage({ page: 'kombat', category: currentCategory })}>Kombat</Button>
-            <KockaModal />
-        </Menu.Item>
-    </Menu>
+    </>
 }
