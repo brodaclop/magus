@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, CardGroup } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import { MERGEK } from '../engine/mereg';
 import { MeregCard } from './MeregCard';
 

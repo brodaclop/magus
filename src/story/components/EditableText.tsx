@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { Button, Icon, Input } from 'semantic-ui-react';
+import { Icon, Input } from 'semantic-ui-react';
 
 export interface EditableTextProps {
     text?: string;

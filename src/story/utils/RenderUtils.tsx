@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Button, Card, CardGroup, Icon, Popup, SemanticICONS, Table } from 'semantic-ui-react';
+import React, { ReactNode, useState } from 'react';
+import { Button, Card, Icon, Menu, Popup, SemanticICONS, Table } from 'semantic-ui-react';
 import { EditableNode } from '../components/EditableNode';
 import { DOMElement, DomUtils } from './DomUtils';
 import { EventRenderer } from './inlinerenderers/EventRenderer';
@@ -209,37 +209,43 @@ const LocationCard: React.FC<{ elem: DOMElement, root: DOMElement, switchToScene
 }
 
 
-const StoryCards: React.FC<{ root: DOMElement, name: string, switchToScene: (id: string) => unknown, save: () => unknown }> = ({ root, name, switchToScene, save }) => {
+const StoryCards: React.FC<{ root: DOMElement, name: string, title: string, switchToScene: (id: string) => unknown, save: () => unknown }> = ({ root, name, switchToScene, save, title }) => {
+    const [activeCard, setActiveCard] = useState<DOMElement>();
     const cards = DomUtils.findElementsByName(root, name).filter(e => !e.attributes?.ref);
-    return <CardGroup itemsPerRow={4}>
-        {cards.map(c => <Card raised key={DomUtils.attr(c, 'id')}>
+
+    return <>
+        <Menu fluid compact color='brown' inverted style={{ flexWrap: 'wrap', marginBottom: '0.5em' }}>
+            <Menu.Item header key='header'>{title}</Menu.Item>
+            {cards.map(card => <Menu.Item key={DomUtils.attr(card, 'id')} active={activeCard === card} onClick={() => setActiveCard(activeCard === card ? undefined : card)}>{DomUtils.childText(card, 'name')}</Menu.Item>)}
+        </Menu>
+        {activeCard && <Card fluid raised key={DomUtils.attr(activeCard, 'id')}>
             <Card.Content>
-                <Card.Header>{DomUtils.childText(c, 'name')}
+                <Card.Header>{DomUtils.childText(activeCard, 'name')}
                     <Button floated='right' icon='delete' color='red'
-                        disabled={DomUtils.findReferences(root, c).length > 0}
+                        disabled={DomUtils.findReferences(root, activeCard).length > 0}
                         onClick={() => {
-                            DomUtils.deleteChild(c.$parent, c);
+                            DomUtils.deleteChild(activeCard.$parent, activeCard);
                             save();
                         }} />
                 </Card.Header>
                 <Card.Meta>
-                    <StoryCard readOnly={false} save={save} tag={c} root={root} switchToScene={switchToScene} />
+                    <StoryCard readOnly={false} save={save} tag={activeCard} root={root} switchToScene={switchToScene} />
                 </Card.Meta>
             </Card.Content>
         </Card>
-        )}
-    </CardGroup>
+        }
+    </>
 }
 
 export interface Renderer {
     renderElement: (elem: DOMElement) => ReactNode
-    renderCards: (name: string, save: () => unknown) => ReactNode
+    renderCards: (name: string, title: string, save: () => unknown) => ReactNode
 }
 
 const createRenderer = (root: DOMElement, switchScene: (id: string) => unknown): Renderer => {
     return {
         renderElement: elem => <StoryElement elem={elem} root={root} switchToScene={switchScene} />,
-        renderCards: (name, save) => <StoryCards save={save} root={root} name={name} switchToScene={switchScene} />
+        renderCards: (name, title, save) => <StoryCards save={save} title={title} root={root} name={name} switchToScene={switchScene} />
     }
 }
 

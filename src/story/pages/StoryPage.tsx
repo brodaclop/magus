@@ -1,6 +1,6 @@
 import fileDownload from 'js-file-download';
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Header, Icon, Menu, Segment, Tab } from 'semantic-ui-react';
+import { Button, Icon, Menu, Segment, Tab } from 'semantic-ui-react';
 import { v4 } from 'uuid';
 import { ButtonRow } from '../../components/ButtonRow';
 import { EditableText } from '../components/EditableText';
@@ -116,7 +116,7 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
         </ButtonRow>
 
         <Menu fluid compact color='blue' inverted style={{ flexWrap: 'wrap', marginBottom: '0.5em' }}>
-            {scenes.map((s, i) => <Menu.Item active={i === activeIdx} key={attr(s, 'id')} onClick={() => setActiveScene(DomUtils.attr(scenes[i], 'id'))}>
+            {scenes.map((s, i) => <Menu.Item active={i === activeIdx} key={attr(s, 'id')} onClick={() => setActiveScene(attr(scenes[i], 'id'))}>
                 <SceneListContextMenu onSelected={item => {
                     if (item === 'delete') {
                         DomUtils.deleteChild(s.$parent, s);
@@ -158,17 +158,8 @@ export const StoryPage: React.FC<{ story: string, saveStory: (story: string) => 
             </Segment>
         }
 
-        <>
-            <Header as='h1'>Szereplők</Header>
-            {renderer.renderCards('character', save)}
-        </>
-        <>
-            <Header as='h1'>Helyszínek</Header>
-            {renderer.renderCards('location', save)}
-        </>
-        <>
-            <Header as='h1'>Tárgyak</Header>
-            {renderer.renderCards('item', save)}
-        </>
+        {renderer.renderCards('character', 'Szereplők', save)}
+        {renderer.renderCards('location', 'Helyszínek', save)}
+        {renderer.renderCards('item', 'Tárgyak', save)}
     </>;
 }

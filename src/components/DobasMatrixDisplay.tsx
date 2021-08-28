@@ -14,17 +14,19 @@ interface DobasMatrixDisplayProps {
     setValue?: (name: string, key: string, value: string) => unknown,
     editable?: Array<string>,
     numberOnly?: boolean,
+    hideSum?: boolean,
+    displayPlusSign?: boolean,
     color?: SemanticCOLORS
 }
 
-export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, keyMap, direction, title, editable, setValue, numberOnly, color }) => {
+export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, keyMap, direction, title, editable, setValue, numberOnly, hideSum, displayPlusSign, color }) => {
     const displayCell = (name: string, key: string) => {
         const value = matrix.values[name][key];
         const constantRoll = (value?.roll?.die ?? 0) === 0;
         const rollString = value?.roll ? formatDiceRoll(value.roll) : '';
         if (!editable?.includes(name)) {
             return <Table.Cell key={name + '-' + key} collapsing>
-                {rollString}{!constantRoll && value?.result && <> = <DobasEredmeny result={value?.result} /></>}
+                {displayPlusSign && constantRoll && (value?.roll?.plus ?? 0) > 0 && '+'}{rollString}{!constantRoll && value?.result && <> = <DobasEredmeny result={value?.result} /></>}
             </Table.Cell>;
         } else {
             return <Table.Cell key={name + '-' + key} collapsing>
@@ -52,13 +54,12 @@ export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, 
                         {matrix.keys.map(key => displayCell(name, key))}
                     </Table.Row>
                 })}
-                <tr key='footer'>
-                </tr>
             </Table.Body>
-            <Table.Footer>
-                <Table.HeaderCell title='sum'>Összeg</Table.HeaderCell>
-                {matrix.keys.map(key => <Table.HeaderCell key={key} collapsing>{matrix.sum[key]}</Table.HeaderCell>)}
-            </Table.Footer>
+            {!hideSum &&
+                <Table.Footer>
+                    <Table.HeaderCell title='sum'>Összeg</Table.HeaderCell>
+                    {matrix.keys.map(key => <Table.HeaderCell key={key} collapsing>{matrix.sum[key]}</Table.HeaderCell>)}
+                </Table.Footer>}
         </Table>
     } else {
         return <Table celled striped definition compact color={color}>
@@ -66,7 +67,7 @@ export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, 
                 <Table.Row>
                     <Table.HeaderCell key='title'>{title}</Table.HeaderCell>
                     {Object.keys(matrix.values).map(name => <Table.HeaderCell key={name}>{name}</Table.HeaderCell>)}
-                    <Table.HeaderCell key='sum' collapsing>Összeg</Table.HeaderCell>
+                    {!hideSum && <Table.HeaderCell key='sum' collapsing>Összeg</Table.HeaderCell>}
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -74,7 +75,7 @@ export const DobasMatrixDisplay: React.FC<DobasMatrixDisplayProps> = ({ matrix, 
                     return <Table.Row key={key}>
                         <Table.HeaderCell key='title'>{keyMap[key]}</Table.HeaderCell>
                         {Object.keys(matrix.values).map(name => displayCell(name, key))}
-                        <Table.HeaderCell key='sum'>{matrix.sum[key]}</Table.HeaderCell>
+                        {!hideSum && <Table.HeaderCell key='sum'>{matrix.sum[key]}</Table.HeaderCell>}
                     </Table.Row>
                 })}
             </Table.Body>

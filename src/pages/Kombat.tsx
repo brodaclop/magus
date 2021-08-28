@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Portal } from 'semantic-ui-react';
+import { Button, ButtonGroup } from 'semantic-ui-react';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 import { ButtonRow } from '../components/ButtonRow';
 import { KombatCard } from '../components/KombatCard';
+import { SzituaciokModal } from '../components/SzituaciokModal';
 import { Fegyver, Karakter } from '../engine/karakter';
 import { Pancel } from '../engine/pancel';
 import { DiceRollResult } from '../engine/roll';
@@ -80,6 +81,7 @@ export const Kombat: React.FC<KombatProps> = ({ karakterek, save, fegyverek, pan
                     setDobasEredmenyek(karakterek.reduce((acc, curr) => { acc[curr.id] = {}; return acc; }, {} as Record<string, any>));
                 }}>Dobások törlése
                 </Button>
+                <SzituaciokModal />
                 <Button basic style={{ marginLeft: '1em' }} color='red' onClick={backToMain}>&lt; Főoldalra</Button>
             </ButtonGroup>
         </ButtonRow>
