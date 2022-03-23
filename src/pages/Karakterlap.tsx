@@ -38,13 +38,10 @@ export const Karakterlap: React.FC<KarakterlapProps> = ({ karakter, save, remove
     const eletero = [
         { name: 'ep', label: 'ÉP', ...karakter.ep },
         { name: 'fp', label: 'FP', ...karakter.fp }];
-    const points = [];
-    if (karakter.pszi) {
-        points.push({ name: 'pszi', label: 'ΨP', ...karakter.pszi })
-    }
-    if (karakter.mp) {
-        points.push({ name: 'mp', label: 'MP', ...karakter.mp })
-    }
+    const points = [
+        { name: 'pszi', label: 'ΨP', ...(karakter.pszi ?? { akt: 0, max: 0 }) },
+        { name: 'mp', label: 'MP', ...(karakter.mp ?? { akt: 0, max: 0 }) }
+    ];
 
     const mgt = calculateMGT(karakter);
     const kepessegMatrix = new DobasMatrix(Object.keys(KEPESSEG_NEV)).add('alap', karakter.kepessegek as any);

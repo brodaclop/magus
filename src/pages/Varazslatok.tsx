@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup, Icon } from 'semantic-ui-react';
 import { VarazslatLista } from '../components/VarazslatLista';
 import { Karakter } from '../engine/karakter';
-import { PSZI_PYARRONI, PSZI_SLAN, PSZI_KYR, PSZI_LABELS, VARAZSLAT_LABELS, BARD_VARAZSLATOK, BM_VARAZSLATOK, Varazslat } from '../engine/varazslat';
+import { PSZI_PYARRONI, PSZI_SLAN, PSZI_KYR, PSZI_LABELS, VARAZSLAT_LABELS, BARD_VARAZSLATOK, BM_VARAZSLATOK, Varazslat, MAGIA_TUZVARAZSLO } from '../engine/varazslat';
 
-const ALL_SPELLS = [...PSZI_PYARRONI, ...PSZI_SLAN, ...PSZI_KYR, ...BARD_VARAZSLATOK, ...BM_VARAZSLATOK];
+const ALL_SPELLS = [...PSZI_PYARRONI, ...PSZI_SLAN, ...PSZI_KYR, ...BARD_VARAZSLATOK, ...BM_VARAZSLATOK, ...MAGIA_TUZVARAZSLO];
 
 interface LabelTreeNode {
     label: string;

@@ -167,7 +167,12 @@ export const KarakterAlkotas: React.FC<{ save: (karakter: Karakter) => unknown, 
         <GridRow columns={1} textAlign='center'>
             <GridColumn>
                 <Button disabled={!kaszt} secondary onClick={dob}>Dob</Button>
-                <Button disabled={!backgroundSelection.name || backgroundSelection.szint === undefined || !matrix.sum} primary onClick={() => { const kar = createKarakter(backgroundSelection, matrix); if (kar) { save(kar) } }}>Ment</Button>
+                <Button disabled={!backgroundSelection.name || backgroundSelection.szint === undefined || !matrix.sum} primary onClick={() => {
+                    const kar = createKarakter(backgroundSelection, matrix);
+                    if (kar) {
+                        save(kar)
+                    }
+                }}>Ment</Button>
             </GridColumn>
         </GridRow>
     </Grid>

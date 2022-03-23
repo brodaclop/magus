@@ -3129,6 +3129,844 @@ export const BM_VARAZSLATOK: Array<Varazslat> = [
         labels: ['magia', 'bm', 'bm-nekromancia'],
         description: ``
     },
+];
+
+export const MAGIA_TUZVARAZSLO = [
+    {
+        name: 'Lángteremtés',
+        pont: '1',
+        misc: {
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A varázslat segítségével a tűzvarázsló apró lángnyelvet teremt, mely képes meggyújtani az éghető tárgyakat.
+        A lángnyelv – Őselemi tűzről lévén szó - tápláló anyagok híján is ég 
+        ám mint az eddigiekből kiderült, komolyan el is harapódzhat. 
+        Ilyenkor a tűz azután is megmarad, hogy a varázslat időtartama lejár és a teremtett lángnyelv eltűnik. 
+        A helyet, ahol a lángnyelv fellobban, a tűzvarázsló határozhatja meg, ám belül kell esnie a zónáján.`
+    },
+    {
+        name: 'Időzített lángteremtés',
+        pont: '15',
+        misc: {
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `Hatása a legapróbb részletekig megegyezik a Lángteremtés varázslattal. A különbség pusztán annyi, hogy a lángnyelv 
+        nem azonnal, hanem a tűzvarázsló által előre meghatározott időpillanatban jön létre. Az időtartam - melyen ennek belül 
+        kell esnie - az örökkévalóság. 
+        Miután a tűzvarázsló befejezte a varázslást, 1 kör áll rendelkezésére, hogy megjelölje a pontot,
+        ahol a lángnyelv majdan fellobban. Bal kezének hüvelykujját kell az adott helyhez 
+        hozzáérintenie - annak lenyomataként egészen apró varázsjel keletkezik. Ha ezt a jelet eltörlik, vagy vonalait
+        megszakítják, a varázslat idő előtt - azonnal - aktivizálódik (vagyis a 
+        lángnyelv fellobban).`
+    },
+    {
+        name: 'Intő tűz',
+        pont: '7',
+        misc: {
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A varázslat befejeztekor a tűzvarázsló a zónáján belül eső 
+        területen tízszer annyi pontot jelölhet meg, mint amennyi a 
+        Tapasztalati Szintje. Ezen pontok mindegyikén a Lángteremtés varázslatnál már leírt lángnyelv lobban. `
+    },
+    {
+        name: 'Tűzteremtés',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A Varázslat sokban hasonlít a Lángteremtés nevű varázslathoz.
+        A különbség az, hogy itt a tűzvarázsló nem apró lángnyelvet, hanem egy tábortűz méretű mágja lángját teremti 
+        meg. Az éghető anyagok nyomban meggyulladnak, és a környékén komoly hóliatás is érzékelhető. `
+    },
+    {
+        name: 'Időzített tűzteremtés',
+        pont: '22',
+        misc: {
+            erosseg: '1',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '12 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A varázslat mindenben hasonlít a Tűzteremtésre. A különbség az, hogy az Időzített lángteremtés
+        varázslathoz hasonlóan a varázsló megjelölheti az időpontot,
+        amikor a varázslat aktivizálódik és a tűz felcsap.
+        A helyet – éppúgy, mint a már említett varázslatnál – a bal hüvelykujjának érintése nyomán keletkező varázsjellel kell jelölnie.`
+    },
+    {
+        name: 'Tűztáncoltatás',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A varázslás befejeztével a tűzvarázsló a zónáján belül eső 
+        területen képes lesz minden természetes tüzet befolyásolni. 
+        (Természetesnek minősül az Olyan tűz, melynek lángjait gyúlékony anyagok
+        táplálják és nem őselemi elvek alapján lobog 
+        azaz semmilyen varázslattal létrehozott tűz nem tekinthető 
+        természetesnek; míg az ennek nyomán elharapózó, éghető 
+        anyagok táplálta lángok már igen!) 
+        A befolyásolás annyit tesz, hogy a tűzvarázsló a lángokat 
+        eredeti méretük felére csökkentheti vagy kétszeresükre 
+        nyújthatja, mitöbb, meghatározhatja a tűz továbbterjedésének irányát is.
+        Ennek sebessége körönként I láb. `
+    },
+    {
+        name: 'Őstűz észlelése',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A tűzvarázsló a varázslat segítségével meg tudja állapítáni, 
+        hogy a zónájában összesen hány E Óstűz van jelen. Ez vonatkozik a tűz leplezett formájára is. `
+    },
+    {
+        name: 'Tűz észlelése',
+        pont: '4',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A tűzvarázsló a zónájában az adott pillanatban egyidejűleg jelenlévő leplezett
+        és leplezetlen Óstűz és természetes tűz összesített E-jét tudhatja meg. `
+    },
+    {
+        name: 'Tűzelemzés',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A tűzvarázsló a varázslat segítségével egy, a zónáján belül 
+        lévő, bármilyen szína szerezhet információkat, megtudhatja E-jét és időtartamának hosszát. Ha a
+        tűz nem őselemi azaz nem mágia hozta létre, hanem természetes, akkor a varázslat ezt is felfedi a tűzvarázslő
+        előtt és a tűz E-jéről tájékoztatja. Természetes tüzek addig égnek, amíg van ami táplálja Őket. `
+    },
+    {
+        name: 'Tűz teleportálása',
+        pont: '3',
+        misc: {
+            erosseg: '1',
+            sebzes: 'k6',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-alapveto'],
+        description: `A tűzvarázsló képes a Óstűz teleportálására a zónáján belül.
+        Csak az egész tüzet lehet teleportálni, részleteit nem. Ha 
+        kevesebb Mp-t áldoz rá a tűzvarázsló, mint amennyi E van a 
+        tűz erőssége, akkor a varázslat nem jön létre. Ha több a teleport E-je,
+        mint a teleportálandó tűz E-je, akkor a többlet Mp-ok elvesznek. 
+        Időtartam, formázás tekintetében a teleportált tűz a 
+        mérvadó. `
+    },
+    {
+        name: 'Szalamandrabőr',
+        pont: '10',
+        misc: {
+            erosseg: 'TSZ',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-vedo'],
+        description: ``
+    },
+    {
+        name: 'Tűztagadás',
+        pont: '35',
+        misc: {
+            erosseg: '18',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-vedo'],
+        description: ``
+    },
+    {
+        name: 'Sárkánybőr',
+        pont: '27',
+        misc: {
+            erosseg: '1',
+            idotartam: 'TSZ+10 perc',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-vedo'],
+        description: ``
+    },
+    {
+        name: 'Sárkánykirály bőre',
+        pont: '60',
+        misc: {
+            erosseg: '18',
+            idotartam: 'TSZ+10 perc',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-vedo'],
+        description: ``
+    },
+    {
+        name: 'Tűznyíl',
+        pont: '4',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzkard',
+        pont: '4',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzkitürés',
+        pont: '4',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzszőnyeg',
+        pont: '10',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '5',
+            idotartam: '3 kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzfal',
+        pont: '10',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '5',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzaura',
+        pont: '4',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '2 kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-iskola'],
+        description: ``
+    },
+    {
+        name: 'Tűzgolyó',
+        pont: '6',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '3 kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzeső',
+        pont: '8',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzhenger',
+        pont: '5',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzzápor',
+        pont: '5',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '3 kör',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzgyűrű',
+        pont: '6',
+        misc: {
+            sebzes: 'k6',
+            erosseg: '1',
+            idotartam: '10 kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzhullám',
+        pont: '8',
+        misc: {
+            sebzes: 'leírás',
+            erosseg: '1',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '6 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-szabad'],
+        description: ``
+    },
+    {
+        name: 'Tűzválasztás',
+        pont: '4/E',
+        misc: {
+            erosseg: '15',
+            idotartam: '3 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Fekete tűz',
+        pont: '2/E',
+        misc: {
+            erosseg: '12',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Hideg tűz',
+        pont: '2/E',
+        misc: {
+            erosseg: '12',
+            idotartam: '5 kör',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Tűzélesztés/tűzlohasztás',
+        pont: 'leírás',
+        misc: {
+            erosseg: '12',
+            idotartam: '2 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Tűzcsapás',
+        pont: '2/E',
+        misc: {
+            erosseg: '12',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Tűzlobbanás',
+        pont: '22',
+        misc: {
+            erosseg: '12',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Füstmarás',
+        pont: '2/E',
+        misc: {
+            sebzes: 'leírás',
+            erosseg: '12',
+            idotartam: '1 perc/TSZ',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Távoli tűz',
+        pont: '1',
+        misc: {
+            erosseg: '1',
+            idotartam: '1 perc/TSZ',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Sogron szent tüze',
+        pont: '6/E',
+        misc: {
+            erosseg: '15',
+            idotartam: 'végleges',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-befolyas'],
+        description: ``
+    },
+    {
+        name: 'Pusztító tűz',
+        pont: '+3/E',
+        misc: {
+            erosseg: 'mint az alap',
+            sebzes: 'leírás',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '+3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Perzselő tekintet',
+        pont: '12',
+        misc: {
+            erosseg: '5',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Izzó tekintet',
+        pont: '32',
+        misc: {
+            erosseg: '12',
+            sebzes: '3k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Hamvasztó tekintet',
+        pont: '44',
+        misc: {
+            erosseg: '20',
+            sebzes: '5k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'A Sárkányfiók lehelete',
+        pont: '34',
+        misc: {
+            erosseg: '15',
+            sebzes: '6k6',
+            idotartam: '5 perc',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'A Sárkány lehelete',
+        pont: '42',
+        misc: {
+            erosseg: '19',
+            sebzes: '10k6',
+            idotartam: '5 perc',
+        },
+        varazslasIdeje: '7 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'A Sárkánykirály lehelete',
+        pont: '55',
+        misc: {
+            erosseg: '35',
+            sebzes: '15k6',
+            idotartam: '5 perc',
+        },
+        varazslasIdeje: '9 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tüzijáték',
+        pont: '5',
+        misc: {
+            erosseg: '1',
+            idotartam: '10 perc',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzcsapda',
+        pont: '13',
+        misc: {
+            erosseg: '2',
+            sebzes: '2k6',
+            idotartam: '3 óra',
+        },
+        varazslasIdeje: '1 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Fémizzítás',
+        pont: '12',
+        misc: {
+            erosseg: '5',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '4 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Lávafolyam',
+        pont: '45',
+        misc: {
+            erosseg: '100+',
+            sebzes: 'halál',
+            idotartam: '10 perc',
+        },
+        varazslasIdeje: '6 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzvihar',
+        pont: '95',
+        misc: {
+            erosseg: '22',
+            sebzes: '8k6',
+            idotartam: '15 perc',
+        },
+        varazslasIdeje: '10 perc',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Hatalomaura',
+        pont: '9',
+        misc: {
+            erosseg: '1',
+            idotartam: '2 kör',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzpenge',
+        pont: '12',
+        misc: {
+            erosseg: '1',
+            idotartam: '4 kör',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Kémtűz',
+        pont: '6',
+        misc: {
+            erosseg: '1',
+            idotartam: '8 kör/TSZ',
+        },
+        varazslasIdeje: '2 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Szolga hívása',
+        pont: '24',
+        misc: {
+            erosseg: '25',
+            sebzes: 'leírás',
+            idotartam: '4 kör/TSZ',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Harcos hívása',
+        pont: '40',
+        misc: {
+            erosseg: '25',
+            sebzes: 'leírás',
+            idotartam: '6 kör/TSZ',
+        },
+        varazslasIdeje: '3 kör',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Lángkitörés',
+        pont: '17',
+        misc: {
+            erosseg: '10',
+            sebzes: 'leírás',
+            idotartam: 'egyszeri',
+            me: 'Asztrál és Mentál'
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Belső tűz',
+        pont: '19',
+        misc: {
+            erosseg: 'TSZ',
+            sebzes: 'leírás',
+            idotartam: '1 kör/TSZ',
+            me: 'Egészség'
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzszem',
+        pont: '8',
+        misc: {
+            erosseg: '1',
+            sebzes: 'k6',
+            idotartam: '2 óra/TSZ',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzkapu',
+        pont: '18',
+        misc: {
+            erosseg: 'leírás',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzeső',
+        pont: '33',
+        misc: {
+            erosseg: 'TSZ/2',
+            sebzes: 'TSZ/2+k6',
+            idotartam: '10 perc',
+        },
+        varazslasIdeje: '4 perc',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Átformázás',
+        pont: '4/E',
+        misc: {
+            erosseg: 'leírás',
+            sebzes: 'leírás',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '3 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűzrablás',
+        pont: '2',
+        misc: {
+            erosseg: '10',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: 'leírás',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Tűznyelés',
+        pont: '4/E',
+        misc: {
+            erosseg: '3',
+            sebzes: 'k6',
+            idotartam: 'egyszeri',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: `A tűzvarázsló ezen varázslata egyesíti magában a támadást 
+        és a védekezést. A tűzvarázsló elnyelheti a rá ható tüzet, majd 
+        csóva formában visszafújhatja ellenfelére. Jellemző még, hogy 
+        a tűzvarázsló varázslás közben érzi, hogy szükség van-e még 
+        mágikus energia befektetésére, azaz hogy mekkora erősséggel 
+        kell varázsolnia a varázslatot. Még Így is fenyegeti azonban az
+        a veszély, hogy Mana-pontjai hamarabb fogynak el, minthogy 
+        az összes tűzet elnyelte volna, azaz a tűz erősítése még mindig
+        nagyobb mint a varázslaté. Ebben az esetben a tűz csökkentett
+        erősséggel hat. A tűzvarázslónak a varázslat után teljes köre van, hogy az elnyelt tüzet kifújja, 
+        ellenkező esetben a tűz hatni fog az elnyelt erősségben, azonban, mivel 
+        a tűzvarázsló testében van, a tűz sebzése maximális (E-nként 6) lesz.
+        
+        Ebből is látszik, hogy a varázslat nem veszélytelen, ámde nem kis meglepetést okozhat a 
+        tító lángokat elnyelő és a támadóra visszalehelő tűzvarázsló. 
+        A visszafújásnál a varázslat teljesen megegyezik a Csóvába 
+        formázott Óstűz varázslói és Tűzcsóva nevü tűzvarázslói
+        varázslatokkal. A visszafújás nem igényel Mp-ráfordítást. 
+        
+        Mivel a varázslat lényege az időzítés, a tűzvarázsló csak 
+        akkor alkalmazhatja sikeresen, ha Öszpontosít a megfelelő 
+        időpontra. Ezt úgy teheti meg, hogy az adott harci kör elején 
+        bejelenti, hogy abban az esetben, ha tüzet használnak ellene, 
+        akkor Tűznyelést varázsol. Az adott körben mással nem 
+        foglalkozhat.És a varázslat Mana-pont igényét 1 E-re vonatkoztatva levonja.
+        Ha a tűzzel való támadás bekövetkezik, akkor a várázslat létrejön,
+        méghozzá a másodperc törtrésze alatt. 
+        Ha az elnyelendő tűz 1 E erősségű, akkor a varázslat nem igényel
+        további Mana-pontokat, csak a további E-k után kell 
+        újabb Mana-pontokat áldozni a varázslatra. Ha ilyen támadás nincs,
+        akkor a tűzvarázsló nem cselekszik semmit, és a Mana-pontok elvesznek. 
+        `
+    },
+    {
+        name: 'Lángfestés',
+        pont: 'leírás',
+        misc: {
+            erosseg: '1',
+            sebzes: 'leírás',
+            idotartam: 'leírás',
+        },
+        varazslasIdeje: '5 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: ``
+    },
+    {
+        name: 'Perzselő érintés',
+        pont: '9',
+        misc: {
+            erosseg: '5',
+            sebzes: 'k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: `Mindenben megegyezik a Perse16 tekintet nevü varåzslattal, 
+        a különbség annyi, hogy itt a tűzvarázsló bal kezének érihtésével tudja
+        megperzselni áldozatåt. Ehhez sikeres Támadó dobást
+        kell tennie. Kezét halvány vörös izzás veszi körül, érintése az 
+        éghető anyagokat nyomban lángra lobbantja, a kevésbé éghetőket csak
+        megperzseli. Az érintési pontban a hőmérséklet 
+        megközelítőleg 150 fok, k6 Sp-t okoz az é1ő1ényeknek, a tárgyaknak
+        ugyanennyi strukturális veszteséget, amit anyaguk szerint 
+        csökkenteni vagy növelni kell. (lásd Tárgyak ellenállása) `
+    },
+    {
+        name: 'Izzó érintés',
+        pont: '20',
+        misc: {
+            erosseg: '12',
+            sebzes: '3k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: `Hatása akár a Perzselő érintésé, ám itt a hőmérséklet az 
+        érintési pontban 500 fok, ami 3k6 Sp-t jelent. A varázslat 
+        közben a tűzvarázsló bal keze erős vörös fénnyel izzik. A fémek egy
+        részét már megolvasztja, az acél felizzik. Az érintéshez sikeres
+        Támadó dobás szükséges.`
+    },
+    {
+        name: 'Hamvasztó érintés',
+        pont: '32',
+        misc: {
+            erosseg: '2ö',
+            sebzes: '5k6',
+            idotartam: '6 kör',
+        },
+        varazslasIdeje: '1 szegmens',
+        labels: ['magia', 'tuzmagia', 'tuzmagia-magas'],
+        description: `Hasonló az Izzó érintéshez, de itt az érintési pontban a
+        hőmérséklet 2000 fok, a fémek megolvadnak, az élőlények 5k6 
+        veszteséget szenvednek el. Az érintés véghezviteléhez sikeres
+        Támadó dobás szükséges. A tűzvarázsló keze vakító vörös 
+        fénnyel világít a varázslat ideje alatt. `
+    },
+
+
+
+
+
+
 
 ]
 
@@ -3138,6 +3976,7 @@ export const VARAZSLAT_LABELS: Record<string, string> = {
     me: 'ME',
     idotartam: 'Időtartam',
     erosseg: 'E',
+    sebzes: 'Sebzés',
     hatotav: 'Hatótáv',
     varazslasIdeje: 'Varázslás ideje',
     hatoido: 'Hatóidő',
